@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global vs Local View on Protocols &mdash; Security Analysis of Cryptographic Protocols with DY*  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/contentui.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/remember.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/example.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/exercise.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/infobox.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/box.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/todo.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/math.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/contentui.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Security Analysis of Cryptographic Protocols with DY*
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#example-protocols">Example Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#main-concepts-in-dy">Main Concepts in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelling-protocols.html">Modelling Protocols in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stating-sec-props.html">Stating Security Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proof-method.html">Proving Security Properties</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Security Analysis of Cryptographic Protocols with DY*</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Global vs Local View on Protocols</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/intro-dyconcepts-localview.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="global-vs-local-view-on-protocols">
+<h1>Global vs Local View on Protocols<a class="headerlink" href="#global-vs-local-view-on-protocols" title="Link to this heading"></a></h1>
+<p>A second point where the intuitive description of a protocol differs
+from the model in , is that the <em>order</em> of the protocol steps is <em>not</em>
+part of the model. Whereas in <a class="reference internal" href="introduction.html#sec-intro-examples"><span class="std std-ref">Example Protocols</span></a> we describe <em>one</em>
+flow of a protocol with a fixed sequence of messages, in we want to
+model arbitrarily <em>many</em>, possibly <em>interleaving</em> flows running in
+parallel. For this we model each receive-react step from the previous
+subsection separately, allowing steps to be executed at any time
+(possibly in different flows).</p>
+<p>Following this approach we need to think of how to identify flows and
+keep track of their state. If we just had the receive-react steps of the
+Needham-Schroeder protocol as in the previous subsection, we could, for
+example, send several messages to Alice including two nonces, and Alice
+would reply to all of those. However, this does not correctly model the
+NS protocol. Alice should only react to such a message, if she
+previously initiated a flow with one of the nonces. We resolve this
+issue by tracking the state of protocol flows <em>locally</em> at every
+participant. In our example, Alice would keep track of flows she
+initiated and respond to a message with two nonces, only if she has a
+corresponding ongoing flow.</p>
+<p>This is in contrast to the intuitive description of protocols as in <a class="reference internal" href="introduction.html#sec-intro-examples"><span class="std std-ref">Example Protocols</span></a>,
+where the state of flows is tracked <em>globally</em> by the specified sequence of messages.</p>
+<div class="admonition example" id="example-twomessage-localview">
+<p class="admonition-title">Example: Local View of Two-Message Protocol</p>
+<p>We adapt our description of the Two-message protocol from
+<a class="reference internal" href="introduction.html#sec-intro-twomessagep"><span class="std std-ref">Two-message Protocol</span></a> to match the local
+view on the protocol used in DY*.</p>
+<p>To keep track of the state of protocol
+flows, we store successful completion of each step.
+We identify a flow</p>
+<ul class="simple">
+<li><p>at the initiator by the nonce contained in the first message and
+the peer it is sent to, and</p></li>
+<li><p>at the responder by the nonce received in
+the initial message and the peer it received the message from.</p></li>
+</ul>
+<p>With this we adapt the receive-react steps from the previous example as follows:</p>
+<ul>
+<li><p><em>Initiate flow and send first message:</em></p>
+<p>Alice generates a nonce
+<span class="math notranslate nohighlight">\(n_A\)</span> and sends it together with her name to Bob.</p>
+<p>She stores that she initiated a flow with Bob using <span class="math notranslate nohighlight">\(n_A\)</span>.</p>
+</li>
+<li><p><em>Receive first message and send second message:</em></p>
+<p>Bob receives a message of the form <span class="math notranslate nohighlight">\((n_A, \text{Alice})\)</span>.
+He sends the nonce <span class="math notranslate nohighlight">\(n_A\)</span> back to Alice.</p>
+<p>Bob stores that he received <span class="math notranslate nohighlight">\(n_A\)</span> in a first message from Alice
+and replied.</p>
+</li>
+<li><p><em>Receive last message:</em></p>
+<p>Alice receives a nonce <span class="math notranslate nohighlight">\(n_A\)</span>.</p>
+<p>If she previously initiated a flow using <span class="math notranslate nohighlight">\(n_A\)</span>, she
+stores that she received a response and finishes this
+protocol flow.</p>
+</li>
+</ul>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Example: Local View of Online? Protocol</p>
+<p>We get the local view description of the Online? protocol from
+<a class="reference internal" href="introduction.html#sec-intro-online"><span class="std std-ref">Online?</span></a> in the same
+way as for the two-message protocol.</p>
+</div>
+<div class="admonition exercise" id="exercise-local-view-ns">
+<p class="admonition-title">Exercise: Local View of Needham-Schroeder Protocol</p>
+<p>Adapt the description of the
+Needham-Schroeder protocol in <a class="reference internal" href="introduction.html#sec-intro-ns"><span class="std std-ref">Needham - Schroeder Protocol</span></a> to match the local
+view on the protocol used in .</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>To keep track of the state of protocol
+flows, we store successful completion of each step. We identify a
+flow at the initiator by the nonce contained in the first message and
+the peer it is sent to, and at the responder by the two nonces sent
+in response to the initial message.</p>
+<ul>
+<li><p><em>Initiate flow and send first message:</em></p>
+<p>Alice generates a nonce
+<span class="math notranslate nohighlight">\(n_A\)</span> and sends it encrypted for Bob.</p>
+<p>She stores that she
+initiated a flow with Bob using <span class="math notranslate nohighlight">\(n_A\)</span>.</p>
+</li>
+<li><p><em>Receive first message and send second message:</em></p>
+<p>Bob receives a message of the form <span class="math notranslate nohighlight">\((n_A, \text{Alice})\)</span>.
+He generates a new nonce <span class="math notranslate nohighlight">\(n_B\)</span>
+and sends both nonces encrypted for Alice.</p>
+<p>Bob stores that he
+received a first message from Alice and replied with <span class="math notranslate nohighlight">\(n_A\)</span> and
+<span class="math notranslate nohighlight">\(n_B\)</span>.</p>
+</li>
+<li><p><em>Receive second message and send third message:</em></p>
+<p>Alice receives two nonces <span class="math notranslate nohighlight">\(n_A\)</span> and <span class="math notranslate nohighlight">\(n_B\)</span>.</p>
+<p>If she previously
+initiated a flow using <span class="math notranslate nohighlight">\(n_A\)</span> with a corresponding Bob,
+she sends back
+<span class="math notranslate nohighlight">\(n_B\)</span> encrypted for Bob and stores that she received two
+nonces and replied.</p>
+</li>
+<li><p><em>Receive last message:</em></p>
+<p>Bob receives a nonce <span class="math notranslate nohighlight">\(n_B\)</span>.</p>
+<p>If he previously
+received a first message and replied with <span class="math notranslate nohighlight">\(n_B\)</span>, he finishes the
+protocol flow.</p>
+</li>
+</ul>
+</div>
+</div>
+<p>A key task when modeling protocols in the local view, is to figure out
+what information is needed at each participant to continue with
+subsequent steps.</p>
+<p>For example, consider the “Initiate Flow” step above.
+The first idea might have been to just store the nonce <span class="math notranslate nohighlight">\(n_A\)</span> at
+Alice. But, when she later receives the response, she needs to send the
+third message with <span class="math notranslate nohighlight">\(n_B\)</span> to someone. Recall that in the
+asynchronous communication model, she does not get information about the
+sender of the second message. So she can not directly reply. Thus, she
+needs to store who she sent the initial message to, to now send the
+third message to the same participant.</p>
+<div class="admonition remember">
+<p class="admonition-title">Remember</p>
+<p>A protocol model in DY*</p>
+<ul class="simple">
+<li><p>… is split into several receive-react steps.</p></li>
+<li><p>… does not contain information about the <em>order</em> of these steps.</p></li>
+</ul>
+<p>So don’t think of the <em>global</em> protocol flow as given in an intuitive
+description, but rather think of each receive-react step <em>locally</em> at
+each participant.</p>
+</div>
+<p>We will now take a closer look at the main concepts used in DY* for tracking
+the state of protocol flows and sending and receiving of messages.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DY* Maintainer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

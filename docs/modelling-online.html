@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Model of the Online? Protocol &mdash; Security Analysis of Cryptographic Protocols with DY*  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/contentui.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/remember.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/example.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/exercise.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/infobox.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/box.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/todo.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/math.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/contentui.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Security Analysis of Cryptographic Protocols with DY*
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#example-protocols">Example Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#main-concepts-in-dy">Main Concepts in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelling-protocols.html">Modelling Protocols in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stating-sec-props.html">Stating Security Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proof-method.html">Proving Security Properties</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Security Analysis of Cryptographic Protocols with DY*</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">A Model of the Online? Protocol</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modelling-online.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="a-model-of-the-online-protocol">
+<h1>A Model of the Online? Protocol<a class="headerlink" href="#a-model-of-the-online-protocol" title="Link to this heading"></a></h1>
+<p>Let us now turn to the Online? protocol and implement a protocol model in DY*.
+The only difference to the Two-Message protocol is
+that the messages are <em>encrypted</em> for the respective participants.
+So the model of the Online? protocol will be very similar
+to the previous one of the Two-Message protocol,
+and we will here focus on the new differences.</p>
+<p>First, we discuss how encryption is modelled in DY*.</p>
+<section id="public-key-encryption-in-dy">
+<h2>Public Key Encryption in DY*<a class="headerlink" href="#public-key-encryption-in-dy" title="Link to this heading"></a></h2>
+<section id="key-storage">
+<span id="pke-key-storage-model"></span><h3>Key storage<a class="headerlink" href="#key-storage" title="Link to this heading"></a></h3>
+<p>We don’t model a PKI in DY*,
+instead we just assume that every participant
+has some private decryption keys and
+some public encryption keys associated with other principals
+in her state.
+To easily access the keys,
+we collect all private keys in one session
+and all public keys in another session.
+We already saw this, when we first introduced states
+and in particular <a class="reference internal" href="introduction.html#ex-online-global-sessions-for-keys"><span class="std std-ref">sessions for global information</span></a>.
+So states look like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Alice:
+  Session 0: collection of private decryption keys
+  Session 1: collection of public encryption keys
+  ...
+</pre></div>
+</div>
+<p>A participant may have several private keys
+for different purposes.
+Think of a protocol with several sub-protocols.
+For each of the sub-protocols there could be
+a separate private key which is only used for this sub-protocol.
+All of those keys are stored in the same session (Session 0 in the example above).
+To use the correct keys in the protocol steps,
+we need to store the information which key is used for which purpose.
+We do this, by tagging the keys.
+That is, the collection of private keys
+is a dictionary with the dictionary key being a tag
+and the values are the keys.
+So Session 0 in the above example could look like the following
+(using the notation <code class="docutils literal notranslate"><span class="pre">lookup_key</span> <span class="pre">=</span> <span class="pre">value</span></code>):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Session 0: {
+    &quot;SubProt1&quot; = priv_key_for_sub_protocol_1
+  , &quot;SubProt2&quot; = priv_key_for_sub_protocol_2
+  , &quot;Other&quot; = priv_key_for_some_other_purpose
+}
+</pre></div>
+</div>
+<p>Similarly, a participant may have several public encryption keys
+for different purposes.
+Additionally, for public keys there are different keys for different
+other participants.
+For example, Alice could have two public keys
+specific to one of the sub-protocols,
+one for Bob and one for Charlie.
+Hence, to identify the correct key for encryption,
+we now use the tag together with the name of the other participant.
+Thus, the collection of public keys
+is a dictionary with the dictionary key
+being the pair of a tag and a participant name.
+So Session 1 from above could look like the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Session 1: {
+    (&quot;SubProt1&quot;, Bob) = pub_key_for_Bob_for_sub_protocol_1
+  , (&quot;SubProt1&quot;, Charlie) = pub_key_for_Charlie_for_sub_protocol_1
+  , (&quot;SubProt2&quot;, Bob) = pub_key_for_Bob_for_sub_protocol_2
+}
+</pre></div>
+</div>
+<p>In the above examples,
+we used Session 0 to store Alice’s private keys
+and Session 1 for her public keys.
+However, the sessions for the keys are not fixed
+and can be allocated dynamically.
+Usually this happens in a setup phase before any protocol run.</p>
+<p>This setup is <em>not</em> part of the protocol <em>model</em> itself.
+Just like protocol runs are not part of the protocol model,
+but need to be implemented separately
+(recall <a class="reference internal" href="modelling-protocols.html#sec-ex-run-two-message-implementation"><span class="std std-ref">the example run for the Two-Message protocol</span></a>).
+But since the protocol steps in the model
+need to know where keys are stored
+for de- and encryption,
+we need to add these session IDs as additional arguments to the steps.
+That is, for implementing a protocol step
+in which you want to encrypt something,
+you can assume that you get the session ID
+of the state where public keys are stored
+as an argument.
+If you then want to implement an actual run of the protocol,
+you need to generate those key sessions (and IDs) in a setup phase
+and pass them on as arguments to the protocol steps in the run.
+We will see how key setup works later,
+when we implement an example run for the Online? protocol.</p>
+<p>For now, it suffices to remember
+that private and public keys are stored in separate sessions
+at a principal
+and that we use a tag to lookup a private key
+and a tag participant pair to lookup a public key.
+With this model of the key storage in mind,
+we can now look at how encryption and decryption works in DY*.</p>
+</section>
+<section id="encryption">
+<h3>Encryption<a class="headerlink" href="#encryption" title="Link to this heading"></a></h3>
+<p>If Alice wants to encrypt some plaintext for Bob,
+she needs to lookup Bob’s public key in her public keys session,
+and use this key to encrypt the plaintext.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">DY.Simplified</span></code> there is a function <code class="docutils literal notranslate"><span class="pre">pke_enc_for</span></code> that does those steps.
+It takes as arguments:</p>
+<ul class="simple">
+<li><p>the participant that does the encryption</p></li>
+<li><p>the participant whose public key is used for encryption</p></li>
+<li><p>the session ID where the active participant stores her known public keys</p></li>
+<li><p>the tag of the key (used to lookup the right key in the public keys session)</p></li>
+<li><p>the abstract message</p></li>
+</ul>
+<p>and returns the corresponding ciphertext in wire format.
+The type is</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">pke_enc_for</span><span class="o">:</span>
+  <span class="o">#</span><span class="n">a</span><span class="o">:</span><span class="nc">Type</span> <span class="o">-&gt;</span> <span class="o">{|</span> <span class="n">parseable_serializeable</span> <span class="n">bytes</span> <span class="n">a</span> <span class="o">|}</span> <span class="o">-&gt;</span>
+  <span class="o">(</span><span class="n">active</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">for</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="o">(</span><span class="n">public_keys_sid</span><span class="o">:</span> <span class="n">state_id</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">key_tag</span><span class="o">:</span> <span class="kt">string</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="o">(</span><span class="n">abstract_msg</span><span class="o">:</span> <span class="n">a</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="o">(</span><span class="n">cipher</span><span class="o">:</span> <span class="n">bytes</span><span class="o">))</span>
+</pre></div>
+</div>
+<p>The function fails if there is no key for the respective participant
+with the given tag
+stored in the given session of the active participant.</p>
+<div class="admonition example" id="ex-pke-encryption">
+<p class="admonition-title">Example: Encrypting an abstract message</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">pke_enc_for</span></code> function from <code class="docutils literal notranslate"><span class="pre">DY.Simplified</span></code> can be called like this:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">pke_enc_for</span> <span class="o">#</span><span class="n">message_t</span> <span class="n">alice</span> <span class="n">bob</span> <span class="n">alices_public_keys_sid</span> <span class="n">key_tag</span> <span class="o">(</span><span class="nc">Ping</span> <span class="o">{</span><span class="n">alice</span><span class="o">;</span> <span class="n">n_a</span><span class="o">})</span>
+</pre></div>
+</div>
+<p>Where Alice wants to encrypt the abstract Ping for Bob
+using <code class="docutils literal notranslate"><span class="pre">key_tag</span></code> as key to lookup the public key of Bob
+in her session with the ID <code class="docutils literal notranslate"><span class="pre">alices_public_keys_sid</span></code>,
+where she stores her known public keys.</p>
+</div>
+</section>
+<section id="decryption">
+<h3>Decryption<a class="headerlink" href="#decryption" title="Link to this heading"></a></h3>
+<p>Decryption works very similar,
+where the active participant now has to lookup her private key
+in her private keys session.</p>
+<p>Again, there is a function <code class="docutils literal notranslate"><span class="pre">pke_dec_with_key_lookup</span></code> in <code class="docutils literal notranslate"><span class="pre">DY.Simplified</span></code>
+for decryption.
+It takes as arguments:</p>
+<ul class="simple">
+<li><p>the active (decrypting) participant</p></li>
+<li><p>the session ID, where the participant stores her private keys</p></li>
+<li><p>the tag of the key (used to lookup the right key in the private keys session)</p></li>
+<li><p>the ciphertext</p></li>
+</ul>
+<p>and returns the corresponding abstract plaintext.
+The type is:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">pke_dec_with_key_lookup</span><span class="o">:</span>
+  <span class="o">#</span><span class="n">a</span><span class="o">:</span><span class="nc">Type</span> <span class="o">-&gt;</span> <span class="o">{|</span> <span class="n">parseable_serializeable</span> <span class="n">bytes</span> <span class="n">a</span> <span class="o">|}</span> <span class="o">-&gt;</span>
+  <span class="n">principal</span> <span class="o">-&gt;</span>
+  <span class="o">(</span><span class="n">private_keys_sid</span><span class="o">:</span> <span class="n">state_id</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">key_tag</span><span class="o">:</span> <span class="kt">string</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="o">(</span><span class="n">cipher</span><span class="o">:</span> <span class="n">bytes</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="o">(</span><span class="n">abstract_plain</span><span class="o">:</span> <span class="n">a</span><span class="o">))</span>
+</pre></div>
+</div>
+<p>The function may fail if one of the following is true:</p>
+<ul class="simple">
+<li><p>there is no key with the given tag in the given keys session</p></li>
+<li><p>the ciphertext was not encrypted with the key
+corresponding to the given tag in the given keys session</p></li>
+<li><p>parsing of the decrypted plain text fails</p></li>
+</ul>
+<div class="admonition example" id="ex-pke-decryption">
+<p class="admonition-title">Example: Decrypting a cipher text to an abstract message</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">pke_dec_with_key_lookup</span></code> function from <code class="docutils literal notranslate"><span class="pre">DY.Simplified</span></code> can be called like this:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">pke_dec_with_key_lookup</span> <span class="o">#</span><span class="n">message_t</span> <span class="n">bob</span> <span class="n">bobs_private_keys_sid</span> <span class="n">key_tag</span> <span class="n">cipher</span>
+</pre></div>
+</div>
+<p>Here Bob wants to decrypt the <code class="docutils literal notranslate"><span class="pre">cipher</span></code>
+using the key with tag <code class="docutils literal notranslate"><span class="pre">key_tag</span></code> stored in his session with ID <code class="docutils literal notranslate"><span class="pre">bobs_private_keys_sid</span></code>.</p>
+</div>
+<div class="admonition remember">
+<p class="admonition-title">Remember: Public Key Encryption in DY*</p>
+<p><em>Key Storage</em>:</p>
+<ul>
+<li><div class="toggle-header docutils container">
+<p>All private keys are stored in <em>one</em> session
+as a dictionary with dictionary key being some tag.</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Alice:
+  Session 0: {
+      &quot;SubProt1&quot; = priv_key_for_sub_protocol_1
+    , &quot;SubProt2&quot; = priv_key_for_sub_protocol_2
+    , &quot;Other&quot; = priv_key_for_some_other_purpose
+  }
+</pre></div>
+</div>
+</div>
+</li>
+<li><div class="toggle-header docutils container">
+<p>All public keys are stored in <em>one</em> session
+as a dictionary with the dictionary key being a tag together with the name of a participant.</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Alice:
+  Session 1: {
+      (&quot;SubProt1&quot;, Bob) = pub_key_for_sub_protocol_1_for_Bob
+    , (&quot;SubProt1&quot;, Charlie) = pub_key_for_sub_protocol_1_for_Charlie
+    , (&quot;SubProt2&quot;, Bob) = pub_key_for_sub_protocol_2_for_Bob
+  }
+</pre></div>
+</div>
+</div>
+</li>
+<li><p>The session IDs of the key sessions
+are generated in a setup phase outside of the protocol steps.
+Thus, the protocol steps take them as an extra argument.</p></li>
+</ul>
+<p><em>Encryption</em>:</p>
+<ul>
+<li><div class="toggle-header docutils container">
+<p>using <code class="docutils literal notranslate"><span class="pre">pke_enc_for</span></code> from <code class="docutils literal notranslate"><span class="pre">DY.Simplified</span></code></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="n">ping_encrypted</span> <span class="o">=</span> <span class="n">pke_enc_for</span> <span class="o">#</span><span class="n">message_t</span> <span class="n">alice</span> <span class="n">bob</span> <span class="n">alices_public_keys_sid</span> <span class="n">key_tag</span> <span class="o">(</span><span class="nc">Ping</span> <span class="o">{</span><span class="n">alice</span><span class="o">;</span> <span class="n">n_a</span><span class="o">})</span> <span class="k">in</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><p>takes the abstract plain text and returns the cipher text in wire format (i.e., includes serializing)</p></li>
+</ul>
+<p><em>Decryption</em>:</p>
+<ul>
+<li><div class="toggle-header docutils container">
+<p>using <code class="docutils literal notranslate"><span class="pre">pke_dec_with_key_lookup</span></code> from <code class="docutils literal notranslate"><span class="pre">DY.Simplified</span></code></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="n">ping_plain</span> <span class="o">=</span> <span class="n">pke_dec_with_key_lookup</span> <span class="o">#</span><span class="n">message_t</span> <span class="n">bob</span> <span class="n">bobs_private_keys_sid</span> <span class="n">key_tag</span> <span class="n">cipher</span> <span class="k">in</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><p>takes the cipher text in wire format and returns the abstract plain text (i.e., includes parsing)</p></li>
+</ul>
+</div>
+<p>With this, we can now implement the model of the Online? protocol.</p>
+</section>
+</section>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h2>
+<p>As for the <a class="reference internal" href="modelling-protocols.html#model-twomessage-setup"><span class="std std-ref">Two-Message protocol</span></a>,
+create a new folder <code class="docutils literal notranslate"><span class="pre">Online</span></code> and add</p>
+<ul>
+<li><div class="toggle-header docutils container">
+<p>a <code class="docutils literal notranslate"><span class="pre">Makefile</span></code></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-Makefile notranslate"><div class="highlight"><pre><span></span><span class="nv">TUTORIAL_HOME</span><span class="w"> </span><span class="o">?=</span><span class="w"> </span>../..
+
+<span class="nv">EXAMPLE_DIRS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>path_to/Online
+
+<span class="cp">include $(TUTORIAL_HOME)/Makefile</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><div class="toggle-header docutils container">
+<p>a <code class="docutils literal notranslate"><span class="pre">DY.Online.Data</span></code> module</p>
+</div>
+<div class="toggle-content docutils container">
+<blockquote>
+<div><div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nn">DY</span><span class="p">.</span><span class="nn">Online</span><span class="p">.</span><span class="nc">Data</span>
+
+<span class="k">open</span> <span class="nc">Comparse</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Core</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Lib</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</li>
+<li><div class="toggle-header docutils container">
+<p>a <code class="docutils literal notranslate"><span class="pre">DY.Online.Protocol</span></code> module.</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nn">DY</span><span class="p">.</span><span class="nn">Online</span><span class="p">.</span><span class="nc">Protocol</span>
+
+<span class="k">open</span> <span class="nc">Comparse</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Core</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Lib</span>
+
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Simplified</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Extend</span>
+
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nn">Online</span><span class="p">.</span><span class="nc">Data</span>
+</pre></div>
+</div>
+</div>
+</li>
+</ul>
+</section>
+<section id="the-data-module">
+<h2>The <code class="docutils literal notranslate"><span class="pre">Data</span></code> module<a class="headerlink" href="#the-data-module" title="Link to this heading"></a></h2>
+<section id="the-abstract-message-and-state-types">
+<h3>The abstract message and state types<a class="headerlink" href="#the-abstract-message-and-state-types" title="Link to this heading"></a></h3>
+<p>We begin the DY* model of the Online? protocol with the abstract message and state types
+in the <code class="docutils literal notranslate"><span class="pre">DY.Online.Data</span></code> module.</p>
+<section id="messages">
+<h4>Messages<a class="headerlink" href="#messages" title="Link to this heading"></a></h4>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Abstract message format</p>
+<p>Define the abstract format for the messages of the Online? protocol
+as records in DY*.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>The messages of the Online? protocol have the same content
+as the messages in the Two-Message protocol.
+Hence, we have the same abstract format and
+can use the same records:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">ping_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="k">type</span> <span class="n">ack_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="k">type</span> <span class="n">message_t</span> <span class="o">=</span>
+  <span class="o">|</span> <span class="nc">Ping</span><span class="o">:</span> <span class="o">(</span><span class="n">ping</span><span class="o">:</span><span class="n">ping_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">message_t</span>
+  <span class="o">|</span> <span class="nc">Ack</span><span class="o">:</span>  <span class="o">(</span><span class="n">ack</span><span class="o">:</span><span class="n">ack_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">message_t</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition remember">
+<p class="admonition-title">Remember</p>
+<p>The abstract format of messages only defines the <em>content</em> of the message.</p>
+<p>In particular, the following are <em>not</em> part of the abstract format:</p>
+<ul class="simple">
+<li><p>the structure of the message (for example: Is it a pair? Is it a 3-tuple where the second component is a pair?)</p></li>
+<li><p>whether the message (or parts of it) are encrypted</p></li>
+</ul>
+</div>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Serializing and Parsing for the abstract message format</p>
+<p>Define serializer and parser for the abstract message format using Comparse.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>Add <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">[@@</span> <span class="n">with_bytes</span> <span class="n">bytes</span><span class="o">]</span></code> to the record types and add</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_ping_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">ping_t</span><span class="o">))</span>
+<span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_ack_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">ack_t</span><span class="o">))</span>
+<span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_message_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">message_t</span><span class="o">))</span>
+
+<span class="n">instance</span> <span class="n">parseable_serializeable_bytes_message_t</span><span class="o">:</span> <span class="n">parseable_serializeable</span> <span class="n">bytes</span> <span class="n">message_t</span> <span class="o">=</span>
+  <span class="n">mk_parseable_serializeable</span> <span class="n">ps_message_t</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="states">
+<h4>States<a class="headerlink" href="#states" title="Link to this heading"></a></h4>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Abstract state format</p>
+<p>Completely define the abstract state format for states related to the Online? protocol.
+(You do not need to think about the states where keys are stored.)</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>Again, the content of the states of the Online? protocol
+are the same as the ones in the Two-Message protocol:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="c">// the record types for the individual states</span>
+<span class="c">// and the combined state_t type</span>
+
+<span class="o">[@@</span> <span class="n">with_bytes</span> <span class="n">bytes</span><span class="o">]</span>
+<span class="k">type</span> <span class="n">sent_ping_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">bob</span> <span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="o">[@@</span> <span class="n">with_bytes</span> <span class="n">bytes</span><span class="o">]</span>
+<span class="k">type</span> <span class="n">sent_ack_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="o">[@@</span> <span class="n">with_bytes</span> <span class="n">bytes</span><span class="o">]</span>
+<span class="k">type</span> <span class="n">received_ack_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">bob</span> <span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="o">[@@</span> <span class="n">with_bytes</span> <span class="n">bytes</span><span class="o">]</span>
+<span class="k">type</span> <span class="n">state_t</span> <span class="o">=</span>
+  <span class="o">|</span> <span class="nc">SentPing</span><span class="o">:</span> <span class="o">(</span><span class="n">ping</span><span class="o">:</span><span class="n">sent_ping_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">state_t</span>
+  <span class="o">|</span> <span class="nc">SentAck</span><span class="o">:</span> <span class="o">(</span><span class="n">ack</span><span class="o">:</span><span class="n">sent_ack_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">state_t</span>
+  <span class="o">|</span> <span class="nc">ReceivedAck</span><span class="o">:</span> <span class="o">(</span><span class="n">rack</span><span class="o">:</span><span class="n">received_ack_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">state_t</span>
+
+<span class="c">// serializing and parsing using Comparse</span>
+
+<span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_sent_ping_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">sent_ping_t</span><span class="o">))</span>
+<span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_sent_ack_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">sent_ack_t</span><span class="o">))</span>
+<span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_received_ack_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">received_ack_t</span><span class="o">))</span>
+<span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_state_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">state_t</span><span class="o">))</span>
+
+<span class="n">instance</span> <span class="n">parseable_serializeable_bytes_state_t</span><span class="o">:</span> <span class="n">parseable_serializeable</span> <span class="n">bytes</span> <span class="n">state_t</span> <span class="o">=</span>
+     <span class="n">mk_parseable_serializeable</span> <span class="n">ps_state_t</span>
+
+<span class="c">// the local_state instance</span>
+
+<span class="n">instance</span> <span class="n">local_state_state_t</span><span class="o">:</span> <span class="n">local_state</span> <span class="n">state_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">tag</span> <span class="o">=</span> <span class="s2">&quot;Online.State&quot;</span><span class="o">;</span>
+  <span class="n">format</span> <span class="o">=</span> <span class="n">parseable_serializeable_bytes_state_t</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="summary">
+<h4>Summary<a class="headerlink" href="#summary" title="Link to this heading"></a></h4>
+<p>The content of the messages and states of the Online? protocol
+are the same as for the Two-Message protocol.
+Hence, the definitions of the abstract formats are the same
+and your <code class="docutils literal notranslate"><span class="pre">DY.Online.Data</span></code> module should now be the same
+as the <code class="docutils literal notranslate"><span class="pre">DY.TwoMessage.Data</span></code> module
+(except for the tag of the states in the <code class="docutils literal notranslate"><span class="pre">local_state</span></code> instance).</p>
+</section>
+</section>
+<section id="preparation-for-public-key-encryption">
+<h3>Preparation for Public Key Encryption<a class="headerlink" href="#preparation-for-public-key-encryption" title="Link to this heading"></a></h3>
+<p>Finally, we need a tag for the protocol related keys
+used for public key en-/decryption of the messages.
+We define this tag as a global constant also in the <code class="docutils literal notranslate"><span class="pre">Data</span></code> module.</p>
+<p>For example:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">key_tag</span> <span class="o">=</span> <span class="s2">&quot;Online.Key&quot;</span>
+</pre></div>
+</div>
+<p>This concludes the <code class="docutils literal notranslate"><span class="pre">Data</span></code> module and we can continue
+with the implementation of the protocol steps.</p>
+</section>
+</section>
+<section id="the-protocol-steps">
+<h2>The protocol steps<a class="headerlink" href="#the-protocol-steps" title="Link to this heading"></a></h2>
+<p>Recall again,
+that the only difference of the Two-Message and the Online? protocol
+is that the messages are now encrypted for the respective participants.
+For this, we use
+the <a class="reference internal" href="modelling-protocols.html#ex-pke-encryption"><span class="std std-ref">encryption function</span></a> <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">pke_enc_for</span></code>
+and the <a class="reference internal" href="modelling-protocols.html#ex-pke-decryption"><span class="std std-ref">decryption function</span></a> <code class="docutils literal notranslate"><span class="pre">pke_dec_with_key_lookup</span></code>.</p>
+<section id="sending-a-ping">
+<h3>Sending a Ping<a class="headerlink" href="#sending-a-ping" title="Link to this heading"></a></h3>
+<p>As a first attempt,
+you might try to just copy the <code class="docutils literal notranslate"><span class="pre">send_ping</span></code> step from the model of the Two-Message protocol:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">val</span> <span class="n">send_ping</span><span class="o">:</span>
+<span class="linenos"> 2</span>  <span class="o">(</span><span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">bob</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span>
+<span class="linenos"> 3</span>  <span class="n">traceful</span> <span class="o">(</span><span class="n">state_id</span> <span class="o">&amp;</span> <span class="n">timestamp</span><span class="o">)</span>
+<span class="linenos"> 4</span><span class="kd">let</span> <span class="n">send_ping</span> <span class="n">alice</span> <span class="n">bob</span> <span class="o">=</span>
+<span class="linenos"> 5</span>  <span class="kd">let</span><span class="o">*</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">gen_rand</span> <span class="k">in</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>  <span class="kd">let</span> <span class="n">ping</span> <span class="o">=</span> <span class="nc">Ping</span> <span class="o">{</span><span class="n">alice</span> <span class="o">=</span> <span class="n">alice</span><span class="o">;</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">n_a</span><span class="o">}</span> <span class="k">in</span>
+<span class="hll"><span class="linenos"> 8</span>  <span class="kd">let</span> <span class="n">ping_wire</span> <span class="o">=</span> <span class="n">serialize</span> <span class="n">message_t</span> <span class="n">ping</span> <span class="k">in</span>
+</span><span class="hll"><span class="linenos"> 9</span>  <span class="kd">let</span><span class="o">*</span> <span class="n">msg_ts</span> <span class="o">=</span> <span class="n">send_msg</span> <span class="n">ping_wire</span> <span class="k">in</span>
+</span><span class="linenos">10</span>
+<span class="linenos">11</span>  <span class="kd">let</span> <span class="n">ping_state</span> <span class="o">=</span> <span class="nc">SentPing</span> <span class="o">{</span><span class="n">bob</span> <span class="o">=</span> <span class="n">bob</span><span class="o">;</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">n_a</span><span class="o">}</span> <span class="k">in</span>
+<span class="linenos">12</span>  <span class="kd">let</span><span class="o">*</span> <span class="n">sid</span> <span class="o">=</span> <span class="n">start_new_session</span> <span class="n">alice</span> <span class="n">ping_state</span> <span class="k">in</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>  <span class="n">return</span> <span class="o">(</span><span class="n">sid</span><span class="o">,</span> <span class="n">msg_ts</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Now that we want to encrypt the message before sending it in Line 9,
+we need to adapt Line 8.
+We want to call <code class="docutils literal notranslate"><span class="pre">pke_enc_for</span></code> here instead of the <code class="docutils literal notranslate"><span class="pre">serialize</span></code>.</p>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Preparing the encryption</p>
+<p>What are the arguments to the call of <code class="docutils literal notranslate"><span class="pre">pke_enc_for</span></code> at this point?
+(Who wants to decrypt for who? Using what key?)</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">alice</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bob</span></code></p></li>
+<li><p>some state ID of alice, where she stores public encryption keys</p></li>
+<li><p>the key tag defined in the <code class="docutils literal notranslate"><span class="pre">Data</span></code> module</p></li>
+<li><p>the abstract Ping message <code class="docutils literal notranslate"><span class="pre">ping</span></code></p></li>
+</ul>
+<p>So the call looks like this:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">pke_enc_for</span> <span class="n">alice</span> <span class="n">bob</span> <span class="n">alice_public_keys_sid</span> <span class="n">key_tag</span> <span class="n">ping</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We observe that the only “undefined” argument is
+the session ID of the state where Alice stores her public encryption keys.
+Recall from the <a class="reference internal" href="modelling-protocols.html#pke-key-storage-model"><span class="std std-ref">introduction of the key storage model</span></a>,
+that this session ID needs to be added as an extra argument to the protocol step.</p>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Adding the public key session ID as argument</p>
+<p>Add the key session ID where Alice stores her public keys
+as extra argument to the <code class="docutils literal notranslate"><span class="pre">send_ping</span></code> step.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">val</span> <span class="n">send_ping</span><span class="o">:</span>
+<span class="hll"><span class="linenos">2</span>  <span class="o">(</span><span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">alice_public_keys_sid</span><span class="o">:</span> <span class="n">state_id</span><span class="o">)</span> <span class="o">-&gt;</span>
+</span><span class="linenos">3</span>  <span class="o">(</span><span class="n">bob</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">traceful</span> <span class="o">(</span><span class="n">state_id</span> <span class="o">&amp;</span> <span class="n">timestamp</span><span class="o">)</span>
+<span class="hll"><span class="linenos">4</span><span class="kd">let</span> <span class="n">send_ping</span> <span class="n">alice</span> <span class="n">alice_public_keys_sid</span> <span class="n">bob</span> <span class="o">=</span>
+</span><span class="linenos">5</span>  <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we want to call <code class="docutils literal notranslate"><span class="pre">pke_enc_for</span></code> in Line 8
+and send the resulting cipher text in Line 9.
+Since encryption is a monadic action,
+we first need to think about the relevant monads
+and which <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span></code> to use.</p>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Calling <code class="docutils literal notranslate"><span class="pre">pke_enc_for</span></code> in <code class="docutils literal notranslate"><span class="pre">send_ping</span></code> – the Monads</p>
+<ol class="arabic simple">
+<li><p>What monad is the <code class="docutils literal notranslate"><span class="pre">pke_enc_for</span></code> action in?</p></li>
+<li><p>What monad is the <code class="docutils literal notranslate"><span class="pre">send_ping</span></code> function in?</p></li>
+<li><p>What <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span></code> do we have to use in Line 8?</p></li>
+</ol>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pke_enc_for</span></code> is a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> action
+(since it may fail, if there is not the right key in the provided session.)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">send_ping</span></code> is a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> function.</p></li>
+<li><p>None. We can not call <code class="docutils literal notranslate"><span class="pre">pke_enc_for</span></code> inside <code class="docutils literal notranslate"><span class="pre">send_ping</span></code>,
+since it has more side effects.</p></li>
+</ol>
+</div>
+</div>
+<p>Since we want to call <code class="docutils literal notranslate"><span class="pre">pke_enc_for</span></code> in the <code class="docutils literal notranslate"><span class="pre">send_ping</span></code> function,
+we need to change the monad of <code class="docutils literal notranslate"><span class="pre">send_ping</span></code> to <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code>.</p>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Calling <code class="docutils literal notranslate"><span class="pre">pke_enc_for</span></code> in <code class="docutils literal notranslate"><span class="pre">send_ping</span></code></p>
+<ol class="arabic simple">
+<li><p>Change the type of <code class="docutils literal notranslate"><span class="pre">send_ping</span></code> so that <code class="docutils literal notranslate"><span class="pre">send_ping</span></code> is a function in the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> monad.</p></li>
+</ol>
+<blockquote>
+<div><div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">send_ping</span><span class="o">:</span>
+  <span class="o">(</span><span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">alice_public_keys_sid</span><span class="o">:</span> <span class="n">state_id</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">bob</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="o">(</span><span class="n">state_id</span> <span class="o">&amp;</span> <span class="n">timestamp</span><span class="o">))</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+<ol class="arabic" start="2">
+<li><p>Change Line 8 to use <code class="docutils literal notranslate"><span class="pre">pke_enc_for</span></code>. What <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span></code> do we have to use?</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>Since we want the overall step to fail,
+if encryption fails, we use <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*?</span></code> in Line 8:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="n">ping_encrypted</span> <span class="o">=</span> <span class="n">pke_enc_for</span> <span class="n">alice</span> <span class="n">bob</span> <span class="n">alice_public_keys_sid</span> <span class="n">key_tag</span> <span class="n">ping</span> <span class="k">in</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><p>Is there anything else we need to change in the <code class="docutils literal notranslate"><span class="pre">send_ping</span></code> function?</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>As we changed the monad of <code class="docutils literal notranslate"><span class="pre">send_ping</span></code> to <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code>,
+we now need to return an <code class="docutils literal notranslate"><span class="pre">option</span></code>:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="o">(</span><span class="n">sid</span><span class="o">,</span> <span class="n">msg_ts</span><span class="o">))</span>
+</pre></div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<p>Putting everything together, the <code class="docutils literal notranslate"><span class="pre">send_ping</span></code> step for the Online? protocol looks like this
+(highlighting the changes to the <code class="docutils literal notranslate"><span class="pre">send_ping</span></code> step from the Two-Message protocol):</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">val</span> <span class="n">send_ping</span><span class="o">:</span>
+<span class="hll"><span class="linenos"> 2</span>  <span class="o">(</span><span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">alice_public_keys_sid</span><span class="o">:</span> <span class="n">state_id</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">bob</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span>
+</span><span class="hll"><span class="linenos"> 3</span>  <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="o">(</span><span class="n">state_id</span> <span class="o">&amp;</span> <span class="n">timestamp</span><span class="o">))</span>
+</span><span class="hll"><span class="linenos"> 4</span><span class="kd">let</span> <span class="n">send_ping</span> <span class="n">alice</span> <span class="n">alice_public_keys_sid</span> <span class="n">bob</span> <span class="o">=</span>
+</span><span class="linenos"> 5</span>  <span class="kd">let</span><span class="o">*</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">gen_rand</span> <span class="k">in</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>  <span class="kd">let</span> <span class="n">ping</span> <span class="o">=</span> <span class="nc">Ping</span> <span class="o">{</span><span class="n">alice</span> <span class="o">=</span> <span class="n">alice</span><span class="o">;</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">n_a</span><span class="o">}</span> <span class="k">in</span>
+<span class="hll"><span class="linenos"> 8</span>  <span class="kd">let</span><span class="o">*?</span> <span class="n">ping_encrypted</span> <span class="o">=</span> <span class="n">pke_enc_for</span> <span class="n">alice</span> <span class="n">bob</span> <span class="n">alice_public_keys_sid</span> <span class="n">key_tag</span> <span class="n">ping</span> <span class="k">in</span>
+</span><span class="hll"><span class="linenos"> 9</span>  <span class="kd">let</span><span class="o">*</span> <span class="n">msg_ts</span> <span class="o">=</span> <span class="n">send_msg</span> <span class="n">ping_encrypted</span> <span class="k">in</span>
+</span><span class="linenos">10</span>
+<span class="linenos">11</span>  <span class="kd">let</span> <span class="n">ping_state</span> <span class="o">=</span> <span class="nc">SentPing</span> <span class="o">{</span><span class="n">bob</span> <span class="o">=</span> <span class="n">bob</span><span class="o">;</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">n_a</span><span class="o">}</span> <span class="k">in</span>
+<span class="linenos">12</span>  <span class="kd">let</span><span class="o">*</span> <span class="n">sid</span> <span class="o">=</span> <span class="n">start_new_session</span> <span class="n">alice</span> <span class="n">ping_state</span> <span class="k">in</span>
+<span class="linenos">13</span>
+<span class="hll"><span class="linenos">14</span>  <span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="o">(</span><span class="n">sid</span><span class="o">,</span> <span class="n">msg_ts</span><span class="o">))</span>
+</span></pre></div>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Common Mistakes</p>
+<p>If you changed Line 8 to</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="n">ping_encrypted</span> <span class="o">=</span> <span class="n">pke_enc_for</span> <span class="n">alice</span> <span class="n">bob</span> <span class="n">alice_public_keys_sid</span> <span class="n">key_tag</span> <span class="n">ping</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>and get the error</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>- Expected type traceful (option (*?u8*) _)
+  but
+      ...
+  has type traceful (state_id &amp; timestamp)
+</pre></div>
+</div>
+<p>you probably forgot to</p>
+<ul>
+<li><p>add <code class="docutils literal notranslate"><span class="pre">option</span></code> to the monad of <code class="docutils literal notranslate"><span class="pre">send_ping</span></code>:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">send_ping</span><span class="o">:</span>
+  <span class="o">(</span><span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">alice_public_keys_sid</span><span class="o">:</span> <span class="n">state_id</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">bob</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="o">(</span><span class="n">state_id</span> <span class="o">&amp;</span> <span class="n">timestamp</span><span class="o">))</span>
+</pre></div>
+</div>
+</li>
+<li><p>or to return an <code class="docutils literal notranslate"><span class="pre">option</span></code>:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="o">(</span><span class="n">sid</span><span class="o">,</span> <span class="n">msg_ts</span><span class="o">))</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</section>
+<section id="replying-with-an-ack">
+<h3>Replying with an Ack<a class="headerlink" href="#replying-with-an-ack" title="Link to this heading"></a></h3>
+<p>As for <code class="docutils literal notranslate"><span class="pre">send_ping</span></code>,
+we will build the second protocol step for the Online? protocol
+from the second step of the Two-Message protocol
+and focus on the differences.</p>
+<p>Start by copying the <code class="docutils literal notranslate"><span class="pre">receive_ping_and_send_ack</span></code> step from
+<code class="docutils literal notranslate"><span class="pre">DY.TwoMessage.Protocol</span></code>:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">val</span> <span class="n">receive_ping_and_send_ack</span><span class="o">:</span>
+<span class="linenos"> 2</span>   <span class="n">principal</span> <span class="o">-&gt;</span> <span class="n">timestamp</span> <span class="o">-&gt;</span>
+<span class="linenos"> 3</span>   <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="o">(</span><span class="n">state_id</span> <span class="o">&amp;</span> <span class="n">timestamp</span><span class="o">))</span>
+<span class="linenos"> 4</span><span class="kd">let</span> <span class="n">receive_ping_and_send_ack</span> <span class="n">bob</span> <span class="n">msg_ts</span> <span class="o">=</span>
+<span class="linenos"> 5</span>  <span class="kd">let</span><span class="o">*?</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">recv_msg</span> <span class="n">msg_ts</span> <span class="k">in</span>
+<span class="hll"><span class="linenos"> 6</span>  <span class="kd">let</span><span class="o">*?</span> <span class="n">png_</span> <span class="o">=</span> <span class="n">return</span> <span class="o">(</span><span class="n">parse</span> <span class="n">message_t</span> <span class="n">msg</span><span class="o">)</span> <span class="k">in</span>
+</span><span class="linenos"> 7</span>  <span class="n">guard_tr</span> <span class="o">(</span><span class="nc">Ping</span><span class="o">?</span> <span class="n">png_</span><span class="o">);*?</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>  <span class="kd">let</span> <span class="nc">Ping</span> <span class="n">png</span> <span class="o">=</span> <span class="n">png_</span> <span class="k">in</span>
+<span class="linenos">10</span>  <span class="kd">let</span> <span class="n">alice</span> <span class="o">=</span> <span class="n">png</span><span class="o">.</span><span class="n">alice</span> <span class="k">in</span>
+<span class="linenos">11</span>  <span class="kd">let</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">png</span><span class="o">.</span><span class="n">n_a</span> <span class="k">in</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span>  <span class="kd">let</span> <span class="n">ack</span> <span class="o">=</span> <span class="nc">Ack</span> <span class="o">{</span><span class="n">n_a</span><span class="o">}</span> <span class="k">in</span>
+<span class="hll"><span class="linenos">14</span>  <span class="kd">let</span><span class="o">*</span> <span class="n">ack_ts</span> <span class="o">=</span> <span class="n">send_msg</span> <span class="o">(</span><span class="n">serialize</span> <span class="n">message_t</span> <span class="n">ack</span><span class="o">)</span> <span class="k">in</span>
+</span><span class="linenos">15</span>
+<span class="linenos">16</span>  <span class="kd">let</span> <span class="n">ack_state</span> <span class="o">=</span> <span class="nc">SentAck</span> <span class="o">{</span><span class="n">alice</span><span class="o">;</span> <span class="n">n_a</span><span class="o">}</span> <span class="k">in</span>
+<span class="linenos">17</span>  <span class="kd">let</span><span class="o">*</span> <span class="n">sess_id</span> <span class="o">=</span> <span class="n">start_new_session</span> <span class="n">bob</span> <span class="n">ack_state</span> <span class="k">in</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span>  <span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="o">(</span><span class="n">sess_id</span><span class="o">,</span> <span class="n">ack_ts</span><span class="o">))</span>
+</pre></div>
+</div>
+<p>The main differences between the Online? and the Two-Message protocol are:</p>
+<ul class="simple">
+<li><p>the received Ping is encrypted and hence Bob needs to decrypt the message in Line 6</p></li>
+<li><p>the Ack needs to be encrypted for Alice in Line 14</p></li>
+</ul>
+<section id="decrypting-the-ping">
+<h4>Decrypting the Ping<a class="headerlink" href="#decrypting-the-ping" title="Link to this heading"></a></h4>
+<p>We begin with decrypting the received message.
+For this we want to use the <a class="reference internal" href="modelling-protocols.html#ex-pke-decryption"><span class="std std-ref">decryption function</span></a> <code class="docutils literal notranslate"><span class="pre">pke_dec_with_key_lookup</span></code>.</p>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Preparing the Decryption</p>
+<p>What are the arguments to the call of <code class="docutils literal notranslate"><span class="pre">pke_dec_with_key_lookup</span></code>
+in Line 6?
+(Who wants to decrypt? Using what key?)</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bob</span></code></p></li>
+<li><p>some state ID of Bob, where he stores his private decryption keys</p></li>
+<li><p>the key tag defined in the <code class="docutils literal notranslate"><span class="pre">Data</span></code> module</p></li>
+<li><p>the wire-format ciphertext <code class="docutils literal notranslate"><span class="pre">msg</span></code></p></li>
+</ul>
+<p>So the call looks like this:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">pke_dec_with_key_lookup</span> <span class="o">#</span><span class="n">message_t</span> <span class="n">bob</span> <span class="n">bob_private_keys_sid</span> <span class="n">key_tag</span> <span class="n">msg</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Again, we currently don’t have Bob’s private key session ID available
+and need to add it as extra argument to the protocol step.
+So the type of the step changes to:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">receive_ping_and_send_ack</span><span class="o">:</span>
+  <span class="n">principal</span> <span class="o">-&gt;</span> <span class="n">state_id</span> <span class="o">-&gt;</span> <span class="n">timestamp</span> <span class="o">-&gt;</span>
+  <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="o">(</span><span class="n">state_id</span> <span class="o">&amp;</span> <span class="n">timestamp</span><span class="o">))</span>
+<span class="kd">let</span> <span class="n">receive_ping_and_send_ack</span> <span class="n">bob</span> <span class="n">bob_private_keys_sid</span> <span class="n">msg_ts</span> <span class="o">=</span>
+  <span class="o">...</span>
+</pre></div>
+</div>
+<p>We are now ready to call the decryption function.</p>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Calling <code class="docutils literal notranslate"><span class="pre">pke_dec_with_key_lookup</span></code> in <code class="docutils literal notranslate"><span class="pre">receive_ping_and_send_ack</span></code></p>
+<ol class="arabic">
+<li><p>Can we call <code class="docutils literal notranslate"><span class="pre">pke_dec_with_key_lookup</span></code> inside <code class="docutils literal notranslate"><span class="pre">receive_ping_and_send_ack</span></code>?
+(Think about the relevant monads.)</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>Yes. Both the decryption action and the overall function are in the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> monad.</p>
+</div>
+</li>
+<li><p>What <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span></code> do we need to use in Line 6?</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>Since we want the protocol step to fail,
+if decryption fails,
+we need to use <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*?</span></code>.</p>
+</div>
+</li>
+<li><p>Change Line 6 accordingly.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="n">png_</span> <span class="o">=</span> <span class="n">pke_dec_with_key_lookup</span> <span class="o">#</span><span class="n">message_t</span> <span class="n">bob</span> <span class="n">private_keys_sid</span> <span class="n">key_tag</span> <span class="n">msg</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>Recall, that decryption includes parsing,
+so the returned <code class="docutils literal notranslate"><span class="pre">png_</span></code> is already in the abstract message format
+and we don’t need to explicitly call <code class="docutils literal notranslate"><span class="pre">parse</span></code>.</p>
+</div>
+</li>
+</ol>
+</div>
+<p>This concludes decryption of the received message to an abstract Ping message.</p>
+</section>
+<section id="encrypting-the-ack">
+<h4>Encrypting the Ack<a class="headerlink" href="#encrypting-the-ack" title="Link to this heading"></a></h4>
+<p>Encrypting the Ack message works just like
+encrypting the Ping in the first protocol step.</p>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Encrypting the Ack</p>
+<p>Change the step so that the Ack is encrypted for Alice.</p>
+<p>You may want to think about the following and adapt the model accordingly:</p>
+<ol class="arabic">
+<li><p>What are the arguments for the encryption function?</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bob</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">alice</span></code></p></li>
+<li><p>a session ID where Bob stores his public encryption keys</p></li>
+<li><p>the key tag defined in the <code class="docutils literal notranslate"><span class="pre">Data</span></code> module</p></li>
+<li><p>the abstract Ack <code class="docutils literal notranslate"><span class="pre">ack</span></code></p></li>
+</ul>
+</div>
+</li>
+<li><p>Does the type of the protocol step need to change?</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>Yes, we need to add the session ID for the public keys of Bob as extra argument:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">receive_ping_and_send_ack</span><span class="o">:</span>
+  <span class="n">principal</span> <span class="o">-&gt;</span> <span class="n">state_id</span> <span class="o">-&gt;</span> <span class="n">state_id</span> <span class="o">-&gt;</span>
+  <span class="n">timestamp</span> <span class="o">-&gt;</span> <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="o">(</span><span class="n">state_id</span> <span class="o">&amp;</span> <span class="n">timestamp</span><span class="o">))</span>
+<span class="kd">let</span> <span class="n">receive_ping_and_send_ack</span> <span class="n">bob</span> <span class="n">bob_private_keys_sid</span> <span class="n">bob_public_keys_sid</span> <span class="n">msg_ts</span> <span class="o">=</span>
+  <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><p>Can we call the encryption function here and what <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span></code> should we use?</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>Yes, since both the encryption action and the overall protocol step are in the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> monad.
+Since we want the whole step to fail, if encryption fails,
+we use <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*?</span></code>.</p>
+<p>Line 14 changes to:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="n">ack_encrypted</span> <span class="o">=</span> <span class="n">pke_enc_for</span> <span class="n">bob</span> <span class="n">alice</span> <span class="n">bob_public_keys_sid</span> <span class="n">key_tag</span> <span class="n">ack</span> <span class="k">in</span>
+</pre></div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</section>
+<section id="id1">
+<h4>Summary<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<p>To summarize, we</p>
+<ul class="simple">
+<li><p>used <code class="docutils literal notranslate"><span class="pre">pke_dec_with_key_lookup</span></code> for decrypting the received message
+(adding Bob’s private keys session ID as extra argument to the step)</p></li>
+<li><p>used <code class="docutils literal notranslate"><span class="pre">pke_enc_for</span></code> to encrypt the Ack for Alice
+(adding Bob’s public keys session ID as extra argument)</p></li>
+</ul>
+<p>so that the final second protocol step now looks like this
+(highlighting the changes to the second step of the Two-Message protocol):</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">val</span> <span class="n">receive_ping_and_send_ack</span><span class="o">:</span>
+<span class="hll"><span class="linenos"> 2</span>  <span class="n">principal</span> <span class="o">-&gt;</span> <span class="n">state_id</span> <span class="o">-&gt;</span> <span class="n">state_id</span> <span class="o">-&gt;</span> <span class="n">timestamp</span> <span class="o">-&gt;</span>
+</span><span class="linenos"> 3</span>  <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="o">(</span><span class="n">state_id</span> <span class="o">&amp;</span> <span class="n">timestamp</span><span class="o">))</span>
+<span class="hll"><span class="linenos"> 4</span><span class="kd">let</span> <span class="n">receive_ping_and_send_ack</span> <span class="n">bob</span> <span class="n">bob_private_keys_sid</span> <span class="n">bob_public_keys_sid</span> <span class="n">msg_ts</span> <span class="o">=</span>
+</span><span class="linenos"> 5</span>  <span class="kd">let</span><span class="o">*?</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">recv_msg</span> <span class="n">msg_ts</span> <span class="k">in</span>
+<span class="hll"><span class="linenos"> 6</span>  <span class="kd">let</span><span class="o">*?</span> <span class="n">png_</span> <span class="o">=</span> <span class="n">pke_dec_with_key_lookup</span> <span class="o">#</span><span class="n">message_t</span> <span class="n">bob</span> <span class="n">bob_private_keys_sid</span> <span class="n">key_tag</span> <span class="n">msg</span> <span class="k">in</span>
+</span><span class="linenos"> 7</span>  <span class="n">guard_tr</span> <span class="o">(</span><span class="nc">Ping</span><span class="o">?</span> <span class="n">png_</span><span class="o">);*?</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>  <span class="kd">let</span> <span class="nc">Ping</span> <span class="n">png</span> <span class="o">=</span> <span class="n">png_</span> <span class="k">in</span>
+<span class="linenos">10</span>  <span class="kd">let</span> <span class="n">alice</span> <span class="o">=</span> <span class="n">png</span><span class="o">.</span><span class="n">alice</span> <span class="k">in</span>
+<span class="linenos">11</span>  <span class="kd">let</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">png</span><span class="o">.</span><span class="n">n_a</span> <span class="k">in</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span>  <span class="kd">let</span> <span class="n">ack</span> <span class="o">=</span> <span class="nc">Ack</span> <span class="o">{</span><span class="n">n_a</span><span class="o">}</span> <span class="k">in</span>
+<span class="hll"><span class="linenos">14</span>  <span class="kd">let</span><span class="o">*?</span> <span class="n">ack_encrypted</span> <span class="o">=</span> <span class="n">pke_enc_for</span> <span class="n">bob</span> <span class="n">alice</span> <span class="n">bob_public_keys_sid</span> <span class="n">key_tag</span> <span class="n">ack</span> <span class="k">in</span>
+</span><span class="hll"><span class="linenos">15</span>  <span class="kd">let</span><span class="o">*</span> <span class="n">ack_ts</span> <span class="o">=</span> <span class="n">send_msg</span> <span class="n">ack_encrypted</span> <span class="k">in</span>
+</span><span class="linenos">16</span>
+<span class="linenos">17</span>  <span class="kd">let</span> <span class="n">ack_state</span> <span class="o">=</span> <span class="nc">SentAck</span> <span class="o">{</span><span class="n">alice</span><span class="o">;</span> <span class="n">n_a</span><span class="o">}</span> <span class="k">in</span>
+<span class="linenos">18</span>  <span class="kd">let</span><span class="o">*</span> <span class="n">sess_id</span> <span class="o">=</span> <span class="n">start_new_session</span> <span class="n">bob</span> <span class="n">ack_state</span> <span class="k">in</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>  <span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="o">(</span><span class="n">sess_id</span><span class="o">,</span> <span class="n">ack_ts</span><span class="o">))</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="receiving-an-ack">
+<h3>Receiving an Ack<a class="headerlink" href="#receiving-an-ack" title="Link to this heading"></a></h3>
+<p>The final step of the Online? protocol
+is again almost the same as the final step of the Two-Message protocol.
+The only difference is,
+that the received Ack is encrypted and needs to be decrypted by Alice.
+This works in the same way as in the second step,
+where Bob decrypts the Ping.
+Looking back at the previous step,
+you should be able to adapt the final step of the Two-Message protocol.</p>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Adapting <code class="docutils literal notranslate"><span class="pre">receive_ack</span></code> from the model of the Two-Message protocol</p>
+<p>Implement the final protocol step by adapting the <code class="docutils literal notranslate"><span class="pre">receive_ack</span></code> step from the model of the Two-Message protocol.</p>
+<p>You can follow these steps:</p>
+<ol class="arabic">
+<li><p>Copy the <code class="docutils literal notranslate"><span class="pre">receive_ack</span></code> step from the model of the Two-Message protocol.
+Where do we need to perform decryption?</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">val</span> <span class="n">receive_ack</span><span class="o">:</span>
+<span class="linenos"> 2</span>  <span class="n">principal</span> <span class="o">-&gt;</span> <span class="n">timestamp</span> <span class="o">-&gt;</span>
+<span class="linenos"> 3</span>  <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="n">state_id</span><span class="o">)</span>
+<span class="linenos"> 4</span><span class="kd">let</span> <span class="n">receive_ack</span> <span class="n">alice</span> <span class="n">ack_ts</span> <span class="o">=</span>
+<span class="linenos"> 5</span>  <span class="kd">let</span><span class="o">*?</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">recv_msg</span> <span class="n">ack_ts</span> <span class="k">in</span>
+<span class="hll"><span class="linenos"> 6</span>  <span class="kd">let</span><span class="o">*?</span> <span class="n">ack</span> <span class="o">=</span> <span class="n">return</span> <span class="o">(</span><span class="n">parse</span> <span class="n">message_t</span> <span class="n">msg</span><span class="o">)</span> <span class="k">in</span>
+</span><span class="linenos"> 7</span>  <span class="n">guard_tr</span> <span class="o">(</span><span class="nc">Ack</span><span class="o">?</span> <span class="n">ack</span><span class="o">);*?</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>  <span class="kd">let</span> <span class="nc">Ack</span> <span class="n">ack</span> <span class="o">=</span> <span class="n">ack</span> <span class="k">in</span>
+<span class="linenos">10</span>  <span class="kd">let</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">ack</span><span class="o">.</span><span class="n">n_a</span> <span class="k">in</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>  <span class="kd">let</span><span class="o">*?</span> <span class="o">(</span><span class="n">sid</span><span class="o">,</span> <span class="n">st</span><span class="o">)</span> <span class="o">=</span> <span class="n">lookup_state</span> <span class="o">#</span><span class="n">state_t</span> <span class="n">alice</span>
+<span class="linenos">13</span>    <span class="o">(</span><span class="k">fun</span> <span class="n">st</span> <span class="o">-&gt;</span>
+<span class="linenos">14</span>          <span class="nc">SentPing</span><span class="o">?</span> <span class="n">st</span>
+<span class="linenos">15</span>      <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="nc">SentPing</span><span class="o">?.</span><span class="n">ping</span> <span class="n">st</span><span class="o">).</span><span class="n">n_a</span> <span class="o">=</span> <span class="n">n_a</span>
+<span class="linenos">16</span>    <span class="o">)</span> <span class="k">in</span>
+<span class="linenos">17</span>  <span class="n">guard_tr</span><span class="o">(</span><span class="nc">SentPing</span><span class="o">?</span> <span class="n">st</span><span class="o">);*?</span>
+<span class="linenos">18</span>  <span class="kd">let</span> <span class="n">bob</span> <span class="o">=</span> <span class="o">(</span><span class="nc">SentPing</span><span class="o">?.</span><span class="n">ping</span> <span class="n">st</span><span class="o">).</span><span class="n">bob</span> <span class="k">in</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>  <span class="n">set_state</span> <span class="n">alice</span> <span class="n">sid</span> <span class="o">(</span><span class="nc">ReceivedAck</span> <span class="o">{</span><span class="n">bob</span><span class="o">;</span> <span class="n">n_a</span><span class="o">});*</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span>  <span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="n">sid</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><p>What are the arguments of the decryption function?</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">alice</span></code></p></li>
+<li><p>the session ID where Alice stores her private decryption keys</p></li>
+<li><p>the key tag defined in the <code class="docutils literal notranslate"><span class="pre">Data</span></code> module</p></li>
+<li><p>the wire-format ciphertext <code class="docutils literal notranslate"><span class="pre">msg</span></code></p></li>
+</ul>
+</div>
+</li>
+<li><p>Does the type of the protocol step need to change?</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>Yes. We need to add the private keys session ID as extra argument:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">receive_ack</span><span class="o">:</span>
+  <span class="n">principal</span> <span class="o">-&gt;</span> <span class="n">state_id</span> <span class="o">-&gt;</span> <span class="n">timestamp</span> <span class="o">-&gt;</span>
+  <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="n">state_id</span><span class="o">)</span>
+<span class="kd">let</span> <span class="n">receive_ack</span> <span class="n">alice</span> <span class="n">alice_private_keys_sid</span> <span class="n">ack_ts</span> <span class="o">=</span>
+  <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><p>Can we call the decryption function here and what <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span></code> should we use?</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>Yes. Since both decryption and the step are in the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> monad.
+We use <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*?</span></code>, as we want the whole step to fail if decryption fails.</p>
+<p>Line 6 changes to:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="n">ack</span> <span class="o">=</span> <span class="n">pke_dec_with_key_lookup</span> <span class="o">#</span><span class="n">message_t</span> <span class="n">alice</span> <span class="n">alice_private_keys_sid</span> <span class="n">key_tag</span> <span class="n">msg</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>We do not need to call parsing explicitly,
+as this is already part of decryption.</p>
+</div>
+</li>
+</ol>
+</div>
+<p>The final step of the Online? protocol looks like this
+(highlighting the changes to <code class="docutils literal notranslate"><span class="pre">receive_ack</span></code> from the Two-Message protocol):</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">val</span> <span class="n">receive_ack</span><span class="o">:</span>
+<span class="hll"><span class="linenos"> 2</span>  <span class="n">principal</span> <span class="o">-&gt;</span> <span class="n">state_id</span> <span class="o">-&gt;</span> <span class="n">timestamp</span> <span class="o">-&gt;</span>
+</span><span class="linenos"> 3</span>  <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="n">state_id</span><span class="o">)</span>
+<span class="hll"><span class="linenos"> 4</span><span class="kd">let</span> <span class="n">receive_ack</span> <span class="n">alice</span> <span class="n">alice_private_keys_sid</span> <span class="n">ack_ts</span> <span class="o">=</span>
+</span><span class="linenos"> 5</span>  <span class="kd">let</span><span class="o">*?</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">recv_msg</span> <span class="n">ack_ts</span> <span class="k">in</span>
+<span class="hll"><span class="linenos"> 6</span>  <span class="kd">let</span><span class="o">*?</span> <span class="n">ack</span> <span class="o">=</span> <span class="n">pke_dec_with_key_lookup</span> <span class="o">#</span><span class="n">message_t</span> <span class="n">alice</span> <span class="n">alice_private_keys_sid</span> <span class="n">key_tag</span> <span class="n">msg</span> <span class="k">in</span>
+</span><span class="linenos"> 7</span>  <span class="n">guard_tr</span> <span class="o">(</span><span class="nc">Ack</span><span class="o">?</span> <span class="n">ack</span><span class="o">);*?</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>  <span class="kd">let</span> <span class="nc">Ack</span> <span class="n">ack</span> <span class="o">=</span> <span class="n">ack</span> <span class="k">in</span>
+<span class="linenos">10</span>  <span class="kd">let</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">ack</span><span class="o">.</span><span class="n">n_a</span> <span class="k">in</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>  <span class="kd">let</span><span class="o">*?</span> <span class="o">(</span><span class="n">sid</span><span class="o">,</span> <span class="n">st</span><span class="o">)</span> <span class="o">=</span> <span class="n">lookup_state</span> <span class="o">#</span><span class="n">state_t</span> <span class="n">alice</span>
+<span class="linenos">13</span>    <span class="o">(</span><span class="k">fun</span> <span class="n">st</span> <span class="o">-&gt;</span>
+<span class="linenos">14</span>          <span class="nc">SentPing</span><span class="o">?</span> <span class="n">st</span>
+<span class="linenos">15</span>      <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="nc">SentPing</span><span class="o">?.</span><span class="n">ping</span> <span class="n">st</span><span class="o">).</span><span class="n">n_a</span> <span class="o">=</span> <span class="n">n_a</span>
+<span class="linenos">16</span>    <span class="o">)</span> <span class="k">in</span>
+<span class="linenos">17</span>  <span class="n">guard_tr</span><span class="o">(</span><span class="nc">SentPing</span><span class="o">?</span> <span class="n">st</span><span class="o">);*?</span>
+<span class="linenos">18</span>  <span class="kd">let</span> <span class="n">bob</span> <span class="o">=</span> <span class="o">(</span><span class="nc">SentPing</span><span class="o">?.</span><span class="n">ping</span> <span class="n">st</span><span class="o">).</span><span class="n">bob</span> <span class="k">in</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>  <span class="n">set_state</span> <span class="n">alice</span> <span class="n">sid</span> <span class="o">(</span><span class="nc">ReceivedAck</span> <span class="o">{</span><span class="n">bob</span><span class="o">;</span> <span class="n">n_a</span><span class="o">});*</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span>  <span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="n">sid</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>This concludes our model of the Online? protocol.
+Which is very similar to the model of the Two-Message protocol,
+with the new features of de- and encryption of messages.</p>
+</section>
+</section>
+<section id="an-example-protocol-run">
+<h2>An example protocol run<a class="headerlink" href="#an-example-protocol-run" title="Link to this heading"></a></h2>
+<p>To check that our model works as expected,
+we implement an example run,
+where Alice sends a Ping to Bob,
+Bob replies with an Ack
+and Alice receives the Ack and checks that she started a run with the received nonce for Bob.</p>
+<p>The general structure is the same as for the <a class="reference internal" href="modelling-protocols.html#sec-ex-run-two-message-implementation"><span class="std std-ref">Two-Message protocol</span></a>:
+we add a <code class="docutils literal notranslate"><span class="pre">Run</span></code> module in which we define a <code class="docutils literal notranslate"><span class="pre">run</span></code> function
+where we call the protocol steps in the right order passing on arguments as needed
+and finally print the trace.</p>
+<p>But since we now use de- and encryption in the protocol steps,
+we also need to take care of the key storage setup,
+which will be our main focus in this section.</p>
+<p>But first, let’s setup the example run module.</p>
+<section id="the-run-module">
+<h3>The <code class="docutils literal notranslate"><span class="pre">Run</span></code> module<a class="headerlink" href="#the-run-module" title="Link to this heading"></a></h3>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Setting up the <code class="docutils literal notranslate"><span class="pre">Run</span></code> module</p>
+<p>Follow the steps from <a class="reference internal" href="modelling-protocols.html#howto-modelling-protocols"><span class="std std-ref">How-To: Modelling a Protocol</span></a>
+to add a new <code class="docutils literal notranslate"><span class="pre">Run</span></code> module,
+add the <code class="docutils literal notranslate"><span class="pre">test</span></code> target to the <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>,
+implement an (empty) <code class="docutils literal notranslate"><span class="pre">run</span></code> function that is called when executing the module
+and in which the current trace is printed.</p>
+<p>Try your setup by running <code class="docutils literal notranslate"><span class="pre">make</span></code> followed by <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code>.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>The <code class="docutils literal notranslate"><span class="pre">Run</span></code> module:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nn">DY</span><span class="p">.</span><span class="nn">Online</span><span class="p">.</span><span class="nc">Run</span>
+
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Core</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Lib</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Simplified</span>
+
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nn">Online</span><span class="p">.</span><span class="nc">Data</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nn">Online</span><span class="p">.</span><span class="nc">Protocol</span>
+
+<span class="kd">let</span> <span class="n">run</span> <span class="bp">()</span> <span class="o">:</span> <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="kt">unit</span> <span class="o">)</span> <span class="o">=</span>
+  <span class="kd">let</span> <span class="n">_</span> <span class="o">=</span> <span class="nn">IO</span><span class="p">.</span><span class="n">debug_print_string</span> <span class="s2">&quot;************* Trace *************</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">in</span>
+
+  <span class="kd">let</span><span class="o">*</span> <span class="n">tr</span> <span class="o">=</span> <span class="n">get_trace</span> <span class="k">in</span>
+  <span class="kd">let</span> <span class="n">_</span> <span class="o">=</span> <span class="nn">IO</span><span class="p">.</span><span class="n">debug_print_string</span> <span class="o">(</span>
+      <span class="n">trace_to_string</span> <span class="n">default_trace_to_string_printers</span> <span class="n">tr</span>
+    <span class="o">)</span> <span class="k">in</span>
+
+  <span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="bp">()</span><span class="o">)</span>
+
+<span class="kd">let</span> <span class="n">_</span> <span class="o">=</span> <span class="n">run</span> <span class="bp">()</span> <span class="n">empty_trace</span>
+</pre></div>
+</div>
+<p>Add to the <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>:</p>
+<div class="highlight-Makefile notranslate"><div class="highlight"><pre><span></span><span class="nf">test</span><span class="o">:</span>
+<span class="w">        </span><span class="nb">cd</span><span class="w"> </span><span class="k">$(</span>TUTORIAL_HOME<span class="k">)</span>/obj<span class="p">;</span><span class="w"> </span><span class="k">$(</span>FSTAR_EXE<span class="k">)</span><span class="w"> </span>--ocamlenv<span class="w"> </span>ocamlbuild<span class="w"> </span>-use-ocamlfind<span class="w"> </span>-pkg<span class="w"> </span>batteries<span class="w"> </span>-pkg<span class="w"> </span>fstar.lib<span class="w"> </span>DY_Online_Run.native
+<span class="w">        </span><span class="k">$(</span>TUTORIAL_HOME<span class="k">)</span>/obj/DY_Online_Run.native
+</pre></div>
+</div>
+<p>Running <code class="docutils literal notranslate"><span class="pre">make</span></code> followed by <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code> produces several lines on the terminal
+where the final line is:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>************* Trace *************
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now that we have a working <code class="docutils literal notranslate"><span class="pre">Run</span></code> module,
+we will populate the <code class="docutils literal notranslate"><span class="pre">run</span></code> function.
+In the end, we want to call the protocol steps,
+so we have to define all necessary arguments for those calls.
+These arguments are</p>
+<ul class="simple">
+<li><p>the participants</p></li>
+<li><p>the key session IDs</p></li>
+</ul>
+<p>For the participants, we define constants</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">alice</span> <span class="o">=</span> <span class="s2">&quot;Alice&quot;</span> <span class="k">in</span>
+<span class="kd">let</span> <span class="n">bob</span> <span class="o">=</span> <span class="s2">&quot;Bob&quot;</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>just as in the example run of the Two-Message protocol.</p>
+<p>Let’s now take a closer look at
+how to setup the key storage for de- and encryption.</p>
+</section>
+<section id="setup-of-key-storage">
+<h3>Setup of Key Storage<a class="headerlink" href="#setup-of-key-storage" title="Link to this heading"></a></h3>
+<p>Recall the layout of key storage at the participants from <a class="reference internal" href="modelling-protocols.html#pke-key-storage-model"><span class="std std-ref">before</span></a>.
+For our example run of the Online? protocol,
+we want to have the following states after key storage setup:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Alice:
+  Session alice_private_keys_sid: {
+    &quot;Online.Key&quot; = alice_private_key
+  }
+  Session alice_public_keys_sid: {
+    (&quot;Online.Key&quot;, Bob) = bob_public_key
+  }
+</pre></div>
+</div>
+<p>Alice has one private key and one public key for Bob for the Online? protocol in her state.
+And similarly for Bob:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Bob:
+  Session bob_private_keys_sid: {
+    &quot;Online.Key&quot; = bob_private_key
+  }
+  Session bob_public_keys_sid: {
+    (&quot;Online.Key&quot;, Alice) = alice_public_key
+  }
+</pre></div>
+</div>
+<p>To achieve these state layouts,
+the setup consists of three phases for every participant:</p>
+<ol class="arabic simple">
+<li><p>Allocate sessions for the private and public keys.</p></li>
+<li><p>Generate and store own private keys.</p></li>
+<li><p>Retrieve and store public keys from other participants.</p></li>
+</ol>
+<section id="allocating-sessions-for-private-and-public-keys">
+<h4>1. Allocating sessions for private and public keys<a class="headerlink" href="#allocating-sessions-for-private-and-public-keys" title="Link to this heading"></a></h4>
+<p>In the first initialization step,
+we allocate new sessions at the participants
+for the private and public keys.
+These new sessions are initialized as empty dictionaries.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">DY.Lib</span></code> there are <code class="docutils literal notranslate"><span class="pre">initialize_*</span></code> functions
+that take as argument a participant
+and return the new session ID where the keys are to be stored.
+They are <code class="docutils literal notranslate"><span class="pre">traceful</span></code> functions that can not fail,
+since they just add new sessions to the state.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: Allocate key sessions for Alice</p>
+<p>For the private keys session of Alice we use <code class="docutils literal notranslate"><span class="pre">initialize_private_keys</span></code>:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="n">alice_private_keys_sid</span> <span class="o">=</span> <span class="n">initialize_private_keys</span> <span class="n">alice</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>and for the public keys session we use <code class="docutils literal notranslate"><span class="pre">initialize_pki</span></code>:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="n">alice_public_keys_sid</span> <span class="o">=</span> <span class="n">initialize_pki</span> <span class="n">alice</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>After these initialization steps the state of Alice looks like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Alice:
+  Session alice_private_keys_sid: { }
+  Session alice_public_keys_sid: { }
+</pre></div>
+</div>
+<p>Alice has two new sessions, each containing an empty dictionary.</p>
+</div>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Allocate key sessions for Bob</p>
+<p>Allocate new sessions for the private and public keys for Bob.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="n">bob_private_keys_sid</span> <span class="o">=</span> <span class="n">initialize_private_keys</span> <span class="n">bob</span> <span class="k">in</span>
+<span class="kd">let</span><span class="o">*</span> <span class="n">bob_public_keys_sid</span> <span class="o">=</span> <span class="n">initialize_pki</span> <span class="n">bob</span> <span class="k">in</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="generating-and-storing-private-keys">
+<h4>2. Generating and Storing private keys<a class="headerlink" href="#generating-and-storing-private-keys" title="Link to this heading"></a></h4>
+<p>Now that we know, <em>where</em> to store the private keys,
+we can actually generate and store them.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">DY.Simplified</span></code> there is a corresponding function:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">generate_private_pke_key</span><span class="o">:</span>
+  <span class="o">(</span><span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">alice_private_keys_sid</span><span class="o">:</span> <span class="n">state_id</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">key_tag</span><span class="o">:</span> <span class="kt">string</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="kt">unit</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>The function takes as arguments</p>
+<ul class="simple">
+<li><p>the participant to generate the private key for</p></li>
+<li><p>the session ID where the key should be stored, and</p></li>
+<li><p>the tag under which the key should be stored.</p></li>
+</ul>
+<p>It generates a new key and stores it under the given tag in the provided session ID of the participant.
+The step may fail,
+if the session at the provided ID is not a private key dictionary.</p>
+<p><span class="todo-inline">TODO: Explain why we use ;* and not ;*? here: It can fail but we don’t do anything different if it does.</span></p>
+<div class="admonition example">
+<p class="admonition-title">Example: Generate private key for Alice</p>
+<p>To generate the private key for the Online? protocol for Alice,
+we use the session ID that we just created in step 1.
+and the key tag specified in the <code class="docutils literal notranslate"><span class="pre">Data</span></code> module:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">generate_private_pke_key</span> <span class="n">alice</span> <span class="n">alice_private_keys_sid</span> <span class="n">key_tag</span><span class="o">;*</span>
+</pre></div>
+</div>
+<p>After this step, the state of Alice looks like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Alice:
+  Session alice_private_keys_sid: {
+    &quot;Online.Key&quot; = alice_private_key
+  }
+  Session alice_public_keys_sid: { }
+</pre></div>
+</div>
+</div>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Generate private key for Bob</p>
+<p>Generate a private key for the Online? protocol for Bob.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">generate_private_pke_key</span> <span class="n">bob</span> <span class="n">bob_private_keys_sid</span> <span class="n">key_tag</span><span class="o">;*</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="retrieving-and-storing-public-keys">
+<h4>3. Retrieving and Storing public keys<a class="headerlink" href="#retrieving-and-storing-public-keys" title="Link to this heading"></a></h4>
+<p>Now that both participants have a private key,
+we want to store the corresponding public keys
+at the other participant.</p>
+<p>Again, there is a corresponding function in <code class="docutils literal notranslate"><span class="pre">DY.Simplified</span></code>:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">install_public_pke_key</span><span class="o">:</span>
+  <span class="o">(</span><span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">alice_public_keys_sid</span><span class="o">:</span> <span class="n">state_id</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="o">(</span><span class="n">key_tag</span><span class="o">:</span> <span class="kt">string</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="o">(</span><span class="n">bob</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">bob_private_keys_sid</span><span class="o">:</span> <span class="n">state_id</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="kt">unit</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Let’s slowly go through the arguments of this function:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">alice</span></code> is the participant who wants to store the public key</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">alice_public_keys_sid</span></code> is the session ID (of the public keys session),
+where Alice wants to store the key</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">key_tag</span></code> is the tag of the key used</p>
+<ul>
+<li><p>as part of the lookup key in Alice’s public keys session for the new key</p></li>
+<li><p>to lookup the private key at Bob</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bob</span></code> is the participant whose public key should be stored</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bob_private_keys_sid</span></code> is the session ID of the private keys session of Bob,
+where he stores his private keys</p></li>
+</ul>
+<p>A call to the function</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">install_public_pke_key</span> <span class="n">alice</span> <span class="n">alice_public_keys_sid</span> <span class="n">key_tag</span> <span class="n">bob</span> <span class="n">bob_private_keys_sid</span>
+</pre></div>
+</div>
+<p>should be read as:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">alice</span></code> wants to store in her public keys session (with ID <code class="docutils literal notranslate"><span class="pre">alice_public_keys_sid</span></code>)
+under the lookup key pair <code class="docutils literal notranslate"><span class="pre">(key_tag,</span> <span class="pre">bob)</span></code>
+the public key related to the private key
+that <code class="docutils literal notranslate"><span class="pre">bob</span></code> stores in his private keys session <code class="docutils literal notranslate"><span class="pre">bob_private_keys_sid</span></code>
+under the same tag <code class="docutils literal notranslate"><span class="pre">key_tag</span></code>.</p>
+</div></blockquote>
+<div class="admonition example">
+<p class="admonition-title">Example: Storing Bob’s public key at Alice</p>
+<p>Assume that after generation of the private keys,
+the states of Alice and Bob look like the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Alice:
+  Session alice_private_keys_sid: {
+    &quot;Online.Key&quot; = alice_private_key
+  }
+  Session alice_public_keys_sid: { }
+
+State Bob:
+  Session bob_private_keys_sid: {
+      &quot;Online.Key&quot; = bob_private_key
+    , &quot;Other.Key&quot; = bob_other_private_key
+  }
+  Session bob_public_keys_sid: { }
+</pre></div>
+</div>
+<p>Alice has one private key for the Online? protocol,
+and Bob has two private keys: one for the Online? protocol
+and another one for some other protocol.</p>
+<p>If Alice wants to store the public key of Bob for the Online? protocol,
+she calls the <code class="docutils literal notranslate"><span class="pre">install_public_pke_key</span></code> function with the following arguments:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">install_public_pke_key</span> <span class="n">alice</span> <span class="n">alice_public_keys_sid</span> <span class="s2">&quot;Online.Key&quot;</span> <span class="n">bob</span> <span class="n">bob_private_keys_sid</span>
+</pre></div>
+</div>
+<p>After this call, Alice has one entry in her public keys session:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Alice:
+  Session alice_public_keys_sid: {
+    (&quot;Online.Key&quot;, Bob) = public key corresponding to bob_private_key
+  }
+</pre></div>
+</div>
+</div>
+<p>You may ask yourself at this point,
+what the value of the public key actually is and where it comes from.
+After all, so far we only generated <em>private</em> keys.
+At this point,
+it is enough to know that the public key can be computed from the corresponding private key.
+We don’t need to care about how exactly that works.
+Just remember:
+A public key is identified by its corresponding private key.</p>
+<div class="toggle-header docutils container">
+<p><strong>I want to know how it works.</strong></p>
+</div>
+<div class="toggle-content box docutils container">
+<p>Since we are in the <em>symbolic</em> world,
+the public keys are actually just defined by adding
+a “public key of” constructor to the private key.
+That is,
+the public key corresponding to the private key <code class="docutils literal notranslate"><span class="pre">private_key</span></code> is
+<code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">Pk</span> <span class="n">private_key</span></code>.</p>
+</div>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Storing Alice’s public key at Bob</p>
+<p>Store the public key of Alice at Bob.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">install_public_pke_key</span> <span class="n">bob</span> <span class="n">bob_public_keys_sid</span> <span class="n">key_tag</span> <span class="n">alice</span> <span class="n">alice_private_keys_sid</span><span class="o">;*</span>
+</pre></div>
+</div>
+<p>Note that here we use the constant <code class="docutils literal notranslate"><span class="pre">key_tag</span></code> defined in the <code class="docutils literal notranslate"><span class="pre">Data</span></code> module,
+in contrast to the explicit string <code class="code highlight fstar docutils literal highlight-fstar"><span class="s2">&quot;Online.Key&quot;</span></code> in the above example for Alice.
+Both is correct, but it is usually better to use the constants.</p>
+</div>
+</div>
+</section>
+<section id="summary-of-key-storage-setup">
+<h4>Summary of Key Storage Setup<a class="headerlink" href="#summary-of-key-storage-setup" title="Link to this heading"></a></h4>
+<p>This concludes setup of the key storage
+for our example run of the Online? protocol.
+Your <code class="docutils literal notranslate"><span class="pre">run</span></code> function should look like the following:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">run</span> <span class="bp">()</span> <span class="o">:</span> <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="kt">unit</span> <span class="o">)</span> <span class="o">=</span>
+  <span class="kd">let</span> <span class="n">_</span> <span class="o">=</span> <span class="nn">IO</span><span class="p">.</span><span class="n">debug_print_string</span> <span class="s2">&quot;************* Trace *************</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">in</span>
+
+  <span class="kd">let</span> <span class="n">alice</span> <span class="o">=</span> <span class="s2">&quot;Alice&quot;</span> <span class="k">in</span>
+  <span class="kd">let</span> <span class="n">bob</span> <span class="o">=</span> <span class="s2">&quot;Bob&quot;</span> <span class="k">in</span>
+
+  <span class="c">(*** key storage setup ***)</span>
+
+  <span class="kd">let</span><span class="o">*</span> <span class="n">alice_private_keys_sid</span> <span class="o">=</span> <span class="n">initialize_private_keys</span> <span class="n">alice</span> <span class="k">in</span>
+  <span class="kd">let</span><span class="o">*</span> <span class="n">alice_public_keys_sid</span> <span class="o">=</span> <span class="n">initialize_pki</span> <span class="n">alice</span> <span class="k">in</span>
+
+  <span class="kd">let</span><span class="o">*</span> <span class="n">bob_private_keys_sid</span> <span class="o">=</span> <span class="n">initialize_private_keys</span> <span class="n">bob</span> <span class="k">in</span>
+  <span class="kd">let</span><span class="o">*</span> <span class="n">bob_public_keys_sid</span> <span class="o">=</span> <span class="n">initialize_pki</span> <span class="n">bob</span> <span class="k">in</span>
+
+  <span class="n">generate_private_pke_key</span> <span class="n">alice</span> <span class="n">alice_private_keys_sid</span> <span class="n">key_tag</span><span class="o">;*</span>
+  <span class="n">generate_private_pke_key</span> <span class="n">bob</span> <span class="n">bob_private_keys_sid</span> <span class="n">key_tag</span><span class="o">;*</span>
+
+  <span class="n">install_public_pke_key</span> <span class="n">alice</span> <span class="n">alice_public_keys_sid</span> <span class="n">key_tag</span> <span class="n">bob</span> <span class="n">bob_private_keys_sid</span><span class="o">;*</span>
+  <span class="n">install_public_pke_key</span> <span class="n">bob</span> <span class="n">bob_public_keys_sid</span> <span class="n">key_tag</span> <span class="n">alice</span> <span class="n">alice_private_keys_sid</span><span class="o">;*</span>
+
+  <span class="kd">let</span><span class="o">*</span> <span class="n">tr</span> <span class="o">=</span> <span class="n">get_trace</span> <span class="k">in</span>
+  <span class="kd">let</span> <span class="n">_</span> <span class="o">=</span> <span class="nn">IO</span><span class="p">.</span><span class="n">debug_print_string</span> <span class="o">(</span>
+      <span class="n">trace_to_string</span> <span class="n">default_trace_to_string_printers</span> <span class="n">tr</span>
+    <span class="o">)</span> <span class="k">in</span>
+
+  <span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="bp">()</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>If you run <code class="docutils literal notranslate"><span class="pre">make</span></code> followed by <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code> now,
+you should see the following trace at the end of the output:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>************* Trace *************
+{&quot;TraceID&quot;: 0, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 0, &quot;Principal&quot;: &quot;Alice&quot;, &quot;Tag&quot;: &quot;DY.Lib.State.PrivateKeys&quot;, &quot;Content&quot;: &quot;[]&quot;}
+{&quot;TraceID&quot;: 1, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 1, &quot;Principal&quot;: &quot;Alice&quot;, &quot;Tag&quot;: &quot;DY.Lib.State.PKI&quot;, &quot;Content&quot;: &quot;[]&quot;}
+{&quot;TraceID&quot;: 2, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 0, &quot;Principal&quot;: &quot;Bob&quot;, &quot;Tag&quot;: &quot;DY.Lib.State.PrivateKeys&quot;, &quot;Content&quot;: &quot;[]&quot;}
+{&quot;TraceID&quot;: 3, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 1, &quot;Principal&quot;: &quot;Bob&quot;, &quot;Tag&quot;: &quot;DY.Lib.State.PKI&quot;, &quot;Content&quot;: &quot;[]&quot;}
+{&quot;TraceID&quot;: 4, &quot;Type&quot;: &quot;Nonce&quot;, &quot;Usage&quot;: {&quot;Type&quot;: &quot;PkeKey&quot;, &quot;Tag&quot;: &quot;Online.Key&quot;, &quot;Data&quot;: &quot;[Alice,]&quot;}}
+{&quot;TraceID&quot;: 5, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 0, &quot;Principal&quot;: &quot;Alice&quot;, &quot;Tag&quot;: &quot;DY.Lib.State.PrivateKeys&quot;, &quot;Content&quot;: &quot;[Online.Key = (Nonce #4),]&quot;}
+{&quot;TraceID&quot;: 6, &quot;Type&quot;: &quot;Nonce&quot;, &quot;Usage&quot;: {&quot;Type&quot;: &quot;PkeKey&quot;, &quot;Tag&quot;: &quot;Online.Key&quot;, &quot;Data&quot;: &quot;[Bob,]&quot;}}
+{&quot;TraceID&quot;: 7, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 0, &quot;Principal&quot;: &quot;Bob&quot;, &quot;Tag&quot;: &quot;DY.Lib.State.PrivateKeys&quot;, &quot;Content&quot;: &quot;[Online.Key = (Nonce #6),]&quot;}
+{&quot;TraceID&quot;: 8, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 1, &quot;Principal&quot;: &quot;Alice&quot;, &quot;Tag&quot;: &quot;DY.Lib.State.PKI&quot;, &quot;Content&quot;: &quot;[(Online.Key, Bob) = (Pk(sk=(Nonce #6))),]&quot;}
+{&quot;TraceID&quot;: 9, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 1, &quot;Principal&quot;: &quot;Bob&quot;, &quot;Tag&quot;: &quot;DY.Lib.State.PKI&quot;, &quot;Content&quot;: &quot;[(Online.Key, Alice) = (Pk(sk=(Nonce #4))),]&quot;}
+</pre></div>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Hints for reading the trace output</p>
+<ul class="simple">
+<li><p>Nonces are referred to by their creation time.
+As such we see <code class="docutils literal notranslate"><span class="pre">Nonce</span> <span class="pre">#ts</span></code>, where <code class="docutils literal notranslate"><span class="pre">ts</span></code> is the timestamp of creation.</p></li>
+<li><p>Dictionaries are represented as lists with entries <code class="docutils literal notranslate"><span class="pre">key</span> <span class="pre">=</span> <span class="pre">value</span></code>.</p></li>
+<li><p>Notation for a public key corresponding to a secret key is <code class="docutils literal notranslate"><span class="pre">Pk</span> <span class="pre">(sk</span> <span class="pre">=</span> <span class="pre">the_private_key)</span></code>.</p></li>
+</ul>
+</div>
+<p>Let’s look at the entries one by one:</p>
+<ul class="simple">
+<li><p><em>Trace entries 0 - 3</em> correspond to initialization of the key sessions for Alice and Bob.
+Both get two empty dictionaries in Sessions 0 and 1 for private and public keys respectively.</p></li>
+<li><p><em>Entries 4 + 5</em> show the generation (4) and storing (5) of Alice’s private key.</p>
+<ul>
+<li><p>Entry 4 reads: Created a new nonce that is to be used as private key with the tag “Online.Key” for Alice.</p></li>
+<li><p>Entry 5 shows Session 0 of Alice, where the new key (the nonce generated in Step 4) is stored under the tag “Online.Key”</p></li>
+</ul>
+</li>
+<li><p><em>Entries 6 + 7</em> show the generation (6) and storing (7) of Bob’s private key.</p></li>
+<li><p><em>Entry 8</em> shows storing of Bob’s public key in Alice’s public key session (Session 1).
+The dictionary now contains one entry with the lookup key “Online.Key” and “Bob”
+and the value is the public key corresponding to the nonce generated in Step 6, i.e., the private key of Bob.</p></li>
+<li><p><em>Entry 9</em> shows storing of Alice’s public key in Bob’s public key session.</p></li>
+</ul>
+</section>
+</section>
+<section id="how-to-setup-key-storage">
+<h3>How-To: Setup Key Storage<a class="headerlink" href="#how-to-setup-key-storage" title="Link to this heading"></a></h3>
+<p>We summarize the key setup for later reference:</p>
+<div class="admonition remember">
+<p class="admonition-title">How-To: Setup Key Storage</p>
+<ol class="arabic">
+<li><p>Allocate sessions for the private and public keys:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="n">alice_private_keys_sid</span> <span class="o">=</span> <span class="n">initialize_private_keys</span> <span class="n">alice</span> <span class="k">in</span>
+<span class="kd">let</span><span class="o">*</span> <span class="n">alice_public_keys_sid</span> <span class="o">=</span> <span class="n">initialize_pki</span> <span class="n">alice</span> <span class="k">in</span>
+</pre></div>
+</div>
+</li>
+<li><p>Generate and store own <em>private</em> keys:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">generate_private_pke_key</span> <span class="n">alice</span> <span class="n">alice_private_keys_sid</span> <span class="n">key_tag</span><span class="o">;*</span>
+</pre></div>
+</div>
+</li>
+<li><p>Retrieve and store <em>public</em> keys from other participants:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">install_public_pke_key</span> <span class="n">alice</span> <span class="n">alice_public_keys_sid</span> <span class="n">key_tag</span> <span class="n">bob</span> <span class="n">bob_private_keys_sid</span><span class="o">;*</span>
+</pre></div>
+</div>
+<p>(Public keys are identified by their corresponding private key.)</p>
+</li>
+</ol>
+</div>
+</section>
+<section id="the-actual-protocol-run">
+<h3>The actual protocol run<a class="headerlink" href="#the-actual-protocol-run" title="Link to this heading"></a></h3>
+<p>We now have all things set up to call the protocol steps in the <code class="docutils literal notranslate"><span class="pre">run</span></code> function.</p>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Call the protocol steps</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">run</span></code> function, call the protocol steps corresponding to a run
+where Alice sends a Ping to Bob, Bob replies with an Ack, and Alice receives the Ack.</p>
+<p>Carefully think about the needed arguments,
+in particular the keys session IDs.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="o">(</span><span class="n">alice_sid</span><span class="o">,</span> <span class="n">ping_ts</span><span class="o">)</span> <span class="o">=</span> <span class="n">send_ping</span> <span class="n">alice</span> <span class="n">bob</span> <span class="n">alice_public_keys_sid</span> <span class="k">in</span>
+<span class="kd">let</span><span class="o">*?</span> <span class="o">(</span><span class="n">bob_sid</span><span class="o">,</span> <span class="n">ack_ts</span><span class="o">)</span> <span class="o">=</span> <span class="n">receive_ping_and_send_ack</span> <span class="n">bob</span> <span class="n">bob_private_keys_sid</span> <span class="n">bob_public_keys_sid</span> <span class="n">ping_ts</span> <span class="k">in</span>
+<span class="n">receive_ack</span> <span class="n">alice</span> <span class="n">alice_private_keys_sid</span> <span class="n">ack_ts</span><span class="o">;*?</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Before calling <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code>,
+we again use a pretty printing function for the protocol messages and states:</p>
+<ul class="simple">
+<li><p>Download the <code class="docutils literal notranslate"><span class="pre">DY.Online.Run.Printing.fst</span></code> file from the <a class="reference external" href="https://github.com/REPROSEC/dolev-yao-star-tutorial-code/blob/main/examples/Online/DY.Online.Run.Printing.fst">Tutorial Repo on GitHub</a>,</p></li>
+<li><p>import the module in your <code class="docutils literal notranslate"><span class="pre">Run</span></code> module and</p></li>
+<li><p>change the default printers to <code class="docutils literal notranslate"><span class="pre">get_trace_to_string_printers</span></code></p></li>
+</ul>
+<p>so that printing is now:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">_</span> <span class="o">=</span> <span class="nn">IO</span><span class="p">.</span><span class="n">debug_print_string</span> <span class="o">(</span>
+    <span class="n">trace_to_string</span> <span class="n">get_trace_to_string_printers</span> <span class="n">tr</span>
+ <span class="o">)</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>If you run <code class="docutils literal notranslate"><span class="pre">make</span></code> followed by <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code> now,
+the output should end with the following trace
+which is quite long and we will go through it line by line:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>************* Trace *************
+{&quot;TraceID&quot;: 0, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 0, &quot;Principal&quot;: &quot;Alice&quot;, &quot;Tag&quot;: &quot;DY.Lib.State.PrivateKeys&quot;, &quot;Content&quot;: &quot;[]&quot;}
+{&quot;TraceID&quot;: 1, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 1, &quot;Principal&quot;: &quot;Alice&quot;, &quot;Tag&quot;: &quot;DY.Lib.State.PKI&quot;, &quot;Content&quot;: &quot;[]&quot;}
+{&quot;TraceID&quot;: 2, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 0, &quot;Principal&quot;: &quot;Bob&quot;, &quot;Tag&quot;: &quot;DY.Lib.State.PrivateKeys&quot;, &quot;Content&quot;: &quot;[]&quot;}
+{&quot;TraceID&quot;: 3, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 1, &quot;Principal&quot;: &quot;Bob&quot;, &quot;Tag&quot;: &quot;DY.Lib.State.PKI&quot;, &quot;Content&quot;: &quot;[]&quot;}
+{&quot;TraceID&quot;: 4, &quot;Type&quot;: &quot;Nonce&quot;, &quot;Usage&quot;: {&quot;Type&quot;: &quot;PkeKey&quot;, &quot;Tag&quot;: &quot;Online.Key&quot;, &quot;Data&quot;: &quot;[Alice,]&quot;}}
+{&quot;TraceID&quot;: 5, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 0, &quot;Principal&quot;: &quot;Alice&quot;, &quot;Tag&quot;: &quot;DY.Lib.State.PrivateKeys&quot;, &quot;Content&quot;: &quot;[Online.Key = (Nonce #4),]&quot;}
+{&quot;TraceID&quot;: 6, &quot;Type&quot;: &quot;Nonce&quot;, &quot;Usage&quot;: {&quot;Type&quot;: &quot;PkeKey&quot;, &quot;Tag&quot;: &quot;Online.Key&quot;, &quot;Data&quot;: &quot;[Bob,]&quot;}}
+{&quot;TraceID&quot;: 7, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 0, &quot;Principal&quot;: &quot;Bob&quot;, &quot;Tag&quot;: &quot;DY.Lib.State.PrivateKeys&quot;, &quot;Content&quot;: &quot;[Online.Key = (Nonce #6),]&quot;}
+{&quot;TraceID&quot;: 8, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 1, &quot;Principal&quot;: &quot;Alice&quot;, &quot;Tag&quot;: &quot;DY.Lib.State.PKI&quot;, &quot;Content&quot;: &quot;[(Online.Key, Bob) = (Pk(sk=(Nonce #6))),]&quot;}
+{&quot;TraceID&quot;: 9, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 1, &quot;Principal&quot;: &quot;Bob&quot;, &quot;Tag&quot;: &quot;DY.Lib.State.PKI&quot;, &quot;Content&quot;: &quot;[(Online.Key, Alice) = (Pk(sk=(Nonce #4))),]&quot;}
+{&quot;TraceID&quot;: 10, &quot;Type&quot;: &quot;Nonce&quot;, &quot;Usage&quot;: {&quot;Type&quot;: &quot;NoUsage&quot;}}
+{&quot;TraceID&quot;: 11, &quot;Type&quot;: &quot;Nonce&quot;, &quot;Usage&quot;: {&quot;Type&quot;: &quot;PkeNonce&quot;}}
+{&quot;TraceID&quot;: 12, &quot;Type&quot;: &quot;Message&quot;, &quot;Content&quot;: &quot;PkeEnc(pk=(Pk(sk=(Nonce #6))), nonce=(Nonce #11), msg=([Alice, [Nonce #10,]]))&quot;}
+{&quot;TraceID&quot;: 13, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 2, &quot;Principal&quot;: &quot;Alice&quot;, &quot;Tag&quot;: &quot;Online.State&quot;, &quot;Content&quot;: &quot;SentPing [n_a = (Nonce #10), to = (Bob)]&quot;}
+{&quot;TraceID&quot;: 14, &quot;Type&quot;: &quot;Nonce&quot;, &quot;Usage&quot;: {&quot;Type&quot;: &quot;PkeNonce&quot;}}
+{&quot;TraceID&quot;: 15, &quot;Type&quot;: &quot;Message&quot;, &quot;Content&quot;: &quot;PkeEnc(pk=(Pk(sk=(Nonce #4))), nonce=(Nonce #14), msg=( [Nonce #10,]))&quot;}
+{&quot;TraceID&quot;: 16, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 2, &quot;Principal&quot;: &quot;Bob&quot;, &quot;Tag&quot;: &quot;Online.State&quot;, &quot;Content&quot;: &quot;SentAck [n_a = (Nonce #10), to = (Alice)]&quot;}
+{&quot;TraceID&quot;: 17, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 2, &quot;Principal&quot;: &quot;Alice&quot;, &quot;Tag&quot;: &quot;Online.State&quot;, &quot;Content&quot;: &quot;ReceivedAck [n_a = (Nonce #10), from = (Bob)]&quot;}
+</pre></div>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Common Mistakes</p>
+<p>If you don’t see a trace in your output,
+one of the steps fails.
+Move around the trace printing part (including <code class="docutils literal notranslate"><span class="pre">get_trace</span></code>) and check which of the steps it is
+(the first one, for which you don’t see a trace after <code class="docutils literal notranslate"><span class="pre">make</span></code> + <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code>).
+Once you found the step, ask yourself:</p>
+<ul class="simple">
+<li><p>Did you use the right arguments for that step?</p></li>
+<li><p>Did you maybe swap private and public keys session IDs?</p></li>
+</ul>
+</div>
+<div class="toggle-header docutils container">
+<p><strong>A surprising Non-Mistake</strong></p>
+</div>
+<div class="toggle-content box docutils container">
+<p>The run in the current <code class="docutils literal notranslate"><span class="pre">run</span></code> function
+will be successful (i.e., you’ll see the correct trace)
+if you swapped Alice’s keys session IDs for Bob’s.
+For example, in the call to <code class="docutils literal notranslate"><span class="pre">receive_ack</span></code> you can use
+<code class="docutils literal notranslate"><span class="pre">bob_private_keys_sid</span></code> instead of <code class="docutils literal notranslate"><span class="pre">alice_private_keys_sid</span></code>.</p>
+<p>Why is that possible?
+In the <code class="docutils literal notranslate"><span class="pre">receive_ack</span></code> step, Alice needs to decrypt the Ack
+and hence is looking for a key with the “Online.Key” tag in the provided session,
+which is now seemingly Bob’s private key session.
+So apparently, Alice can decrypt a message encrypted for her using Bob’s private key.
+Is there a bug in DY*’s decryption?</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>Of course there is no bug in DY*’s decryption!</p>
+<p>The misleading part in the above argument is
+that we don’t provide sessions but session <strong>IDs</strong>.
+So Alice does not look for the key in Bob’s private keys session,
+instead she looks in her own state at the provided session <strong>ID</strong>.
+Since both <code class="docutils literal notranslate"><span class="pre">alice_private_keys_sid</span></code> and <code class="docutils literal notranslate"><span class="pre">bob_private_keys_sid</span></code> are 0 in our run,
+she looks for the private key in her own Session 0 in both cases.</p>
+<p><em>Lesson learned:</em>
+Session IDs are just numbers and a participant can only look at sessions in his own state.
+The same session ID may appear in the states of different participants,
+but probably with very different content related to it.</p>
+</div>
+</div>
+<p>Let’s now look at the trace entries:</p>
+<ul>
+<li><p><em>Entries 0-9</em> show the key storage setup that we previously saw.</p></li>
+<li><p><em>Entry 10 - 13</em> come from the first step of the protocol, where Alice generates a nonce <span class="math notranslate nohighlight">\(n_A\)</span>
+and sends this nonce together with her name to Bob.</p>
+<ul>
+<li><p><em>Entry 10</em> shows the generation of the nonce <span class="math notranslate nohighlight">\(n_A\)</span>
+<span class="todo-inline">TODO: what to say about the usage/type? Ideally, I want to avoid talking about this. But it is needed for private key generation (and maybe PkeNonces)</span></p></li>
+<li><p>Let’s now first look at <em>Entry 12</em>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{&quot;TraceID&quot;: 12, &quot;Type&quot;: &quot;Message&quot;, &quot;Content&quot;: &quot;PkeEnc(pk=(Pk(sk=(Nonce #6))), nonce=(Nonce #11), msg=([Alice, [Nonce #10,]]))&quot;}
+</pre></div>
+</div>
+<p>This is the encrypted message from Alice to Bob.</p>
+<ul class="simple">
+<li><p>At the very end we see the plaintext <code class="docutils literal notranslate"><span class="pre">msg=([Alice,</span> <span class="pre">[Nonce</span> <span class="pre">#10,]])</span></code>
+which is the message containing Alice’s name and the nonce <span class="math notranslate nohighlight">\(n_A\)</span> she generated at time 10.</p></li>
+<li><p>In the beginning of the message content we see <code class="docutils literal notranslate"><span class="pre">PkeEnc</span></code> which means that the plaintext is encrypted.</p></li>
+<li><p>The public encryption key that is used for this message,
+is given as we have seen previously: <code class="docutils literal notranslate"><span class="pre">pk=(Pk(sk=(Nonce</span> <span class="pre">#6)))</span></code>.
+It is the public key corresponding to the private key that was generated at time 6.
+If we look at the entry at time 6, we see that this is (as expected) the private key of Bob.</p></li>
+<li><p>We are left with the middle part <code class="docutils literal notranslate"><span class="pre">nonce=(Nonce</span> <span class="pre">#11)</span></code>.
+<span class="todo-inline">TODO: ideally i don’t want to talk about this nonce (and hence entry 11) at all</span></p></li>
+</ul>
+</li>
+<li><p><em>Entry 13</em> shows that Alice creates a new session with ID 2 for the protocol status,
+where she stores that she sent the Ping <span class="math notranslate nohighlight">\(n_A\)</span> (<code class="docutils literal notranslate"><span class="pre">Nonce</span> <span class="pre">#10</span></code>) to Bob.</p></li>
+</ul>
+</li>
+<li><p><em>Entries 14 - 16</em> come from the second protocol step,
+where Bob receives the Ping, and replies with an Ack.</p>
+<ul>
+<li><p><em>Entry 15</em> shows the encrypted Ack</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{&quot;TraceID&quot;: 15, &quot;Type&quot;: &quot;Message&quot;, &quot;Content&quot;: &quot;PkeEnc(pk=(Pk(sk=(Nonce #4))), nonce=(Nonce #14), msg=( [Nonce #10,]))&quot;}
+</pre></div>
+</div>
+<p>with</p>
+<ul class="simple">
+<li><p>the plaintext <code class="docutils literal notranslate"><span class="pre">msg=(</span> <span class="pre">[Nonce</span> <span class="pre">#10,])</span></code> being the nonce generated at time 10
+(the nonce <span class="math notranslate nohighlight">\(n_A\)</span>, Alice generated and sent to Bob in the Ping)</p></li>
+<li><p>the encryption key <code class="docutils literal notranslate"><span class="pre">pk=(Pk(sk=(Nonce</span> <span class="pre">#4)))</span></code> being the public key related to the private key generated at time 4
+(which is, as expected, the private key of Alice)</p></li>
+<li><p>the encryption nonce <code class="docutils literal notranslate"><span class="pre">nonce=(Nonce</span> <span class="pre">#14)</span></code> generated in the previous step (time 14)</p></li>
+</ul>
+</li>
+<li><p><em>Entry 16</em> shows the new session that Bob creates in the step,
+where he stores
+that he sent the Ack <span class="math notranslate nohighlight">\(n_A\)</span> (<code class="docutils literal notranslate"><span class="pre">Nonce</span> <span class="pre">#10</span></code>) to Alice.</p></li>
+</ul>
+</li>
+<li><p><em>Entry 17</em> shows the updated Session 2 of Alice, where she now stores
+that she received the Ack with <span class="math notranslate nohighlight">\(n_A\)</span> (<code class="docutils literal notranslate"><span class="pre">Nonce</span> <span class="pre">#10</span></code>) from Bob.</p></li>
+</ul>
+<p>So we see that our model of the Online? protocol
+seems to be correct.
+We can successfully model an example run,
+where everything works as expected.
+This concludes our model of the Online? protocol.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DY* Maintainer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

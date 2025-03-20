@@ -1,0 +1,75 @@
+options:
+  enumerate: "\\setcounter{protostep}{%d}\\protostep{ns-attack:%s} "
+  colsep: 0.3\linewidth
+  rowsep: 0.25ex
+  styles: []
+
+
+protocol:
+  !Protocol
+  parties:
+  - &Alice
+    !Party
+    name: Alice
+  - &Eve
+    !Party
+    name: Eve
+  - &Bob
+    !Party
+    name: Bob
+
+  steps:
+# Start Parties
+    - !Parallel
+      steps:
+        - !start-party
+          party: *Alice
+        - !start-party
+          party: *Eve
+        - !start-party
+          party: *Bob
+
+    - !action
+      party: *Alice
+      id: gen-nonce
+      label: Generate a new nonce $n_A$          
+    - !msg
+      src: *Alice
+      dest: *Eve
+      caption: $\{\text{Alice}, n_A\}^\text{a}_{k_\text{Eve}}$
+      id: msg1-a-e
+    - !msg
+      src: *Eve
+      dest: *Bob
+      caption: $\{\text{Alice}, n_A\}^\text{a}_{k_\text{Bob}}$
+    - !action
+      party: *Bob
+      id: gen-nonce
+      label: Generate a new nonce $n_B$          
+    - !msg
+      src: *Bob
+      dest: *Eve
+      caption: $\{n_A, n_B\}^\text{a}_{k_\text{Alice}}$
+      id: nonces-bob-eve
+    - !msg
+      src: *Eve
+      dest: *Alice
+      caption: $\{n_A, n_B\}^\text{a}_{k_\text{Alice}}$
+    - !msg
+      src: *Alice
+      dest: *Eve
+      caption: $\{n_B\}^\text{a}_{k_\text{Eve}}$
+    - !msg
+      src: *Eve
+      dest: *Bob
+      caption: $\{n_B\}^\text{a}_{k_\text{Bob}}$
+      
+# End Parties
+    - !Parallel
+      steps:
+        - !end-party
+          party: *Alice
+        - !end-party
+          party: *Bob
+        - !end-party
+          party: *Eve

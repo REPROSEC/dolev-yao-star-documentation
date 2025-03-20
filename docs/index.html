@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Security Analysis of Cryptographic Protocols with DY* &mdash; Security Analysis of Cryptographic Protocols with DY*  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/contentui.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/remember.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/example.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/exercise.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/infobox.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/box.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/todo.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/math.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/contentui.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            Security Analysis of Cryptographic Protocols with DY*
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#example-protocols">Example Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#main-concepts-in-dy">Main Concepts in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelling-protocols.html">Modelling Protocols in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stating-sec-props.html">Stating Security Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proof-method.html">Proving Security Properties</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Security Analysis of Cryptographic Protocols with DY*</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Security Analysis of Cryptographic Protocols with DY*</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="security-analysis-of-cryptographic-protocols-with-dy">
+<h1>Security Analysis of Cryptographic Protocols with DY*<a class="headerlink" href="#security-analysis-of-cryptographic-protocols-with-dy" title="Link to this heading"></a></h1>
+<p>DY* (pronounce as “D-Y Star”) is a formal verification framework for the symbolic analysis of cryptographic protocols.
+The name consists of “DY” which stands for the underlying Dolev-Yao Model
+and the star (*) referring to the programming language it is written in: <a class="reference external" href="https://fstar-lang.org/">F*</a>.</p>
+<p>The framework accounts for advanced protocol features
+like unbounded loops and mutable recursive data structures,
+as well as low-level implementation details like
+protocol state machines and message formats,
+which are often at the root of real-world attacks.</p>
+<p>DY* extends a long line of research on using dependent type systems for this task,
+but takes a fundamentally new approach by explicitly modeling the global trace-based semantics within the framework,
+hence bridging the gap between trace-based and type-based protocol analyses.
+This approach enables us to uniformly, precisely, and soundly model, for the first time using dependent types, long-lived mutable protocol state, equational theories, fine-grained dynamic corruption, and trace-based security properties like forward secrecy and post-compromise security.</p>
+<p>DY* is built as a library of F* modules that includes
+a model of low-level protocol execution,
+a Dolev-Yao symbolic attacker,
+and generic security abstractions and lemmas,
+all verified using F*.
+The library exposes a high-level API that facilitates succinct security proofs for protocol code.</p>
+<p>The code is available at <a class="reference external" href="https://github.com/REPROSEC/dolev-yao-star-extrinsic">GitHub</a>.</p>
+<p>In this document, we give a hands-on introduction to DY* as taught in a practical course for computer science students.</p>
+<p>A document containing more details on the technical concepts and underlying theory of DY* can be found at <span class="todo-inline">TODO: link to detailed technical doc</span>.
+The code examples used in this tutorial and all solutions can be found at <span class="todo-inline">TODO: link to GitHub Repo for this Tutorial</span>.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#example-protocols">Example Protocols</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#two-message-protocol">Two-message Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#online">Online?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#needham-schroeder-protocol">Needham - Schroeder Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#attack-on-ns-protocol">Attack on NS Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#needham-schroeder-lowe-protocol">Needham - Schroeder - Lowe Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#login">Login</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#main-concepts-in-dy">Main Concepts in DY*</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#communication-model">Communication Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#global-vs-local-view-on-protocols">Global vs Local View on Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#states">States</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#the-global-trace">The Global Trace</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#sending-and-receiving-of-messages">Sending and Receiving of Messages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#capabilities-of-honest-participants">Capabilities of Honest Participants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#attacker-capabilities">Attacker Capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#stating-security-properties">Stating Security Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#how-to-prepare-protocol-models-for-dy">How To: Prepare Protocol Models for DY*</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modelling-protocols.html">Modelling Protocols in DY*</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modelling-protocols.html#wire-format-and-abstract-formats-for-messages-and-sessions">Wire-format and Abstract Formats for Messages and Sessions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#abstract-formats-for-messages">Abstract Formats for Messages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#abstract-formats-for-states">Abstract Formats for States</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#translating-between-abstract-and-wire-format">Translating between Abstract and Wire-Format</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modelling-protocols.html#the-traceful-and-option-monads">The <code class="docutils literal notranslate"><span class="pre">traceful</span></code> and <code class="docutils literal notranslate"><span class="pre">option</span></code> Monads</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#the-traceful-monad">The <code class="docutils literal notranslate"><span class="pre">traceful</span></code> Monad</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#the-option-monad">The <code class="docutils literal notranslate"><span class="pre">option</span></code> Monad</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#the-traceful-option-monad">The <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> Monad</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#comparing-traceful-option-with-traceful">Comparing <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> with <code class="docutils literal notranslate"><span class="pre">traceful</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#combining-actions-from-different-monads">Combining actions from different Monads</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modelling-protocols.html#a-model-of-the-two-message-protocol">A Model of the Two-Message Protocol</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#setup">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#the-abstract-message-and-state-types">The abstract message and state types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#the-protocol-steps">The protocol steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#an-example-protocol-run">An Example Protocol Run</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modelling-protocols.html#how-to-modelling-a-protocol-in-dy">How To: Modelling a Protocol in DY*</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modelling-protocols.html#a-model-of-the-online-protocol">A Model of the Online? Protocol</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#public-key-encryption-in-dy">Public Key Encryption in DY*</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#id12">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#the-data-module">The <code class="docutils literal notranslate"><span class="pre">Data</span></code> module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#id17">The protocol steps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modelling-protocols.html#id19">An example protocol run</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modelling-protocols.html#a-first-implementation-of-nsl">A First Implementation of NSL</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="stating-sec-props.html">Stating Security Properties</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="stating-sec-props.html#attacker-knowledge-and-corruption">Attacker Knowledge and Corruption</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stating-sec-props.html#attacker-knowledge">Attacker Knowledge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stating-sec-props.html#corruption">Corruption</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stating-sec-props.html#secrecy">Secrecy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stating-sec-props.html#authentication">Authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stating-sec-props.html#how-to-state-security-properties-in-dy">How To: State Security Properties in DY*</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="proof-method.html">Proving Security Properties</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="proof-method.html#the-proof">The Proof</a></li>
+<li class="toctree-l2"><a class="reference internal" href="proof-method.html#labeling-system">Labeling System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="proof-method.html#trace-invariants">Trace Invariants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="proof-method.html#proof-of-secrecy-for-online-protocol">Proof of Secrecy for Online? Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="proof-method.html#proof-of-responder-authentication-for-online-protocol">Proof of Responder Authentication for Online? Protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="proof-method.html#proving-security-properties-for-nsl">Proving Security Properties for NSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="proof-method.html#how-to-prove-security-properties-in-dy">How To: Prove Security Properties in DY*</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DY* Maintainer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

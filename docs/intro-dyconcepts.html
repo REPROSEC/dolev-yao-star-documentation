@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Main Concepts in DY* &mdash; Security Analysis of Cryptographic Protocols with DY*  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/contentui.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/remember.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/example.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/exercise.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/infobox.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/box.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/todo.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/math.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/contentui.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Security Analysis of Cryptographic Protocols with DY*
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#example-protocols">Example Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#main-concepts-in-dy">Main Concepts in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelling-protocols.html">Modelling Protocols in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stating-sec-props.html">Stating Security Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proof-method.html">Proving Security Properties</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Security Analysis of Cryptographic Protocols with DY*</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Main Concepts in DY*</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/intro-dyconcepts.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="main-concepts-in-dy">
+<span id="sec-main-concepts-dystar"></span><h1>Main Concepts in DY*<a class="headerlink" href="#main-concepts-in-dy" title="Link to this heading"></a></h1>
+<section id="communication-model">
+<h2>Communication Model<a class="headerlink" href="#communication-model" title="Link to this heading"></a></h2>
+<p>In the Dolev-Yao model, sending and receiving of messages is asynchronous. A message from
+<span class="math notranslate nohighlight">\(A\)</span> to <span class="math notranslate nohighlight">\(B\)</span> is not sent directly from <span class="math notranslate nohighlight">\(A\)</span> to <span class="math notranslate nohighlight">\(B\)</span>,
+instead <span class="math notranslate nohighlight">\(A\)</span> hands the message to the (delivery) network, who takes
+care of delivering the message to <span class="math notranslate nohighlight">\(B\)</span> at some later point. Think
+of this in the same way a letter is delivered: If Alice sends a letter
+to Bob, she puts the letter in a post box, handing it to the postal
+service who delivers the letter to Bob’s letter box.</p>
+<p>In this asynchronous model, the delivery network plays a central role in
+scheduling the delivery of messages and delivering messages to their
+intended receivers.</p>
+<p>If we look at the descriptions of our example protocols in
+<a class="reference internal" href="introduction.html#sec-intro-examples"><span class="std std-ref">Example Protocols</span></a>, they are given as
+a sequence of messages sent from one participant to another. But since
+we use asynchronous communication in DY* we need to reformulate these
+descriptions to match the communication model.</p>
+<p>We split each communication via a message into two steps:
+a send step and a <em>receive-react</em> step.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: Asynchronous Description of Two-Message Protocol</p>
+<p>A description of the Two-message protocol (see <a class="reference internal" href="introduction.html#sec-intro-twomessagep"><span class="std std-ref">Two-message Protocol</span></a>)
+in the asynchronous communication model is as follows:</p>
+<ol class="arabic">
+<li><p><em>Initiate flow and send first message:</em></p>
+<p>Alice generates a nonce
+<span class="math notranslate nohighlight">\(n_A\)</span> and sends it together with her name to Bob</p>
+</li>
+<li><p><em>Receive first message and send second message:</em></p>
+<p>Bob receives the
+nonce <span class="math notranslate nohighlight">\(n_A\)</span> from Alice and sends it back to Alice</p>
+</li>
+<li><p><em>Receive last message:</em></p>
+<p>Alice receives <span class="math notranslate nohighlight">\(n_A\)</span> from Bob and
+finishes the protocol flow</p>
+</li>
+</ol>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Example: Asynchronous Description of Online? Protocol</p>
+<p>A description of the Online? protocol (see <a class="reference internal" href="introduction.html#sec-intro-online"><span class="std std-ref">Online?</span></a>) in the asynchronous
+communication model:</p>
+<ol class="arabic">
+<li><p><em>Initiate flow and send first message:</em></p>
+<p>Alice generates a nonce
+<span class="math notranslate nohighlight">\(n_A\)</span>, encrypts the nonce together with her name for Bob,
+and sends the message to Bob</p>
+</li>
+<li><p><em>Receive first message and send second message:</em></p>
+<p>Bob receives the
+nonce <span class="math notranslate nohighlight">\(n_A\)</span> from Alice, encrypts it for Alice and sends it
+back to Alice</p>
+</li>
+<li><p><em>Receive last message:</em></p>
+<p>Alice receives <span class="math notranslate nohighlight">\(n_A\)</span> from Bob and
+finishes the protocol flow</p>
+</li>
+</ol>
+</div>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Asynchronous Description of Needham-Schroeder Protocol</p>
+<p>Adapt the description of the Needham-Schroeder
+protocol from <a class="reference internal" href="introduction.html#sec-intro-ns"><span class="std std-ref">Needham - Schroeder Protocol</span></a> to
+match the asynchronous communication model.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<ol class="arabic">
+<li><p><em>Initiate flow and send first message:</em></p>
+<p>Alice generates a nonce
+<span class="math notranslate nohighlight">\(n_A\)</span> and sends it (together with her name) encrypted for
+Bob</p>
+</li>
+<li><p><em>Receive first message and send second message:</em></p>
+<p>Bob receives the
+nonce <span class="math notranslate nohighlight">\(n_A\)</span> from Alice, generates a new nonce <span class="math notranslate nohighlight">\(n_B\)</span>
+and sends both nonces encrypted for Alice</p>
+</li>
+<li><p><em>Receive second message and send third message:</em></p>
+<p>Alice receives
+the two nonces <span class="math notranslate nohighlight">\(n_A\)</span> and <span class="math notranslate nohighlight">\(n_B\)</span> from Bob and sends back
+<span class="math notranslate nohighlight">\(n_B\)</span> encrypted for Bob</p>
+</li>
+<li><p><em>Receive last message:</em></p>
+<p>Bob receives <span class="math notranslate nohighlight">\(n_B\)</span> and finishes the
+protocol flow</p>
+</li>
+</ol>
+</div>
+</div>
+</section>
+<section id="global-vs-local-view-on-protocols">
+<h2>Global vs Local View on Protocols<a class="headerlink" href="#global-vs-local-view-on-protocols" title="Link to this heading"></a></h2>
+<p>A second point where the intuitive description of a protocol differs
+from the model in , is that the <em>order</em> of the protocol steps is <em>not</em>
+part of the model. Whereas in <a class="reference internal" href="introduction.html#sec-intro-examples"><span class="std std-ref">Example Protocols</span></a> we describe <em>one</em>
+flow of a protocol with a fixed sequence of messages, in we want to
+model arbitrarily <em>many</em>, possibly <em>interleaving</em> flows running in
+parallel. For this we model each receive-react step from the previous
+subsection separately, allowing steps to be executed at any time
+(possibly in different flows).</p>
+<p>Following this approach we need to think of how to identify flows and
+keep track of their state. If we just had the receive-react steps of the
+Needham-Schroeder protocol as in the previous subsection, we could, for
+example, send several messages to Alice including two nonces, and Alice
+would reply to all of those. However, this does not correctly model the
+NS protocol. Alice should only react to such a message, if she
+previously initiated a flow with one of the nonces. We resolve this
+issue by tracking the state of protocol flows <em>locally</em> at every
+participant. In our example, Alice would keep track of flows she
+initiated and respond to a message with two nonces, only if she has a
+corresponding ongoing flow.</p>
+<p>This is in contrast to the intuitive description of protocols as in <a class="reference internal" href="introduction.html#sec-intro-examples"><span class="std std-ref">Example Protocols</span></a>,
+where the state of flows is tracked <em>globally</em> by the specified sequence of messages.</p>
+<div class="admonition example" id="example-twomessage-localview">
+<p class="admonition-title">Example: Local View of Two-Message Protocol</p>
+<p>We adapt our description of the Two-message protocol from
+<a class="reference internal" href="introduction.html#sec-intro-twomessagep"><span class="std std-ref">Two-message Protocol</span></a> to match the local
+view on the protocol used in DY*.</p>
+<p>To keep track of the state of protocol
+flows, we store successful completion of each step.
+We identify a flow</p>
+<ul class="simple">
+<li><p>at the initiator by the nonce contained in the first message and
+the peer it is sent to, and</p></li>
+<li><p>at the responder by the nonce received in
+the initial message and the peer it received the message from.</p></li>
+</ul>
+<p>With this we adapt the receive-react steps from the previous example as follows:</p>
+<ul>
+<li><p><em>Initiate flow and send first message:</em></p>
+<p>Alice generates a nonce
+<span class="math notranslate nohighlight">\(n_A\)</span> and sends it together with her name to Bob.</p>
+<p>She stores that she initiated a flow with Bob using <span class="math notranslate nohighlight">\(n_A\)</span>.</p>
+</li>
+<li><p><em>Receive first message and send second message:</em></p>
+<p>Bob receives a message of the form <span class="math notranslate nohighlight">\((n_A, \text{Alice})\)</span>.
+He sends the nonce <span class="math notranslate nohighlight">\(n_A\)</span> back to Alice.</p>
+<p>Bob stores that he received <span class="math notranslate nohighlight">\(n_A\)</span> in a first message from Alice
+and replied.</p>
+</li>
+<li><p><em>Receive last message:</em></p>
+<p>Alice receives a nonce <span class="math notranslate nohighlight">\(n_A\)</span>.</p>
+<p>If she previously initiated a flow using <span class="math notranslate nohighlight">\(n_A\)</span>, she
+stores that she received a response and finishes this
+protocol flow.</p>
+</li>
+</ul>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Example: Local View of Online? Protocol</p>
+<p>We get the local view description of the Online? protocol from
+<a class="reference internal" href="introduction.html#sec-intro-online"><span class="std std-ref">Online?</span></a> in the same
+way as for the two-message protocol.</p>
+</div>
+<div class="admonition exercise" id="exercise-local-view-ns">
+<p class="admonition-title">Exercise: Local View of Needham-Schroeder Protocol</p>
+<p>Adapt the description of the
+Needham-Schroeder protocol in <a class="reference internal" href="introduction.html#sec-intro-ns"><span class="std std-ref">Needham - Schroeder Protocol</span></a> to match the local
+view on the protocol used in .</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>To keep track of the state of protocol
+flows, we store successful completion of each step. We identify a
+flow at the initiator by the nonce contained in the first message and
+the peer it is sent to, and at the responder by the two nonces sent
+in response to the initial message.</p>
+<ul>
+<li><p><em>Initiate flow and send first message:</em></p>
+<p>Alice generates a nonce
+<span class="math notranslate nohighlight">\(n_A\)</span> and sends it encrypted for Bob.</p>
+<p>She stores that she
+initiated a flow with Bob using <span class="math notranslate nohighlight">\(n_A\)</span>.</p>
+</li>
+<li><p><em>Receive first message and send second message:</em></p>
+<p>Bob receives a message of the form <span class="math notranslate nohighlight">\((n_A, \text{Alice})\)</span>.
+He generates a new nonce <span class="math notranslate nohighlight">\(n_B\)</span>
+and sends both nonces encrypted for Alice.</p>
+<p>Bob stores that he
+received a first message from Alice and replied with <span class="math notranslate nohighlight">\(n_A\)</span> and
+<span class="math notranslate nohighlight">\(n_B\)</span>.</p>
+</li>
+<li><p><em>Receive second message and send third message:</em></p>
+<p>Alice receives two nonces <span class="math notranslate nohighlight">\(n_A\)</span> and <span class="math notranslate nohighlight">\(n_B\)</span>.</p>
+<p>If she previously
+initiated a flow using <span class="math notranslate nohighlight">\(n_A\)</span> with a corresponding Bob,
+she sends back
+<span class="math notranslate nohighlight">\(n_B\)</span> encrypted for Bob and stores that she received two
+nonces and replied.</p>
+</li>
+<li><p><em>Receive last message:</em></p>
+<p>Bob receives a nonce <span class="math notranslate nohighlight">\(n_B\)</span>.</p>
+<p>If he previously
+received a first message and replied with <span class="math notranslate nohighlight">\(n_B\)</span>, he finishes the
+protocol flow.</p>
+</li>
+</ul>
+</div>
+</div>
+<p>A key task when modeling protocols in the local view, is to figure out
+what information is needed at each participant to continue with
+subsequent steps.</p>
+<p>For example, consider the “Initiate Flow” step above.
+The first idea might have been to just store the nonce <span class="math notranslate nohighlight">\(n_A\)</span> at
+Alice. But, when she later receives the response, she needs to send the
+third message with <span class="math notranslate nohighlight">\(n_B\)</span> to someone. Recall that in the
+asynchronous communication model, she does not get information about the
+sender of the second message. So she can not directly reply. Thus, she
+needs to store who she sent the initial message to, to now send the
+third message to the same participant.</p>
+<div class="admonition remember">
+<p class="admonition-title">Remember</p>
+<p>A protocol model in DY*</p>
+<ul class="simple">
+<li><p>… is split into several receive-react steps.</p></li>
+<li><p>… does not contain information about the <em>order</em> of these steps.</p></li>
+</ul>
+<p>So don’t think of the <em>global</em> protocol flow as given in an intuitive
+description, but rather think of each receive-react step <em>locally</em> at
+each participant.</p>
+</div>
+<p>We will now take a closer look at the main concepts used in DY* for tracking
+the state of protocol flows and sending and receiving of messages.</p>
+</section>
+<section id="states">
+<span id="sec-intro-states"></span><h2>States<a class="headerlink" href="#states" title="Link to this heading"></a></h2>
+<p>To store information locally, every participant has a <em>state</em>.
+This state consists of several <em>sessions</em>
+that contain some information.</p>
+<p>In the simplest case,
+one session in a state corresponds to
+one run of a protocol.</p>
+<div class="admonition example" id="ex-states-twomessage">
+<p class="admonition-title">Example: States in <em>one</em> run of the Two-Message Protocol</p>
+<p>We look at the states of Alice and Bob
+in one run of the Two-Message protocol.</p>
+<p>When Alice initiated a run her state looks like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Alice:
+  Session 0: SentPing n_A to Bob
+</pre></div>
+</div>
+<p>There is one session where she stores the status of the protocol
+run.
+Here she stores that she initiated a run
+with Bob sending the nonce <span class="math notranslate nohighlight">\(n_A\)</span>.</p>
+<p>When Bob received such a ping and replied, his state looks like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Bob:
+  Session 0: SentAck n_A to Alice
+</pre></div>
+</div>
+<p>He also has one session for keeping track of the protocol status.</p>
+<p>Finally, when Alice received the Ack of Bob, her state changes to:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Alice:
+  Session 0: ReceivedAck n_A from Bob
+</pre></div>
+</div>
+<p>In this case, Alice considers Session 0 to be finished.</p>
+</div>
+<p>To illustrate the concept of
+one session per run at each participant even more,
+we look at a slightly more complex example,
+where we consider several <em>interleaving</em> runs
+of the Two-Message protocol.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: States in <em>interleaving</em> runs of the Two-Message Protocol</p>
+<p>Alice, Bob and Charlie are running several runs
+of the Two-Message Protocol in parallel.
+These runs are stored in different sessions in their states.</p>
+<p>At some point, their states could look like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Alice:
+  Session 0: ReceivedAck n_A1 from Bob
+  Session 1: SentPing n_A2 to Bob
+  Session 2: SentPing n_A3 to Charlie
+
+State Bob:
+  Session 0: SentPing n_B1 to Charlie
+  Session 1: SentAck n_A1 to Alice
+
+State Charlie:
+  Session 0: SentAck n_A3 to Alice
+  Session 1: SentAck n_B1 to Bob
+</pre></div>
+</div>
+<p>At this point, we have the following situation:</p>
+<ul class="simple">
+<li><p>Alice has 3 ongoing runs of the protocol:</p>
+<ul>
+<li><p>in Session 0 she finished a run with Bob</p></li>
+<li><p>in Sessions 1 and 2, she initiated two more runs
+with Bob and Charlie resp.</p></li>
+</ul>
+</li>
+<li><p>Bob has 2 ongoing runs:</p>
+<ul>
+<li><p>in Session 0 he initiated a run with Charlie</p></li>
+<li><p>in Session 1 he replied to Alice
+(this corresponds to Alice’s Session 0
+since they are both identified by the nonce <span class="math notranslate nohighlight">\(n_{A1}\)</span>)</p></li>
+</ul>
+</li>
+<li><p>Charlie has also 2 ongoing runs:</p>
+<ul>
+<li><p>in Session 0 he replied to Alice
+(which in turn correspond to
+Alice’s Session 2 (<span class="math notranslate nohighlight">\(n_{A3}\)</span>))</p></li>
+<li><p>in Session 1 he replied to Bob
+(corresponding to Bob’s Session 0 (<span class="math notranslate nohighlight">\(n_{B1}\)</span>))</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>In the simple Two-Message protocol,
+we only have sessions keeping track of protocol runs.
+However, sessions can also be used to store
+global information at a participant that is independent of
+the individual protocol runs.
+Such global information are for example
+private keys for decryption and public encryption keys.
+We see this in the Online? protocol:</p>
+<div class="admonition example" id="ex-online-global-sessions-for-keys">
+<p class="admonition-title">Example: Sessions with global Information in the Online? Protocol</p>
+<p>After the first step of one run of the Online? protocol,
+Alice’s state looks like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Alice:
+  Session 0: private decryption key k_A
+  Session 1: public encryption key pk_B of Bob
+  Session 2: SentPing n_A to Bob
+</pre></div>
+</div>
+<p>We see, that Session 2 is the session keeping track of the
+protocol run. Just as in the previous examples for the Two-Message protocol.</p>
+<p>New are the first two sessions that now store some global information:
+Session 0 contains Alice’s private decryption key <span class="math notranslate nohighlight">\(k_A\)</span>
+and Session 1 a public encryption key <span class="math notranslate nohighlight">\(k_B\)</span> for Bob.</p>
+<p>The state of Bob at the same time (before receiving the first message from Alice) is:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Bob:
+  Session 0: private decryption key k_B
+  Session 1: public encryption key pk_A of Alice
+</pre></div>
+</div>
+<p>He just stores his private key and the public key of Alice.</p>
+</div>
+<p>To keep track of the current state of a protocol run,
+participants need to be able to <em>update</em> existing sessions.
+Consider the previous example:
+When Alice receives the Ack from Bob,
+she needs to update her Session 2 to store this progress in the run.</p>
+<p>On the other hand, participants must also be able to <em>create</em> new sessions.
+Again, in the previous example, we see that Bob
+does not yet have any session for the started run.
+Once he receives the Ping from Alice and replies with an Ack,
+he needs to store the progress of the run.
+So he must be able to create a new session.</p>
+<p>And indeed, these are the two operations on session that are available:</p>
+<ul class="simple">
+<li><p>add a new session to a state</p></li>
+<li><p>update an existing session</p></li>
+</ul>
+<p>Comparing the different sessions for protocol runs and global information
+in terms of how often they are upated,
+we observe,
+that we update protocol sessions frequently,
+usually after every protocol step of the participant.
+In contrast, the sessions containing global information
+are mostly set up at the very beginning and don’t change after that.</p>
+<p>This intuition of one session per protocol run that is updated after every protocol step and some sessions for global information that are only set up in the beginning is sufficient for now.</p>
+<div class="admonition remember">
+<p class="admonition-title">Remember</p>
+<p>A session in a state of a principal can store</p>
+<ul class="simple">
+<li><p>global information like private or public keys</p></li>
+<li><p>the current state of a protocol run</p></li>
+</ul>
+<p>New sessions can be added to a state
+and existing sessions can be updated.</p>
+</div>
+<p>You should now be able to explain how the states of Alice and Bob look like in a run of the Needham-Schroeder protocol:</p>
+<div class="admonition exercise" id="ex-states-ns">
+<p class="admonition-title">Exercise: States in the Needham-Schroeder Protocol</p>
+<p>How do the states of Alice and Bob look like in a run of the Needham-Shroeder
+protocol?</p>
+<p>Show them at the beginning of the run, and after each protocol step.
+Look back at <a class="reference internal" href="introduction.html#exercise-local-view-ns"><span class="std std-ref">Exercise: Local View of Needham-Shroeder</span></a> to recall the information that needs to be stored in the states.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>The initial states of Alice and Bob
+before the run begins,
+just contain the corresponding private and public keys:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Alice:
+  Session 0: private decryption key k_A
+  Session 1: public encryption key pk_B of Bob
+
+State Bob:
+  Session 0: private decryption key k_B
+  Session 1: public encryption key pk_A of Alice
+</pre></div>
+</div>
+<p>After Alice started the run,
+she adds a new session for the state of this run:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Alice:
+  ...
+  Session 2: SentMsg1 n_A to Bob
+</pre></div>
+</div>
+<p>When Bob replied to this 1st message,
+he also creates a new session:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Bob:
+  ...
+  Session 2: SentMsg2 (n_A, n_B) to Alice
+</pre></div>
+</div>
+<p>When Alice receives this response and
+in turn responded with the last message,
+she updates Session 2:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Alice:
+  ...
+  Session 2: The run for (n_A, n_B) with Bob has finished
+    and I sent Msg3 n_b to Bob
+</pre></div>
+</div>
+<p>And finally, after Bob received this message,
+he also updates his session for this run:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>State Bob:
+  ...
+  Session 2: The run for (n_A, n_B) with Alice has finished
+    as I received Msg3 (n_B) from Alice
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-global-trace">
+<span id="sec-intro-trace"></span><h2>The Global Trace<a class="headerlink" href="#the-global-trace" title="Link to this heading"></a></h2>
+<p>The overall state of the system, including all messages sent so far and
+the states of participants across all parallel flows, are captured on
+<strong>the trace</strong>, which is a log of observable protocol actions. The trace is
+an ordered collection of <strong>entries</strong> of the following types:</p>
+<ul class="simple">
+<li><p><strong>messages</strong> sent between participants</p></li>
+<li><p><strong>states</strong> of participants</p></li>
+<li><p><strong>events</strong> logged by participants (for example, “Alice initiated a flow
+with Bob”)</p></li>
+<li><p>generation of <strong>random values</strong> (for example, keys and nonces)</p></li>
+<li><p><strong>corruption</strong> (more on the attacker model and corruption later)</p></li>
+</ul>
+<p>Since the trace acts as a log, entries can only be <em>appended</em> to the end
+of the trace, but not removed from the trace or changed later on.</p>
+<div class="admonition example" id="ex-run-two-messagep">
+<p class="admonition-title">Example: Trace of Run of Two-Message Protocol</p>
+<p>The trace after a successful run of the Two-Message protocol
+looks like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1. Generate nonce n_A
+2. Message: Ping (Alice, n_A)
+3. Session 0 of Alice: SentPing n_A to Bob
+4. Message: Ack n_A
+5. Session 0 of Bob: SentAck n_A to Alice
+6. Session 0 of Alice: ReceivedAck n_A from Bob
+</pre></div>
+</div>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Example: Key Setup for Online? Protocol</p>
+<p>The key setup phase for the Online? Protocol
+is captured on the trace like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1. Generate private key k_A for Alice
+// Alice stores this private key
+2. Session 0 of Alice: Private Key k_A
+
+3. Generate private key k_B for Bob
+// Bob stores his private key
+4. Session 0 of Bob: Private Key k_B
+
+// Alice stores the public key of Bob
+5. Session 1 of Alice: Public Key pk_B of Bob
+// Bob stores the public key of Alice
+6. Session 1 of Bob: Public Key pk_A of Alice
+</pre></div>
+</div>
+</div>
+<p>Observe from the previous example,
+that a trace entry only contains <em>one</em> action and not the complete global
+state where relevant parts are updated.
+In particular for states that means that
+a trace entry contains only one state (<span class="todo-inline">TODO: state vs session vs version: What terms to use?</span>),
+and not the full state of a principal.
+For example, in Step 5, Alice adds a new Session 1 to her state.
+The corresponding trace entry captures only the new state,
+and not the <em>full</em> state of Alice.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: Trace for Attack on Needham-Schroeder Protocol</p>
+<p>The beginning of the trace corresponding to the attack flow for the
+Needham-Schroeder protocol looks like this (simplified):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>// Setup Phase: Key generation and compromising Eve
+0.  Generate a private decryption key for Alice
+1.  Store the private key in Alice&#39;s state
+2.  + 3. Generate and store a private decryption key for Bob
+4.  + 5. Generate and store a private decryption key for Eve
+6.  Compromise the state session where Eve stores her private key
+7.  Store the public encryption key of Alice in Bob&#39;s state
+8.  Store the public encryption key of Bob in Eve&#39;s state
+9.  Store the public encryption key of Eve in Alice&#39;s state
+10. Compromise the state session where Eve stores Alice&#39;s encryption key
+
+// Actual Flow - Step 1: Alice starts a flow with Eve and sends a nonce $n_a$ encrypted to Eve
+11. Generate nonce n_a
+12. Event: Alice initiated flow with Eve using n_a
+13. Store (Eve, n_a) in Alice&#39;s state
+14. Generate a nonce n_pke used for encryption
+15. Message from Alice to Eve: encrypted (n_a, Alice) with Eve&#39;s key and used n_pke
+...
+</pre></div>
+</div>
+<p>In the above trace part we see trace entries of all 5 types:</p>
+<ul class="simple">
+<li><p>messages: entry 15,</p></li>
+<li><p>states of participants: entries 1,3,5,7,8,9,13,</p></li>
+<li><p>an event: entry 12,</p></li>
+<li><p>generation of random values: entries 0,2,4,11,14, and</p></li>
+<li><p>corruption: entries 6 and 10.</p></li>
+</ul>
+</div>
+<section id="sending-and-receiving-of-messages">
+<h3>Sending and Receiving of Messages<a class="headerlink" href="#sending-and-receiving-of-messages" title="Link to this heading"></a></h3>
+<p>Among other things, the trace is used as post and letter box for our
+asynchronous communication model. To send a message, a new message entry
+is added to the trace and receiving a message is just reading the
+corresponding message entry. Delivery of the message by the postal
+service corresponds to telling the receiver which message entry to read.</p>
+</section>
+</section>
+<section id="capabilities-of-honest-participants">
+<h2>Capabilities of Honest Participants<a class="headerlink" href="#capabilities-of-honest-participants" title="Link to this heading"></a></h2>
+<p>Honest participants can read and write sessions of their own state, send
+and receive messages, create events, and generate nonces.</p>
+</section>
+<section id="attacker-capabilities">
+<h2>Attacker Capabilities<a class="headerlink" href="#attacker-capabilities" title="Link to this heading"></a></h2>
+<p>Recall that we consider a Dolev-Yao network attacker, who controls the
+network (handling of messages) and can corrupt participants. In we model
+this by specifying how the attacker can access the trace.</p>
+<dl class="simple">
+<dt>Messages</dt><dd><p>The attacker can read all message entries on the trace. He also acts
+as the postal service delivering messages. Recall, that receiving a
+message is reading a specific message entry from the trace. The
+attacker chooses which message entry is to be read by whom at what
+point (if at all). He can also create and send messages on his own.</p>
+</dd>
+<dt>States</dt><dd><p>The attacker can corrupt single sessions of a participant state by
+adding a corruption event to the trace. He can then read the content
+of all corrupted sessions.</p>
+</dd>
+</dl>
+<p>From this information that the attacker can directly read off the trace,
+he can also derive new information and use this to create own messages
+or state sessions. For example, if he knows two values <span class="math notranslate nohighlight">\(x\)</span> and
+<span class="math notranslate nohighlight">\(y\)</span> from some messages on the trace, he can produce a new message
+containing both values. We give full details on deriving new values
+later, for now the intuition that the attacker can do anything an honest
+participant can do with information he knows, should suffice. Most
+notably, no one (not even the attacker) can break cryptography. For
+example, if the attacker sees a message that is encrypted with some key
+that the attacker doesn’t know, he can’t access the plain text of the
+message.</p>
+</section>
+<section id="stating-security-properties">
+<h2>Stating Security Properties<a class="headerlink" href="#stating-security-properties" title="Link to this heading"></a></h2>
+<p>Our security properties are trace-based properties and talk about all
+traces that follow the protocol specification. For example, secrecy
+properties are often of the form “In any trace following the protocol
+specification, a secret value between Alice and Bob is not known to the
+attacker, if neither Alice nor Bob are corrupted.”</p>
+<div class="admonition example">
+<p class="admonition-title">Example: Secrecy Property for NSL</p>
+<p>For the NSL protocol we want to show secrecy of the shared secret key
+<span class="math notranslate nohighlight">\(n_B\)</span>. The property is stated in in the following simplified
+form:</p>
+<p>For all traces following the protocol specification and all values
+<span class="math notranslate nohighlight">\(n_B\)</span> the following holds: if Bob finishes a flow with Alice
+and <span class="math notranslate nohighlight">\(n_B\)</span>, then the attacker does not know <span class="math notranslate nohighlight">\(n_B\)</span> or one
+of Alice and Bob is corrupted.</p>
+</div>
+<p>In
+<a class="reference external" href="#chap:labelingsystem,chap:proofmethod">[chap:labelingsystem,chap:proofmethod]</a>,
+we give more details on security properties in DY* and in particular, how to state that a trace follows the protocol specification.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DY* Maintainer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

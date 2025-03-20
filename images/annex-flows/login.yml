@@ -1,0 +1,74 @@
+options:
+  enumerate: "\\setcounter{protostep}{%d}\\protostep{login-example:%s} "
+  colsep: 0.4\textwidth
+  rowsep: 1ex
+  tex_intro: |
+
+
+protocol:
+  !Protocol
+  parties:
+  - &client
+    !Party
+    name: 'Client $C$'
+  - &server
+    !Party
+    name: 'Server $S$'
+
+  steps:
+# Start Parties
+    - !Parallel
+      steps:
+        - !start-party
+          party: *client
+        - !start-party
+          party: *server
+    - !Serial
+      label: "Registration"
+      steps:
+        - !action
+          party: *client
+          label: Choose \& store password, \\ generate new nonce $N_C$
+        - !msg &registration-req
+          id: registration-req
+          src: *client
+          dest: *server
+          caption: '$\{42, N_C, \text{password}, C\}^a_{k_S}$'
+        - !action
+          party: *server
+          label: 'Create \& store user account:\\$(C,\text{cookie},\text{password})$'
+        - !msg
+          id: registration-resp
+          src: *server
+          dest: *client
+          caption: '$\{1337, $ ``ok``$\}^s_{N_C}$'
+    - ------
+    - !Serial
+      label: "Login"
+      steps:
+        - !action
+          party: *client
+          label: Choose new nonce $N'_C$ \\ \phantom{Choose \& store password, ttt}
+        - !msg &login-req
+          id: login-req
+          src: *client
+          dest: *server
+          caption: $\{42, N_C', \text{password}, C\}^a_{k_S}$
+        - !action
+          party: *server
+          label: Search account DB \\  \phantom{Create \& store user accounttttt}
+        - !msg
+          src: *server
+          dest: *client
+          caption:
+            $\{23, \text{cookie}\}^s_{N_C'}$
+        - !action
+          party: *client
+          label: 'Store cookie'
+# End Parties
+    - !Parallel
+      steps:
+        - !end-party
+          party: *server
+        - !end-party
+          party: *client

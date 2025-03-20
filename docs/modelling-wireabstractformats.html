@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wire-format and Abstract Formats for Messages and Sessions &mdash; Security Analysis of Cryptographic Protocols with DY*  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/contentui.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/remember.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/example.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/exercise.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/infobox.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/box.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/todo.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/math.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/contentui.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Security Analysis of Cryptographic Protocols with DY*
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#example-protocols">Example Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#main-concepts-in-dy">Main Concepts in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelling-protocols.html">Modelling Protocols in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stating-sec-props.html">Stating Security Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proof-method.html">Proving Security Properties</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Security Analysis of Cryptographic Protocols with DY*</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Wire-format and Abstract Formats for Messages and Sessions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modelling-wireabstractformats.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="wire-format-and-abstract-formats-for-messages-and-sessions">
+<h1>Wire-format and Abstract Formats for Messages and Sessions<a class="headerlink" href="#wire-format-and-abstract-formats-for-messages-and-sessions" title="Link to this heading"></a></h1>
+<p><span class="todo-inline">TODO: should this concept move to the concepts section? (without code records)</span></p>
+<p>On the lowest level of a real network,
+messages are sent in a wire-format
+which can be thought of as a byte-stream without any structure.
+But the different network layers interpret this stream
+and give it some structure to make processing on higher layers easier.
+For example a UDP message contains
+some header that has several fields with meta-information followed by the actual
+content of the message.
+Further, the higher layers don’t really care about or even need to
+know how their message is encoded on the lower layers.
+They just work with the content they need.</p>
+<p>In DY* we use the same idea:
+The content of entries on the trace are stored in the wire-format, which is called <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">bytes</span></code>.
+But if we implement a protocol we don’t want to work with the wire-format,
+instead we are only interested in the <em>content</em> of the messages.
+We collect the different components of our messages in an <em>abstract format</em>.</p>
+<section id="abstract-formats-for-messages">
+<h2>Abstract Formats for Messages<a class="headerlink" href="#abstract-formats-for-messages" title="Link to this heading"></a></h2>
+<div class="admonition example">
+<p class="admonition-title">Example: Abstract Message Format for the Two-Message Protocol</p>
+<p>The first message of the Two-Message Protocol (the Ping)
+has the following abstract structure:
+it consists of two entries,
+one of which is the name of Alice and the other one is some nonce.</p>
+<p>The second message (the Ack) contains only one entry: the nonce.</p>
+</div>
+<p>In our implementations, we use F*’s <a class="reference external" href="https://fstar-lang.org/tutorial/book/part1/part1_inductives.html#records">record type</a> for abstract message formats.</p>
+<div class="admonition example" id="ex-abstract-messages-twomessagep">
+<p class="admonition-title">Example: The records for the Abstract Format for the Two-Message Protocol</p>
+<p>We define a new type for the Ping message,
+collecting the two entries:</p>
+<blockquote>
+<div><div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">ping_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The name of Alice is captured in the <code class="code docutils literal notranslate"><span class="pre">alice</span></code> component.
+It is a field of type <code class="code docutils literal notranslate"><span class="pre">principal</span></code> (which is just a <code class="code docutils literal notranslate"><span class="pre">string</span></code>).</p>
+<p>The nonce is caputured in the <code class="code docutils literal notranslate"><span class="pre">n_a</span></code> component.
+This field is of type <code class="code docutils literal notranslate"><span class="pre">bytes</span></code>.</p>
+<p>Similarly, we define a new type for the Ack message:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">ack_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Example: Abstract Message Format for the Online? Example</p>
+<p>The messages of the Online? protocol,
+have the same structures as the messages for the Two-Message protocol.
+We can thus use the same record types.</p>
+</div>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Abstract Message Format for the Needham-Schroeder Protocol</p>
+<p>Describe the abstract message format for the Needham-Schroeder protocol
+and define the corresponding record types.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>The first message consists of two parts:
+the name of Alice, and a nonce.
+Similarly to before, we define the record:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">message1_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The second message also has two parts:
+the two nonces.
+We define the record:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">message2_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+  <span class="n">n_b</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The final message contains only the nonce of Bob:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">message3_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">n_b</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="abstract-formats-for-states">
+<h2>Abstract Formats for States<a class="headerlink" href="#abstract-formats-for-states" title="Link to this heading"></a></h2>
+<p>We do the same for states:
+States are also stored on the trace in the wire-format,
+however, we want to work with a more structured abstract format.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: Abstract State Format for the Two-Message Protocol</p>
+<p>In the Two-Message protocol,
+we have three states
+(recall from <a class="reference internal" href="introduction.html#ex-states-twomessage"><span class="std std-ref">Example: States in one run of the Two-Message Protocol</span></a>):</p>
+<ul class="simple">
+<li><p>The first state (SentPing) consists of two parts: the nonce <span class="math notranslate nohighlight">\(n_A\)</span> and the name of Bob.</p></li>
+<li><p>The second state (SentAck) also consists of two parts: the nonce <span class="math notranslate nohighlight">\(n_A\)</span> and the name of Alice.</p></li>
+<li><p>Finally, the third state (ReceivedAck) also consists of two parts: the nonce <span class="math notranslate nohighlight">\(n_A\)</span> and the name of Bob.</p></li>
+</ul>
+<p>This describes the abstract state format.</p>
+</div>
+<div class="admonition example" id="ex-abstract-state-twomessage">
+<p class="admonition-title">Example: The records for the Abstract State Format for the Two-Message Protocol</p>
+<p>From the abstract state format,
+we define the record types:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">sent_ping_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">bob</span> <span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">sent_ack_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">received_ack_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">bob</span> <span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Abstract State Format for the Needham-Schroeder Protocol</p>
+<p>Describe the abstract state format for the Needham-Schroeder protocol
+and define the corresponding record types.
+(Refer to <a class="reference internal" href="introduction.html#ex-states-ns"><span class="std std-ref">Exercise:States in the Needham-Schroeder Protocol</span></a> for the states.)
+Consider <em>only</em> the states storing the progress of the protocol. (I.e., ignore the states for storing keys.)</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>There are 4 kinds of states for storing the protocol progress:</p>
+<ul class="simple">
+<li><p>The state, after Alice sent the first messge (SentMsg1):
+it contains two parts: the nonce <span class="math notranslate nohighlight">\(n_A\)</span> and the name of Bob</p></li>
+<li><p>The state after Bob replied with a second message (SentMsg2):
+it contains three parts: the two nonces <span class="math notranslate nohighlight">\(n_A\)</span> and <span class="math notranslate nohighlight">\(n_B\)</span> and the name of Alice</p></li>
+<li><p>The state after Alice receives the third message from Bob:
+it contains three parts: the two nonces and the name of Bob</p></li>
+<li><p>The state after Bob received the third message from Alice:
+it stores the same things as the previous state of Bob:
+the two nonces and the name of Alice</p></li>
+</ul>
+<p>We define the record types:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">sent_msg1_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">bob</span> <span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">sent_msg2_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">alice</span> <span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+  <span class="n">n_b</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">sent_msg3_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">bob</span> <span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+  <span class="n">n_b</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">received_msg3_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">alice</span> <span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+  <span class="n">n_b</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="translating-between-abstract-and-wire-format">
+<h2>Translating between Abstract and Wire-Format<a class="headerlink" href="#translating-between-abstract-and-wire-format" title="Link to this heading"></a></h2>
+<p>Once we have our abstract message and state formats,
+we need to take care of transforming this abstract format to the
+wire-format and vice versa.
+For example, when sending a message and when receiving a message,
+we need to translate from the abstract message format to the wire-format and vice versa, respectively.
+Similarly, when we want to store a state on the trace,
+we need to translate from the abstract state format to the wire-format.
+We call the translations <em>serializing</em> (abstract to wire-format) and <em>parsing</em> (wire to abstract format).</p>
+<p>We use a tool called <a class="reference external" href="https://github.com/TWal/comparse">Comparse</a> for translating between abstract and wire-format.
+We will not go into the details of how Comparse works.
+We just use it and explain everything necessary for that.</p>
+<div class="admonition remember">
+<p class="admonition-title">Remember</p>
+<ul class="simple">
+<li><p>Everything stored on the trace, is stored using the <em>wire-format</em> <code class="code docutils literal notranslate"><span class="pre">bytes</span></code>.</p></li>
+<li><p>In a protocol model, we work with <em>abstract formats</em>
+for messages and states, i.e., just the contents.</p></li>
+<li><p>Translating from abstract to wire-format is called <em>serializing</em></p></li>
+<li><p>Translating from wire to abstract format is called <em>parsing</em></p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DY* Maintainer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

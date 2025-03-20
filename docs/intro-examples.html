@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Example Protocols &mdash; Security Analysis of Cryptographic Protocols with DY*  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/contentui.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/remember.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/example.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/exercise.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/infobox.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/box.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/todo.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/math.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/contentui.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Security Analysis of Cryptographic Protocols with DY*
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#example-protocols">Example Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#main-concepts-in-dy">Main Concepts in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelling-protocols.html">Modelling Protocols in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stating-sec-props.html">Stating Security Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proof-method.html">Proving Security Properties</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Security Analysis of Cryptographic Protocols with DY*</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Example Protocols</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/intro-examples.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="example-protocols">
+<span id="sec-intro-examples"></span><h1>Example Protocols<a class="headerlink" href="#example-protocols" title="Link to this heading"></a></h1>
+<section id="two-message-protocol">
+<span id="sec-intro-twomessagep"></span><h2>Two-message Protocol<a class="headerlink" href="#two-message-protocol" title="Link to this heading"></a></h2>
+<p>In the two-message protocol (see Fig. <a class="reference internal" href="introduction.html#fig-2msg"><span class="std std-ref">A simple Two Message Protocol</span></a>), Alice generates a nonce <span class="math notranslate nohighlight">\(n_A\)</span> and sends this nonce together with her name to Bob.
+Bob then confirms that he received the message, by replying with the nonce <span class="math notranslate nohighlight">\(n_A\)</span> he received.</p>
+<figure class="align-default" id="id1">
+<span id="fig-2msg"></span><a class="reference internal image-reference" href="_images/2msg_example_.svg"><img alt="_images/2msg_example_.svg" src="_images/2msg_example_.svg" style="width: 70%;" /></a>
+<figcaption>
+<p><span class="caption-text">A simple Two Message Protocol</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>This very simple protocol does not guarantee any security properties,
+we will use it just as illustrating example for the first part of the tutorial.</p>
+<p>The two-message protocol can be made a bit more secure by encrypting the messages for the corresponding recipients.
+This is then called the Online? protocol.</p>
+</section>
+<section id="online">
+<span id="sec-intro-online"></span><h2>Online?<a class="headerlink" href="#online" title="Link to this heading"></a></h2>
+<p>With the Online? protocol (see Fig. <a class="reference internal" href="introduction.html#fig-online"><span class="std std-ref">The Online? Protocol</span></a>) Alice wants to figure out whether Bob is online.
+She creates a nonce <span class="math notranslate nohighlight">\(n_A\)</span> and sends it together with her name to Bob. This message is encrypted with Bob’s public key.
+If Bob is online and receives this message, he’ll reply by sending back the nonce <span class="math notranslate nohighlight">\(n_A\)</span> encrypted for Alice.</p>
+<figure class="align-default" id="id2">
+<span id="fig-online"></span><a class="reference internal image-reference" href="_images/online_example_.svg"><img alt="_images/online_example_.svg" src="_images/online_example_.svg" style="width: 70%;" /></a>
+<figcaption>
+<p><span class="caption-text">The Online? Protocol</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Using encryption gives us a one-sided <em>secrecy property</em>:
+A nonce <span class="math notranslate nohighlight">\(n_A\)</span> that Alice generates for (and sends to) some honest other party Bob,
+is only known to Alice and Bob.</p>
+<p>However, we don’t have secrecy of a nonce that Bob receives,
+i.e., it is not true that any nonce Bob receives from Alice,
+is only known to Alice and Bob.
+An attacker can do a MitM attack, sitting between Alice and Bob (see Fig. <a class="reference internal" href="introduction.html#fig-online-mitm"><span class="std std-ref">A MitM attack on the Online? Protocol breaking Bob-sided secrecy</span></a>):</p>
+<figure class="align-default" id="id3">
+<span id="fig-online-mitm"></span><a class="reference internal image-reference" href="_images/online_example_mitm_.svg"><img alt="_images/online_example_mitm_.svg" src="_images/online_example_mitm_.svg" style="width: 70%;" /></a>
+<figcaption>
+<p><span class="caption-text">A MitM attack on the Online? Protocol breaking Bob-sided secrecy</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>In this attack, Bob thinks that he is talking to Alice,
+and hence that the nonce is only known to Alice and Bob.
+However, the nonce is also known to the attacker Eve.</p>
+<p>Note: The secrecy property from Alice’s perspective is satisfied!
+The property only talks about <em>honest</em> parties.
+Intuitvely speaking:
+If you send something willingly to the attacker (as Alice does in this case),
+it is no longer a secret.</p>
+<p>As a second property, we consider <em>responder authentication</em>:
+If Alice at the end of a run believes,
+she talks with Bob,
+then this Bob must have been involved in the run,
+i.e., Bob must have sent a response.</p>
+<p>Note, that we don’t have <em>initiator authentication</em>:
+In the MitM attack,
+Bob believes to be talking with Alice,
+but instead he is talkin with Eve
+and Alice is not involved in the run with Bob.</p>
+</section>
+<section id="needham-schroeder-protocol">
+<span id="sec-intro-ns"></span><h2>Needham - Schroeder Protocol<a class="headerlink" href="#needham-schroeder-protocol" title="Link to this heading"></a></h2>
+<p>As a second example we consider the Needham-Schroeder (NS) protocol (see Fig. <a class="reference internal" href="introduction.html#fig-ns"><span class="std std-ref">The NS protocol</span></a>) used to agree on a shared secret between two participants.</p>
+<p>First, Alice creates a new nonce <span class="math notranslate nohighlight">\(n_A\)</span> and sends it encrypted for Bob.
+Now Bob also creates a new nonce <span class="math notranslate nohighlight">\(n_B\)</span> and replies to Alice’s message with both nonces <span class="math notranslate nohighlight">\(n_A\)</span> and <span class="math notranslate nohighlight">\(n_B\)</span>, encrypted for Alice.
+Finally, Alice sends back <span class="math notranslate nohighlight">\(n_B\)</span> encrypted to Bob.
+The nonce <span class="math notranslate nohighlight">\(n_B\)</span> can now be used as a shared secret between Alice and Bob.</p>
+<figure class="align-default" id="id4">
+<span id="fig-ns"></span><a class="reference internal image-reference" href="_images/ns_.svg"><img alt="_images/ns_.svg" src="_images/ns_.svg" style="width: 70%;" /></a>
+<figcaption>
+<p><span class="caption-text">The NS protocol</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>We would like to have a secrecy property stating that <span class="math notranslate nohighlight">\(n_B\)</span> is only known to Alice and Bob after a successful run of the NS protocol.
+Unfortunately, there is a man-in-the-middle attack destroying the secrecy of <span class="math notranslate nohighlight">\(n_B\)</span> (see Fig. <a class="reference internal" href="introduction.html#fig-ns-attack"><span class="std std-ref">Attack on the NS Protocol</span></a>).</p>
+</section>
+<section id="attack-on-ns-protocol">
+<h2>Attack on NS Protocol<a class="headerlink" href="#attack-on-ns-protocol" title="Link to this heading"></a></h2>
+<figure class="align-default" id="id5">
+<span id="fig-ns-attack"></span><a class="reference internal image-reference" href="_images/ns-attack_.svg"><img alt="_images/ns-attack_.svg" src="_images/ns-attack_.svg" style="width: 90%;" /></a>
+<figcaption>
+<p><span class="caption-text">Attack on the NS Protocol</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>In this flow, Bob thinks he is talking with Alice and he doesn’t notice anything wrong from his point of view,
+but the nonce <span class="math notranslate nohighlight">\(n_B\)</span> he generates (intended for Alice) leaks to Eve.</p>
+</section>
+<section id="needham-schroeder-lowe-protocol">
+<span id="sec-intro-nsl"></span><h2>Needham - Schroeder - Lowe Protocol<a class="headerlink" href="#needham-schroeder-lowe-protocol" title="Link to this heading"></a></h2>
+<p>The previous attack can be prevented by a small change to the protocol.
+Instead of just sending the two nonces, Bob also sends his name.
+This is then the Needham-Schroeder-Lowe (NSL) protocol (see Fig. <a class="reference internal" href="introduction.html#fig-nsl"><span class="std std-ref">The NSL protocol</span></a>):</p>
+<p>Alice generates a nonce <span class="math notranslate nohighlight">\(n_A\)</span> and sends it together with her name encrypted to Bob.
+Bob then generates his own nonce <span class="math notranslate nohighlight">\(n_B\)</span> and sends the two nonce <span class="math notranslate nohighlight">\(n_A\)</span> and <span class="math notranslate nohighlight">\(n_B\)</span> together with his name to Alice. This message is encrypted for Alice.
+Finally, Alice sends the nonce <span class="math notranslate nohighlight">\(n_B\)</span> back to Bob.</p>
+<figure class="align-default" id="id6">
+<span id="fig-nsl"></span><a class="reference internal image-reference" href="_images/nsl_.svg"><img alt="_images/nsl_.svg" src="_images/nsl_.svg" style="width: 70%;" /></a>
+<figcaption>
+<p><span class="caption-text">The NSL protocol</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The MitM attack is prevented, since Eve can not just forward Message 4 to Alice.
+Alice expects to see Eve’s name in there and not Bob.
+So Alice would stop the protocol run at that point.
+Note that Eve can not change the name in the message, since Bob sends this message encrypted <em>for Alice</em>.</p>
+<p>Indeed, this protocol guarantees secrecy of both nonces <span class="math notranslate nohighlight">\(n_A\)</span> and <span class="math notranslate nohighlight">\(n_B\)</span>,
+i.e., the attacker does not get to know the nonces as long as both Alice and Bob are honest.</p>
+<p>Additionally,
+the NSL protocol also provides <em>responder authentication</em>,
+similar to the Online? protocol:
+If Alice at the end of a run believes to be talking with Bob,
+then this Bob must indeed be involved in the run.</p>
+<p>The Online? protocol did not provide the reverse direction of
+<em>initiator authentication</em>.
+The NSL protocol does:
+If Bob at the end of a run believes to be talking with Alice,
+then this Alice must indeed be involved in the run.</p>
+</section>
+<section id="login">
+<span id="sec-intro-login"></span><h2>Login<a class="headerlink" href="#login" title="Link to this heading"></a></h2>
+<p>Our final example is a simple registration and login protocol (just called Login protocol) shown in Fig. <a class="reference internal" href="introduction.html#fig-login"><span class="std std-ref">The Login Protocol</span></a>.
+It has two phases: a registration and a login phase.</p>
+<figure class="align-default" id="id7">
+<span id="fig-login"></span><a class="reference internal image-reference" href="_images/login_.svg"><img alt="_images/login_.svg" src="_images/login_.svg" style="width: 70%;" /></a>
+<figcaption>
+<p><span class="caption-text">The Login Protocol</span><a class="headerlink" href="#id7" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>For registration, the client first chooses and stores a new password.
+It then generates a nonce <span class="math notranslate nohighlight">\(N_C\)</span> and sends a message containing the tag “42”, the nonce <span class="math notranslate nohighlight">\(N_C\)</span> and the password together with the name of the client.
+This message is sent asymmetrically encrypted to the server.</p>
+<p>The server now checks whether it already has a client with name <span class="math notranslate nohighlight">\(C\)</span> and the password in its database.
+If not, it creates a new account by storing the name and password, and a newly generated cookie.
+It then replies with a message containing the tag “1337” and the string “ok”.
+This message is symmetrically encrypted with the nonce <span class="math notranslate nohighlight">\(N_C\)</span>.
+The client now knows that it has an account at the server and can log in.</p>
+<p>For logging in, the client generates a new nonce <span class="math notranslate nohighlight">\(N'_C\)</span> and sends a message containing the tag “42”, the nonce <span class="math notranslate nohighlight">\(N'_C\)</span> and the password together with its name.
+If the server already has a client with the password in its database, it reads the corresponding cookie from the account
+and replies with a message containing the tag “23” and the cookie.
+This message is symmetrically encrypted with the nonce <span class="math notranslate nohighlight">\(N'_C\)</span>.
+The client stores the cookie and the protocol ends.</p>
+<p>Note that the messages sent by the client (Message 2 and Message 6) are the same for registration and log in.
+For registration the client chooses a new password and for log in it chooses some existing password.
+The server expects only one type of message and can’t immediately see whether this is a registration or a log in message.
+To react correctly, it has to check the stored accounts.</p>
+<p>For this protocol we want to show a secrecy property for the cookie from the server’s point of view:
+A cookie stored at the server is only known to the server and the client it was created for.</p>
+<div class="admonition-goals-of-the-course admonition">
+<p class="admonition-title">Goals of the Course</p>
+<ul class="simple">
+<li><p>Model and Implement the Two-Message protocol</p></li>
+<li><p>Model and Implement the Online? protocol and show Alice-sided secrecy</p></li>
+<li><p>Model and Implement the NS Protocol and the Attack of Lowe</p></li>
+<li><p>Model and Implement the NSL Protocol and show the secrecy property</p></li>
+<li><p>Model and Implement the Login Protocol and show the secrecy property</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DY* Maintainer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

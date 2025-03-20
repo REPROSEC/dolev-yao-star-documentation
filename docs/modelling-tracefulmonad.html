@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The traceful and option Monads &mdash; Security Analysis of Cryptographic Protocols with DY*  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/contentui.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/remember.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/example.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/exercise.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/infobox.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/box.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/todo.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/math.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/contentui.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Security Analysis of Cryptographic Protocols with DY*
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#example-protocols">Example Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#main-concepts-in-dy">Main Concepts in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelling-protocols.html">Modelling Protocols in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stating-sec-props.html">Stating Security Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proof-method.html">Proving Security Properties</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Security Analysis of Cryptographic Protocols with DY*</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">The <code class="docutils literal notranslate"><span class="pre">traceful</span></code> and <code class="docutils literal notranslate"><span class="pre">option</span></code> Monads</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modelling-tracefulmonad.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="the-traceful-and-option-monads">
+<h1>The <code class="docutils literal notranslate"><span class="pre">traceful</span></code> and <code class="docutils literal notranslate"><span class="pre">option</span></code> Monads<a class="headerlink" href="#the-traceful-and-option-monads" title="Link to this heading"></a></h1>
+<section id="the-traceful-monad">
+<h2>The <code class="docutils literal notranslate"><span class="pre">traceful</span></code> Monad<a class="headerlink" href="#the-traceful-monad" title="Link to this heading"></a></h2>
+<p>As we have seen previously,
+the core object for capturing the overall state and for
+stating and reasoning about properties of a protocol,
+is the <em>global trace</em>.</p>
+<p>Every protocol step is a sequence of reading entries from the current trace,
+or adding new entries to the trace.
+Each action in this sequence works with the new trace resulting from the previous action.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: Explicit Trace Manipulation in the Two-Message Protocol</p>
+<p>The explicit trace manipulations of the first step of the Two-Message protocol (see <a class="reference internal" href="introduction.html#example-twomessage-localview"><span class="std std-ref">Example: Local View of Two-Message Protocol</span></a>) is:</p>
+<ol class="arabic simple" start="0">
+<li><p>The current trace before the step begins is <code class="code docutils literal notranslate"><span class="pre">tr_in</span></code></p></li>
+<li><p>Generate a nonce <span class="math notranslate nohighlight">\(n_A\)</span> and store it on the current trace <code class="code docutils literal notranslate"><span class="pre">tr_in</span></code>.
+This results in the new trace <code class="code docutils literal notranslate"><span class="pre">tr_nonce</span></code>.</p></li>
+<li><p>Send the first message, i.e., append the message to the current trace <code class="code docutils literal notranslate"><span class="pre">tr_nonce</span></code>.
+This results in the new trace <code class="code docutils literal notranslate"><span class="pre">tr_message</span></code>.</p></li>
+<li><p>Store the SentPing state, i.e., append the new state to the current trace <code class="code docutils literal notranslate"><span class="pre">tr_message</span></code>.
+This results in the new trace <code class="code docutils literal notranslate"><span class="pre">tr_state</span></code>.</p></li>
+</ol>
+<p>The whole first step transforms the input trace <code class="code docutils literal notranslate"><span class="pre">tr_in</span></code> to the final trace <code class="code docutils literal notranslate"><span class="pre">tr_state</span></code>.</p>
+</div>
+<p>This explicit trace passing from one action to the next,
+is rather cumbersome and we want to avoid doing that manually.
+DY* offers the <code class="code docutils literal notranslate"><span class="pre">traceful</span></code> monad for <em>implicit</em> trace handling.
+With this, we can just write the sequence of actions <em>without</em> having to think of the underlying traces.</p>
+<p>At this point, you do <em>not</em> need to know what a monad is.
+We will see everything we need to <em>use</em> the monad in the following.
+The important general intuition is that monadic actions
+compute some return value (just like normal functions)
+but may have <em>side effects</em>.
+In our case that means,
+a traceful action works with the trace and may change the trace.
+For example,
+sending a message has the side effect,
+that the message is added to the trace.</p>
+<div class="admonition remember">
+<p class="admonition-title">Remember: Intuition for Monads</p>
+<p>Monadic actions are functions with <em>side effects</em>.</p>
+<p>Specifically, a <em>traceful</em> action may look at and change the current trace.</p>
+</div>
+<div class="admonition infobox">
+<p class="admonition-title">Info on Monads</p>
+<p>If you want to understand the general concept of monads in F*, we refer to the corresponding <a class="reference external" href="https://fstar-lang.org/tutorial/book/part2/part2_par.html#a-first-model-of-computational-effects">chapter in the F* Book</a>.</p>
+<div class="toggle-header docutils container">
+<p><strong>If you are familiar with monads</strong></p>
+</div>
+<div class="toggle-content box docutils container">
+<p>The <code class="code docutils literal notranslate"><span class="pre">traceful</span></code> monad
+is a <em>state monad</em>, where the state is the trace
+with the additional condition, that the new trace can only append entries to the old trace.
+The value/result type can be anything.</p>
+</div>
+</div>
+<p>In the previous example, we see that each step has an effect on the trace (i.e., changes the trace).
+We can thus consider the steps as traceful actions.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: Implicit Trace Manipulation in the Two-Message Protocol</p>
+<p>Using the <code class="code docutils literal notranslate"><span class="pre">traceful</span></code> monad, we can write the first step of the Two Message protocol as:</p>
+<ol class="arabic simple">
+<li><p>Generate a new nonce <span class="math notranslate nohighlight">\(n_A\)</span> (this implicitly changes the trace)</p></li>
+<li><p>Send the first message (this implicitly takes the trace after action 1 and produces a new trace)</p></li>
+<li><p>Store the SentPing state (this implicitly takes the trace after action 2 and produces a new trace)</p></li>
+</ol>
+<p>Which is exactly our intuitive description from <a class="reference internal" href="introduction.html#example-twomessage-localview"><span class="std std-ref">Example: Local View of Two-Message Protocol</span></a>.</p>
+</div>
+<section id="sequential-composition-of-traceful-functions">
+<h3>Sequential composition of traceful functions<a class="headerlink" href="#sequential-composition-of-traceful-functions" title="Link to this heading"></a></h3>
+<p>Combining two <code class="docutils literal notranslate"><span class="pre">traceful</span></code> actions sequentially,
+like steps 1., 2. and 3. in the previous example,
+is done with <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*</span></code>:
+<code class="code highlight fstar docutils literal highlight-fstar"><span class="n">traceful_action_1</span> <span class="o">;*</span> <span class="n">traceful_action_2</span></code>.</p>
+<div class="toggle-header docutils container">
+<p><strong>If you are familiar with monads</strong></p>
+</div>
+<div class="toggle-content box docutils container">
+<p><code class="code highlight fstar docutils literal highlight-fstar"><span class="n">a</span><span class="o">;*</span> <span class="n">b</span></code> is syntactic sugar for <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">bind</span> <span class="n">a</span> <span class="o">(</span><span class="k">fun</span> <span class="n">_</span> <span class="o">-&gt;</span> <span class="n">b</span><span class="o">)</span></code></p>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Example: Sequential Composition of Traceful Functions</p>
+<p>The following code snippet</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">send_msg</span> <span class="n">message</span> <span class="o">;*</span>
+<span class="n">store_state</span> <span class="n">alice</span> <span class="n">state</span>
+</pre></div>
+</div>
+<p>executes two traceful actions sequentially:</p>
+<ol class="arabic simple">
+<li><p>A message (<code class="docutils literal notranslate"><span class="pre">message</span></code>) is sent (i.e., added to the end of the current trace)</p></li>
+<li><p>A new state (<code class="docutils literal notranslate"><span class="pre">state</span></code>) is stored for <code class="docutils literal notranslate"><span class="pre">alice</span></code> (i.e., the state is added to the trace after the message)</p></li>
+</ol>
+</div>
+</section>
+<section id="accessing-return-values-of-traceful-functions">
+<h3>Accessing return values of traceful functions<a class="headerlink" href="#accessing-return-values-of-traceful-functions" title="Link to this heading"></a></h3>
+<p>To access the computed value of a traceful action, we use <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*</span></code>:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="n">return_value</span> <span class="o">=</span> <span class="n">traceful_action</span> <span class="k">in</span>
+<span class="c">// now we can use return_value in subsequent actions</span>
+</pre></div>
+</div>
+<div class="toggle-header docutils container">
+<p><strong>If you are familiar with monads</strong></p>
+</div>
+<div class="toggle-content box docutils container">
+<p><code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*</span> <span class="n">x</span> <span class="o">=</span> <span class="n">a</span> <span class="k">in</span> <span class="n">b</span></code> is syntactic sugar for <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">bind</span> <span class="n">a</span> <span class="o">(</span><span class="k">fun</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">b</span><span class="o">)</span></code></p>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Example: Accessing Return Values of Traceful Functions</p>
+<p>With <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">gen_rand</span> <span class="k">in</span></code> we can access the nonce, returned by the traceful <code class="docutils literal notranslate"><span class="pre">gen_rand</span></code> function
+and use it later on under the name <code class="docutils literal notranslate"><span class="pre">n_a</span></code>.</p>
+<p><em>Note:</em> <code class="docutils literal notranslate"><span class="pre">gen_rand</span></code> as a traceful function also changes the underlying trace,
+but with <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*</span></code> we are only accessing the computed <em>value</em>. The new trace is passed on implicitly as before.</p>
+</div>
+</section>
+<section id="returning-a-value-inside-a-traceful-function">
+<span id="sec-traceful-return"></span><h3>Returning a value inside a traceful function<a class="headerlink" href="#returning-a-value-inside-a-traceful-function" title="Link to this heading"></a></h3>
+<p>If we compute some value inside a traceful function,
+which we want to return to the caller of the function,
+we use <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">value</span></code>.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: Returning a Value inside a Traceful Function</p>
+<p>Consider the example from above,
+where we send a message and then store a state.
+Recall, that sending a message is just adding the message to the trace.
+If later, someone should receive this message,
+the receiver needs to know the timestamp of the message on the trace.
+Thus, the send function returns exactly this timestamp and our bigger function
+needs to also return the timestamp.</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="n">msg_ts</span> <span class="o">=</span> <span class="n">send_msg</span> <span class="n">message</span> <span class="k">in</span> <span class="c">// send the message and store the returned timestamp</span>
+<span class="n">store_state</span> <span class="n">alice</span> <span class="n">state</span> <span class="o">;*</span>        <span class="c">// do some other traceful actions</span>
+<span class="n">return</span> <span class="n">msg_ts</span>                     <span class="c">// return the message timestamp as final result of the traceful function</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="the-option-monad">
+<h2>The <code class="docutils literal notranslate"><span class="pre">option</span></code> Monad<a class="headerlink" href="#the-option-monad" title="Link to this heading"></a></h2>
+<p>Another thing, that we want to simplify is combining functions that may fail.</p>
+<p>Consider as an example a function where we want to
+decrypt a cipher text, and then parse the resulting plain text to some abstract message format.
+Both of the steps (decryption and parsing) may fail
+and we want our overall function to succeed, only if both steps succeed.</p>
+<p>Luckily, there is already a builtin type in F* capturing possible failure: the <code class="docutils literal notranslate"><span class="pre">option</span></code> type.
+So we can write our function as</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">match</span> <span class="n">decrypt</span> <span class="n">cipher_text</span> <span class="k">with</span>
+<span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="nc">None</span>        <span class="c">// fail if decryption fails</span>
+<span class="o">|</span> <span class="nc">Some</span> <span class="n">plaintext</span> <span class="o">-&gt;</span> <span class="o">(</span> <span class="c">// decryption was successful</span>
+    <span class="k">match</span> <span class="n">parse</span> <span class="n">plaintext</span> <span class="k">with</span>
+    <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="nc">None</span>               <span class="c">// fail if parsing fails</span>
+    <span class="o">|</span> <span class="nc">Some</span> <span class="n">abstract_plaintext</span> <span class="o">-&gt;</span> <span class="c">// parsing was successful</span>
+        <span class="o">...</span> <span class="c">// do something with abstract_plaintext</span>
+<span class="o">)</span>
+</pre></div>
+</div>
+<p>This works perfectly fine, but is a lot of lines for just two actions!</p>
+<p>To simplify the nested matches, we define the <code class="docutils literal notranslate"><span class="pre">option</span></code> monad.
+The corresponding side effect here would be failure,
+i.e., an optional action computes some value but may fail,
+with the intuition that the execution stops in the failure case.</p>
+<p>Similarly to <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*</span></code> and <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*</span></code> for the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> monad,
+we have <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;?</span></code> and <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">?</span></code> for composing functions that may fail
+and accessing return values of such functions.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;?</span></code> and <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">?</span></code> for the <code class="docutils literal notranslate"><span class="pre">option</span></code> monad</p>
+<p>Consider our example from before:
+a function that decrypts a cipher text, parses the resulting plain text
+and does something with the abstract plaintext.
+Each of the actions may fail and we want the overall function to succeed only if all actions succeed.
+We can write this as:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">?</span> <span class="n">plaintext</span> <span class="o">=</span> <span class="n">decrypt</span> <span class="n">cipher_text</span> <span class="k">in</span> <span class="c">// Try to decrypt the ciphertext.</span>
+     <span class="c">// The whole step fails, if decryption fails. If decryption is successful, the result value is called plaintext.</span>
+<span class="kd">let</span><span class="o">?</span> <span class="n">abstract_plaintext</span> <span class="o">=</span> <span class="n">parse</span> <span class="n">plaintext</span> <span class="k">in</span> <span class="c">// Try to parse the plaintext. If successful the result value is called abstract_plaintext</span>
+<span class="n">some_function</span> <span class="n">abstract_plaintext</span><span class="o">;?</span>  <span class="c">// Do something with the abstract plaintext. This step may fail (causing the whole function to fail).</span>
+<span class="nc">Some</span> <span class="n">abstract_plaintext</span>  <span class="c">// if all steps succeeded, the final return value of the function is the abstract plaintext</span>
+</pre></div>
+</div>
+<p>See how the previous two nested matches are now just two lines (the first two)!</p>
+</div>
+</section>
+<section id="the-traceful-option-monad">
+<h2>The <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> Monad<a class="headerlink" href="#the-traceful-option-monad" title="Link to this heading"></a></h2>
+<p>Most of the actions in a protocol step will be actions that work with the trace
+<em>and</em> may fail.
+For example,
+in the last step of the Two-Message protocol,
+Alice checks whether she previously started a flow
+with the received nonce.
+This action needs to look at the trace, but may fail if she did not start a flow with this nonce.</p>
+<p>So we have a combination of the previous two side effects.
+And indeed the combination of <code class="docutils literal notranslate"><span class="pre">traceful</span></code> and <code class="docutils literal notranslate"><span class="pre">option</span></code>, where we have <code class="docutils literal notranslate"><span class="pre">option</span></code> inside <code class="docutils literal notranslate"><span class="pre">traceful</span></code>,
+i.e., <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="n">a</span><span class="o">)</span></code> is again a monad.</p>
+<p>The intuition for sequentially composing two traceful + option actions is:</p>
+<ul class="simple">
+<li><p>the second action only gets executed if the first one is successful</p></li>
+<li><p>if the first action fails, the changes on the underlying trace of the first action are still captured</p></li>
+</ul>
+<p>With this,
+we model that the individual steps may fail,
+but that all side-effects on the trace are recorded
+up until the point of failure.</p>
+<p>Just like before we have <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*?</span></code> for sequential composition and
+<code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*?</span></code> for accessing the return value of traceful + optional actions.</p>
+<div class="admonition example" id="example-composition-in-traceful-option">
+<p class="admonition-title">Example: Composition in the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> Monad</p>
+<p>Consider the following function in the traceful + option monad:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">f</span> <span class="o">(</span><span class="n">x</span><span class="o">:</span><span class="kt">int</span><span class="o">):</span> <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="kt">string</span><span class="o">)</span> <span class="o">=</span>
+  <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">2</span>
+  <span class="k">then</span> <span class="o">(</span>
+    <span class="n">add_entry_</span> <span class="n">en</span><span class="o">;*?</span>
+    <span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="s2">&quot;added entry&quot;</span><span class="o">)</span>
+  <span class="o">)</span>
+  <span class="k">else</span> <span class="n">return</span> <span class="nc">None</span>
+</pre></div>
+</div>
+<p>This function takes an <code class="code highlight fstar docutils literal highlight-fstar"><span class="kt">int</span></code> <code class="docutils literal notranslate"><span class="pre">x</span></code>,
+if <code class="docutils literal notranslate"><span class="pre">x</span></code> is less than 2,
+an entry <code class="docutils literal notranslate"><span class="pre">en</span></code> is added to the current trace
+and the string “added entry” is returned.
+If <code class="docutils literal notranslate"><span class="pre">x</span></code> is not less than 2,
+the function fails (and returns <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">None</span></code>).</p>
+<p>We sequentially execute this function 3 times with different values for <code class="docutils literal notranslate"><span class="pre">x</span></code>:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">f3</span> <span class="o">=</span> <span class="n">f</span> <span class="mi">1</span><span class="o">;*?</span> <span class="n">f</span> <span class="mi">2</span><span class="o">;*?</span> <span class="n">f</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>and see how the trace evolves (beginning with an empty trace) and what the final return value is.</p>
+<ol class="arabic simple">
+<li><p>We begin with an empty trace <code class="docutils literal notranslate"><span class="pre">tr0</span></code>
+and execute <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">f</span> <span class="mi">1</span></code>.
+This returns an optional string <code class="docutils literal notranslate"><span class="pre">opt_str1</span></code> and a new trace <code class="docutils literal notranslate"><span class="pre">tr1</span></code>.
+Since 1 is less than 2,
+the entry <code class="docutils literal notranslate"><span class="pre">en</span></code> will be added to the trace <code class="docutils literal notranslate"><span class="pre">tr0</span></code>
+and <code class="docutils literal notranslate"><span class="pre">opt_str1</span></code> is <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">Some</span> <span class="s2">&quot;added entry&quot;</span></code>.</p></li>
+<li><p>We then execute <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">f</span> <span class="mi">2</span></code> with the new trace <code class="docutils literal notranslate"><span class="pre">tr1</span></code>.
+This again, returns an optional string <code class="docutils literal notranslate"><span class="pre">opt_str2</span></code> and a new trace <code class="docutils literal notranslate"><span class="pre">tr2</span></code>.
+Since 2 is not less than 2,
+<code class="docutils literal notranslate"><span class="pre">opt_str2</span></code> is <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">None</span></code> and the trace doesn’t change.</p></li>
+<li><p>Since the previous step returned <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">None</span></code>,
+the final <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">f</span> <span class="mi">0</span></code> is not executed.</p></li>
+</ol>
+<p>In total,
+after step 3 we have a return value <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">None</span></code>
+and a trace <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">[</span><span class="n">en</span><span class="o">]</span></code>.</p>
+<p>To better understand the behaviour of the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> monad,
+lets look at what happens if we switch the order of the three actions in the function <code class="docutils literal notranslate"><span class="pre">f3</span></code>:
+(the first row is the case we just looked at)</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">f3</span></code></p></th>
+<th class="head"><p>return value</p></th>
+<th class="head"><p>new trace</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="n">f</span> <span class="mi">1</span><span class="o">;*?</span>  <span class="n">f</span> <span class="mi">2</span><span class="o">;*?</span>  <span class="n">f</span> <span class="mi">0</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">None</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="o">[</span><span class="n">en</span><span class="o">]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="n">f</span> <span class="mi">0</span><span class="o">;*?</span>  <span class="n">f</span> <span class="mi">1</span><span class="o">;*?</span>  <span class="n">f</span> <span class="mi">2</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">None</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="o">[</span><span class="n">en</span><span class="o">;</span>
+<span class="n">en</span><span class="o">]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="n">f</span> <span class="mi">2</span><span class="o">;*?</span>  <span class="n">f</span> <span class="mi">1</span><span class="o">;*?</span>  <span class="n">f</span> <span class="mi">0</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">None</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="o">[</span> <span class="o">]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="n">f</span> <span class="mi">1</span><span class="o">;*?</span>  <span class="n">f</span> <span class="mi">0</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">Some</span> <span class="s2">&quot;added entry&quot;</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="o">[</span><span class="n">en</span><span class="o">;</span>
+<span class="n">en</span><span class="o">]</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Looking at the first three rows,
+this highlights that monadic actions have <em>side effects</em>.
+Although the return value is the same for all three rows,
+the final trace is different.</p>
+</div>
+<p><span class="todo-inline">TODO: where should the following box go?</span></p>
+<div class="admonition remember" id="remember-last-action-in-traceful-option">
+<p class="admonition-title">Remember</p>
+<p>The <em>last</em> action in a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> function,
+must be</p>
+<ul class="simple">
+<li><p>a call to a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> action or</p></li>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">return</span></code> of <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">None</span></code> or <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">Some</span> <span class="n">value</span></code></p></li>
+</ul>
+</div>
+</section>
+<section id="comparing-traceful-option-with-traceful">
+<span id="sec-comparing-traceful-option-traceful"></span><h2>Comparing <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> with <code class="docutils literal notranslate"><span class="pre">traceful</span></code><a class="headerlink" href="#comparing-traceful-option-with-traceful" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> monad can be considered
+a special case of the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> monad:
+Every action in the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> monad
+can be considered as an action in the plain <code class="docutils literal notranslate"><span class="pre">traceful</span></code> monad,
+if we ignore the knowledge that the return type is an option.</p>
+<p>We already saw this in the function <code class="docutils literal notranslate"><span class="pre">f</span></code> in the previous example:
+The function uses the <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">return</span></code> of the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> monad (in Lines 5 and 7)
+to return the computed value.
+Since, the return type of <code class="docutils literal notranslate"><span class="pre">f</span></code>, considered as a plain <code class="docutils literal notranslate"><span class="pre">traceful</span></code> action,
+is an option,
+we need to return <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">Some</span> <span class="n">value</span></code> or <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">None</span></code>.</p>
+<p>It is important to know
+which of the two monads we want,
+when composing <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> actions.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: Comparing Composition of <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> actions with <code class="docutils literal notranslate"><span class="pre">traceful</span></code> actions</p>
+<p>To highlight the difference between sequential composition
+in the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> monad
+with composition in the plain <code class="docutils literal notranslate"><span class="pre">traceful</span></code> monad,
+lets use <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*</span></code> instead of <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*?</span></code> in the function <code class="docutils literal notranslate"><span class="pre">f3</span></code> in the previous example:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">f3</span> <span class="o">=</span> <span class="n">f</span> <span class="mi">1</span><span class="o">;*</span> <span class="n">f</span> <span class="mi">2</span><span class="o">;*</span> <span class="n">f</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>In the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> monad,
+the composition just passes on the trace
+without looking at the return values of the function.
+Thus, the execution of <code class="docutils literal notranslate"><span class="pre">f3</span></code> does <strong>not</strong> stop
+when <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">f</span> <span class="mi">2</span></code> fails (as in the previous example)!
+<code class="code highlight fstar docutils literal highlight-fstar"><span class="n">f</span> <span class="mi">2</span></code> doesn’t change the trace and
+<code class="code highlight fstar docutils literal highlight-fstar"><span class="n">f</span> <span class="mi">0</span></code> is successfully executed.</p>
+<p>The overall result of the new <code class="docutils literal notranslate"><span class="pre">f3</span></code> is
+<code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">Some</span> <span class="s2">&quot;added entry&quot;</span></code>
+and the new trace is <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">[</span><span class="n">en</span><span class="o">;</span> <span class="n">en</span><span class="o">]</span></code>.</p>
+<p>Look back at the first line in the table in the previous example
+and compare the results when using <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*?</span></code>.</p>
+</div>
+<div class="admonition remember">
+<p class="admonition-title">Remember</p>
+<p>If we compose two <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> actions with <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*</span></code>,
+the second action gets executed in any case, even if the first action fails.</p>
+<p>If we compose them instead with <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*?</span></code>,
+the second action is not executed when the first action fails.</p>
+</div>
+<p><span class="todo-inline">TODO: add a link/pointer to the example file in the repo (examples/Basics/DY.Basics.Monads.fst)</span></p>
+</section>
+<section id="combining-actions-from-different-monads">
+<h2>Combining actions from different Monads<a class="headerlink" href="#combining-actions-from-different-monads" title="Link to this heading"></a></h2>
+<p>We have now seen three monads,
+and we looked at how to sequentially execute
+actions <em>within the same</em> monad.
+However,
+it is often the case that we need to
+combine actions from <em>different</em> monads.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: The Three Monads in one Protocol Step</p>
+<p>Consider the following prototypical excerpt of a protocol step:</p>
+<ol class="arabic simple">
+<li><p>receive a message</p></li>
+<li><p>parse the received message</p></li>
+<li><p>send a new message</p></li>
+</ol>
+<p>These actions are all in different monads:</p>
+<ol class="arabic simple">
+<li><p>receiving a message is a traceful action that may fail (if there is no message entry at the provided timestamp) (<code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code>)</p></li>
+<li><p>parsing a message is an action that may fail, but does not need the trace (<code class="docutils literal notranslate"><span class="pre">option</span></code>)</p></li>
+<li><p>sending a message is a traceful action that never fails (<code class="docutils literal notranslate"><span class="pre">traceful</span></code>)</p></li>
+</ol>
+</div>
+<p>It is possible to compose actions of different monads,
+but one has to be extra careful
+which composition to use
+and what the overall type of the function will be.</p>
+<section id="the-overall-type">
+<h3>The Overall Type<a class="headerlink" href="#the-overall-type" title="Link to this heading"></a></h3>
+<p>Let’s first think about the overall type of a function
+executing several actions from different monads.</p>
+<p>Recall the main intuition:
+monadic actions are functions with side effects.
+If we compose several actions with different side effects,
+the overall function may have <em>all</em> of the individual side effects.</p>
+<p>In our case, we have the three side effects of
+working with the trace, potential failure and “work with the trace and may fail”.
+Observe, that the last one captures both side effects of the first two.
+From this, we intuitively see that
+whenever we compose actions from different monads,
+the overall function will be in the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> monad,
+since we may have an effect on the trace and may fail.</p>
+<p>Putting things a bit differently, this means,
+that if you want to write a function in the <code class="docutils literal notranslate"><span class="pre">option</span></code> monad,
+you <em>can not</em> use any <code class="docutils literal notranslate"><span class="pre">traceful</span></code> or <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> actions
+inside,
+since this would mean having more side effects
+than just the failure case from <code class="docutils literal notranslate"><span class="pre">option</span></code>
+specified in the type of your function.
+And similarly,
+if you are writing a non-optional <code class="docutils literal notranslate"><span class="pre">traceful</span></code> function,
+you can not use an <code class="docutils literal notranslate"><span class="pre">option</span></code> or <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> action inside,
+since the failure side effect is not covered by the specified type.</p>
+<div class="admonition remember">
+<p class="admonition-title">Remember</p>
+<p>If you compse actions from different monads,
+you will end up in the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> monad.</p>
+<ul class="simple">
+<li><p>Inside an <code class="docutils literal notranslate"><span class="pre">option</span></code> function,
+you <em>can not</em> call <code class="docutils literal notranslate"><span class="pre">traceful</span></code> or <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> actions.</p></li>
+<li><p>Inside a plain non-optional <code class="docutils literal notranslate"><span class="pre">traceful</span></code> function,
+you <em>can not</em> call <code class="docutils literal notranslate"><span class="pre">option</span></code> or <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> actions.</p></li>
+</ul>
+</div>
+</section>
+<section id="how-to-compose">
+<h3>How to Compose<a class="headerlink" href="#how-to-compose" title="Link to this heading"></a></h3>
+<p>Now that we know,
+we are in a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> function,
+we have to think about
+how to call <code class="docutils literal notranslate"><span class="pre">option</span></code> and plain <code class="docutils literal notranslate"><span class="pre">traceful</span></code> actions
+inside our function.</p>
+<section id="traceful-inside-traceful-option">
+<h4><code class="docutils literal notranslate"><span class="pre">traceful</span></code> inside <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code><a class="headerlink" href="#traceful-inside-traceful-option" title="Link to this heading"></a></h4>
+<p>Plain non-optional <code class="docutils literal notranslate"><span class="pre">traceful</span></code> actions
+already have the “may modify trace” side effect,
+but are missing the “might fail” effect.
+Intuitively, a non-optional action,
+just does not fail and always produces a result and a new trace.
+We can thus use the plain <code class="docutils literal notranslate"><span class="pre">traceful</span></code> <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*</span></code>.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: <code class="docutils literal notranslate"><span class="pre">traceful</span></code> action inside <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code></p>
+<p>In most of the protocol steps,
+we will send some message.
+This is a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> action,
+since it appends the message to the trace,
+that returns the timestamp of the message in the new trace.
+The action never fails, since entries can always be added to the trace.</p>
+<p>In the protocol step we can write</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">send_msg</span> <span class="n">message</span><span class="o">;*</span>
+<span class="o">...</span> <span class="c">// some other traceful + option actions</span>
+</pre></div>
+</div>
+<p>Or, if we want to use the returned timestamp</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="n">ts</span> <span class="o">=</span> <span class="n">send_msg</span> <span class="n">message</span> <span class="k">in</span>
+<span class="o">...</span> <span class="c">// some other traceful + option actions that can use ts</span>
+</pre></div>
+</div>
+</div>
+<p>Recall from <a class="reference internal" href="#remember-last-action-in-traceful-option"><span class="std std-ref">before</span></a>
+that the last action in a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> function,
+needs to be a call to another <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> action (as in the example above),
+or a <code class="docutils literal notranslate"><span class="pre">return</span></code> of an <code class="docutils literal notranslate"><span class="pre">option</span></code>.
+So if we want to have a plain <code class="docutils literal notranslate"><span class="pre">traceful</span></code> action as the last step in our function,
+we need to have a <code class="docutils literal notranslate"><span class="pre">return</span></code> after that.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: <code class="docutils literal notranslate"><span class="pre">traceful</span></code> action as <em>last</em> action inside <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code></p>
+<p>If sending a message is the last action in our protocol step,
+and we want to return the message timestamp,
+we need to write</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="n">ts</span> <span class="o">=</span> <span class="n">send_msg</span> <span class="n">message</span> <span class="k">in</span>
+<span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="n">ts</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="traceful-option-actions-inside-traceful-option">
+<h4><code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> actions inside <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code><a class="headerlink" href="#traceful-option-actions-inside-traceful-option" title="Link to this heading"></a></h4>
+<p>A special case of the above, are <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> actions
+inside the overall <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> function.
+You may wonder why we need to talk about this case here.
+Isn’t this just combining actions within the <em>same</em> monad?</p>
+<p>Well, we have seen <a class="reference internal" href="#sec-comparing-traceful-option-traceful"><span class="std std-ref">before</span></a>
+that we can use both <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*</span></code> and <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*?</span></code>
+to combine <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> actions.
+And it depends on whether we want the second action to be executed
+if the first one fails or not.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: Using both <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*</span></code> and <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*?</span></code> for <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> actions</p>
+<p>We look again at the function <code class="docutils literal notranslate"><span class="pre">f</span></code> from <a class="reference internal" href="#example-composition-in-traceful-option"><span class="std std-ref">the previous example</span></a>
+and use a mix of <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*</span></code> and <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*?</span></code> to combine
+the calls for different arguments:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">f3</span></code></p></th>
+<th class="head"><p>return value</p></th>
+<th class="head"><p>new trace</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="n">f</span> <span class="mi">1</span><span class="o">;*?</span>  <span class="n">f</span> <span class="mi">2</span><span class="o">;*</span> <span class="n">f</span> <span class="mi">0</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">Some</span> <span class="s2">&quot;added entry&quot;</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="o">[</span><span class="n">en</span><span class="o">;</span> <span class="n">en</span><span class="o">]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="n">f</span> <span class="mi">1</span><span class="o">;*</span> <span class="n">f</span> <span class="mi">3</span> <span class="o">;*</span> <span class="n">f</span> <span class="mi">1</span> <span class="o">;*</span>
+<span class="n">f</span> <span class="mi">2</span> <span class="o">;*?</span> <span class="n">f</span> <span class="mi">0</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">None</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="o">[</span><span class="n">en</span><span class="o">;</span> <span class="n">en</span><span class="o">]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="n">f</span> <span class="mi">1</span><span class="o">;*</span> <span class="n">f</span> <span class="mi">3</span> <span class="o">;*?</span> <span class="n">f</span> <span class="mi">1</span> <span class="o">;*</span>
+<span class="n">f</span> <span class="mi">2</span> <span class="o">;*?</span> <span class="n">f</span> <span class="mi">0</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">None</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="o">[</span><span class="n">en</span><span class="o">]</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="option-inside-traceful-option">
+<h4><code class="docutils literal notranslate"><span class="pre">option</span></code> inside <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code><a class="headerlink" href="#option-inside-traceful-option" title="Link to this heading"></a></h4>
+<p>An <code class="docutils literal notranslate"><span class="pre">option</span></code> action,
+already has the “may fail” effect,
+but is missing the “modifies trace” effect,
+since it doesn’t even operate on a trace.
+Intuitively,
+an action not working with the trace
+can be seen as a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> action
+that doesn’t change the trace.
+That is, an <code class="docutils literal notranslate"><span class="pre">option</span></code> action
+can be seen as a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> action
+that computes some value and passes the underlying trace on unchanged.
+This behavior can be realized with the <code class="docutils literal notranslate"><span class="pre">return</span></code> we <a class="reference internal" href="#sec-traceful-return"><span class="std std-ref">previously</span></a> introduced.
+<code class="docutils literal notranslate"><span class="pre">return</span></code> takes some value and attaches the current trace to it unchanged.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: <code class="docutils literal notranslate"><span class="pre">option</span></code> action inside <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code></p>
+<p>When we receive a message in some protocol step,
+the message is in the wire format.
+Since we want to work with the abstract format,
+we need to parse the received message.
+Parsing may fail but does not need to look at the trace.
+Thus, parsing is an <code class="docutils literal notranslate"><span class="pre">option</span></code> action.
+The overall protocol step will be a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> function.</p>
+<p>Thus, we need to use <code class="docutils literal notranslate"><span class="pre">return</span></code> around the call to <code class="docutils literal notranslate"><span class="pre">parse</span></code> inside the protocol step:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="n">abstract_message</span> <span class="o">=</span> <span class="n">return</span> <span class="o">(</span><span class="n">parse</span> <span class="n">wire_message</span><span class="o">)</span> <span class="k">in</span>
+</pre></div>
+</div>
+</div>
+<p><span class="todo-inline">TODO: add an exercise</span></p>
+<div class="admonition remember">
+<p class="admonition-title">Remember</p>
+<p>To call an <code class="docutils literal notranslate"><span class="pre">option</span></code> action
+inside a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> function,
+you need to use <code class="docutils literal notranslate"><span class="pre">return</span></code> around the call to the action.</p>
+</div>
+</section>
+</section>
+<section id="summary">
+<h3>Summary<a class="headerlink" href="#summary" title="Link to this heading"></a></h3>
+<p>To summarize,
+it is possible to combine actions from different monads.
+If we do so, we will end up in the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> monad.
+To combine these actions, we need to take special care of which
+<code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;</span></code> and <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span></code> to use.
+The following gives an overview:</p>
+<div class="admonition remember" id="monads-combine">
+<p class="admonition-title">Remember: Which <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;</span></code> and <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span></code> to use?</p>
+<p>If you want to call an action <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">act</span> <span class="o">:</span> <span class="n">m</span> <span class="n">ret</span></code>
+inside a function <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">f</span> <span class="o">:</span> <span class="n">m&#39;</span> <span class="n">ret&#39;</span></code>,
+where <code class="docutils literal notranslate"><span class="pre">m</span></code> and <code class="docutils literal notranslate"><span class="pre">m'</span></code> are two of the three monads we have seen,
+and <code class="docutils literal notranslate"><span class="pre">ret</span></code> and <code class="docutils literal notranslate"><span class="pre">ret'</span></code> some return types,
+you can use the following table to choose the right composition and accessing return values:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">m'</span></code> (the monad of <code class="docutils literal notranslate"><span class="pre">f</span></code>)</p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">m</span></code> (the monad of <code class="docutils literal notranslate"><span class="pre">act</span></code>)</p></th>
+<th class="head"><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;</span></code></p></th>
+<th class="head"><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span></code></p></th>
+<th class="head"><p>comment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">option</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">option</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;?</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">?</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">traceful</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">traceful</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*</span></code> or
+<code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*?</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*</span></code>
+or
+<code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*?</span></code></p></td>
+<td><p>depending on
+wanted behavior
+in error case:</p>
+<p>should the rest
+be executed if
+the first action
+fails or not?</p>
+</td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">option</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*?</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*?</span></code></p></td>
+<td><p><em>must</em> use
+<code class="docutils literal notranslate"><span class="pre">return</span></code> around
+call to action</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">traceful</span></code> and <code class="docutils literal notranslate"><span class="pre">ret'</span></code> is
+not <code class="docutils literal notranslate"><span class="pre">option</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="o">;*</span></code></p></td>
+<td><p><code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*</span></code></p></td>
+<td><p>if <em>last</em> action
+in <code class="docutils literal notranslate"><span class="pre">f</span></code>, a
+<code class="docutils literal notranslate"><span class="pre">return</span></code> must
+follow</p></td>
+</tr>
+</tbody>
+</table>
+<p>Plain <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span></code> (i.e., non-monadic actions) can be used inside any monadic function.</p>
+</div>
+<p>We now have all pre-requisites to start our first protocol model in DY*.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DY* Maintainer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

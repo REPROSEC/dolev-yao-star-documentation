@@ -1,0 +1,230 @@
+
+        \begin{tikzpicture}[]
+        \pgfdeclarelayer{arrows}
+        \pgfdeclarelayer{groups}
+        \pgfdeclarelayer{markers}
+        \pgfsetlayers{groups,arrows,main,markers}
+        
+        % MATRIX
+        \matrix [column sep={0.4\textwidth,between origins}, row sep=1ex]
+        {
+        \node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-0){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-0){};\node[annex_matrix_dummy_height,minimum height=5ex,anchor=center]{};\node[annex_matrix_dummy_height,minimum height=5ex,anchor=center]{};\\
+\node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-1){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-1){};\node[annex_matrix_dummy_height,minimum height=5ex,anchor=center]{};\\
+\node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-2){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-2){};\node[annex_matrix_dummy_height,minimum height=2ex+2ex,anchor=south,yshift=-1ex]{};\\
+\node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-3){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-3){};\node[annex_matrix_dummy_height,minimum height=5ex,anchor=center]{};\\
+\node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-4){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-4){};\node[annex_matrix_dummy_height,minimum height=2ex+2ex,anchor=south,yshift=-1ex]{};\\
+\node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-5){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-5){};\node[annex_matrix_dummy_height,minimum height=2ex,anchor=center]{};\\
+\node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-6){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-6){};\node[annex_matrix_dummy_height,minimum height=5ex,anchor=center]{};\\
+\node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-7){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-7){};\node[annex_matrix_dummy_height,minimum height=2ex+2ex,anchor=south,yshift=-1ex]{};\\
+\node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-8){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-8){};\node[annex_matrix_dummy_height,minimum height=5ex,anchor=center]{};\\
+\node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-9){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-9){};\node[annex_matrix_dummy_height,minimum height=2ex+2ex,anchor=south,yshift=-1ex]{};\\
+\node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-10){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-10){};\node[annex_matrix_dummy_height,minimum height=3ex,anchor=center]{};\\
+\node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-11){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-11){};\node[annex_matrix_dummy_height,minimum height=5ex,anchor=center]{};\node[annex_matrix_dummy_height,minimum height=5ex,anchor=center]{};\\
+};
+
+% MAIN LAYER
+
+% drawing node of type Protocol in matrix line 0 with attributes: {'annexid': 'Protocol_1', 'parties': [<Party_2>, <Party_3>], 'steps': [<Parallel_4>, <Serial_5>, <Separator_6>, <Serial_7>, <Parallel_8>], 'options': {'colsep': '0.4\\textwidth', 'rowsep': '1ex', 'enumerate': '\\setcounter{protostep}{%d}\\protostep{login-example:%s} ', 'styles': [], 'tex_intro': ''}, 'line': 0, 'length': 12, 'columns': [{'num': 0}, {'num': 1}], 'protocol': <Protocol_1>}
+
+
+% drawing node of type Parallel in matrix line 0 with attributes: {'annexid': 'Parallel_4', 'steps': [<StartParty_9>, <StartParty_10>], 'line': 0, 'length': 1, 'protocol': <Protocol_1>}
+
+
+% drawing node of type StartParty in matrix line 0 with attributes: {'annexid': 'StartParty_9', 'party': <Party_2>, 'line': 0, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['StartParty_9_0'], 'node_name': 'StartParty_9_0', 'end': <EndParty_21>, 'lifeline_segments': [(0, 22, 'annex_lifeline')]}
+\node[name=StartParty_9_0,annex_start_party_box,] at (pos-0-0) {Client $C$};
+
+% drawing node of type StartParty in matrix line 0 with attributes: {'annexid': 'StartParty_10', 'party': <Party_3>, 'line': 0, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['StartParty_10_0'], 'node_name': 'StartParty_10_0', 'end': <EndParty_20>, 'lifeline_segments': [(0, 22, 'annex_lifeline')]}
+\node[name=StartParty_10_0,annex_start_party_box,] at (pos-1-0) {Server $S$};
+
+% drawing node of type Serial in matrix line 1 with attributes: {'annexid': 'Serial_5', 'label': 'Registration', 'steps': [<Action_11>, <GenericMessage_12>, <Action_13>, <GenericMessage_14>], 'line': 1, 'length': 4, 'protocol': <Protocol_1>}
+
+
+% drawing node of type Action in matrix line 1 with attributes: {'annexid': 'Action_11', 'party': <Party_2>, 'label': 'Choose \\& store password, \\\\ generate new nonce $N_C$', 'line': 1, 'protocol': <Protocol_1>, '_counter': 1, 'node_name_counter': 1, '_affecting_nodes': ['Action_11_0'], 'node_name': 'Action_11_0'}
+\node[annex_action,name=Action_11_0] at (pos-0-1) {\setcounter{protostep}{0}\protostep{login-example:Action_11} \contour{white}{Choose \& store password, }\\\contour{white}{ generate new nonce $N_C$}};
+
+% drawing node of type GenericMessage in matrix line 2 with attributes: {'annexid': 'GenericMessage_12', 'id': 'registration-req', 'src': <Party_2>, 'dest': <Party_3>, 'caption': '$\\{42, N_C, \\text{password}, C\\}^a_{k_S}$', 'line': 2, 'protocol': <Protocol_1>, '_counter': 2, 'text_above': '$\\{42, N_C, \\text{password}, C\\}^a_{k_S}$', 'text_below': '', '_affecting_nodes': ['pos-0-2', 'pos-1-2']}
+
+
+% drawing node of type Action in matrix line 3 with attributes: {'annexid': 'Action_13', 'party': <Party_3>, 'label': 'Create \\& store user account:\\\\$(C,\\text{cookie},\\text{password})$', 'line': 3, 'protocol': <Protocol_1>, '_counter': 3, 'node_name_counter': 1, '_affecting_nodes': ['Action_13_0'], 'node_name': 'Action_13_0'}
+\node[annex_action,name=Action_13_0] at (pos-1-3) {\setcounter{protostep}{2}\protostep{login-example:Action_13} \contour{white}{Create \& store user account:}\\\contour{white}{$(C,\text{cookie},\text{password})$}};
+
+% drawing node of type GenericMessage in matrix line 4 with attributes: {'annexid': 'GenericMessage_14', 'id': 'registration-resp', 'src': <Party_3>, 'dest': <Party_2>, 'caption': '$\\{1337, $ ``ok``$\\}^s_{N_C}$', 'line': 4, 'protocol': <Protocol_1>, '_counter': 4, 'text_above': '$\\{1337, $ ``ok``$\\}^s_{N_C}$', 'text_below': '', '_affecting_nodes': ['pos-1-4', 'pos-0-4']}
+
+
+% drawing node of type Separator in matrix line 5 with attributes: {'annexid': 'Separator_6', 'line': 5, 'protocol': <Protocol_1>}
+
+
+% drawing node of type Serial in matrix line 6 with attributes: {'annexid': 'Serial_7', 'label': 'Login', 'steps': [<Action_15>, <GenericMessage_16>, <Action_17>, <GenericMessage_18>, <Action_19>], 'line': 6, 'length': 5, 'protocol': <Protocol_1>}
+
+
+% drawing node of type Action in matrix line 6 with attributes: {'annexid': 'Action_15', 'party': <Party_2>, 'label': "Choose new nonce $N'_C$ \\\\ \\phantom{Choose \\& store password, ttt}", 'line': 6, 'protocol': <Protocol_1>, '_counter': 5, 'node_name_counter': 1, '_affecting_nodes': ['Action_15_0'], 'node_name': 'Action_15_0'}
+\node[annex_action,name=Action_15_0] at (pos-0-6) {\setcounter{protostep}{4}\protostep{login-example:Action_15} \contour{white}{Choose new nonce $N'_C$ }\\\contour{white}{ \phantom{Choose \& store password, ttt}}};
+
+% drawing node of type GenericMessage in matrix line 7 with attributes: {'annexid': 'GenericMessage_16', 'id': 'login-req', 'src': <Party_2>, 'dest': <Party_3>, 'caption': "$\\{42, N_C', \\text{password}, C\\}^a_{k_S}$", 'line': 7, 'protocol': <Protocol_1>, '_counter': 6, 'text_above': "$\\{42, N_C', \\text{password}, C\\}^a_{k_S}$", 'text_below': '', '_affecting_nodes': ['pos-0-7', 'pos-1-7']}
+
+
+% drawing node of type Action in matrix line 8 with attributes: {'annexid': 'Action_17', 'party': <Party_3>, 'label': 'Search account DB \\\\  \\phantom{Create \\& store user accounttttt}', 'line': 8, 'protocol': <Protocol_1>, '_counter': 7, 'node_name_counter': 1, '_affecting_nodes': ['Action_17_0'], 'node_name': 'Action_17_0'}
+\node[annex_action,name=Action_17_0] at (pos-1-8) {\setcounter{protostep}{6}\protostep{login-example:Action_17} \contour{white}{Search account DB }\\\contour{white}{  \phantom{Create \& store user accounttttt}}};
+
+% drawing node of type GenericMessage in matrix line 9 with attributes: {'annexid': 'GenericMessage_18', 'src': <Party_3>, 'dest': <Party_2>, 'caption': "$\\{23, \\text{cookie}\\}^s_{N_C'}$", 'line': 9, 'protocol': <Protocol_1>, '_counter': 8, 'text_above': "$\\{23, \\text{cookie}\\}^s_{N_C'}$", 'text_below': '', '_affecting_nodes': ['pos-1-9', 'pos-0-9']}
+
+
+% drawing node of type Action in matrix line 10 with attributes: {'annexid': 'Action_19', 'party': <Party_2>, 'label': 'Store cookie', 'line': 10, 'protocol': <Protocol_1>, '_counter': 9, 'node_name_counter': 1, '_affecting_nodes': ['Action_19_0'], 'node_name': 'Action_19_0'}
+\node[annex_action,name=Action_19_0] at (pos-0-10) {\setcounter{protostep}{8}\protostep{login-example:Action_19} \contour{white}{Store cookie}};
+
+% drawing node of type Parallel in matrix line 11 with attributes: {'annexid': 'Parallel_8', 'steps': [<EndParty_20>, <EndParty_21>], 'line': 11, 'length': 1, 'protocol': <Protocol_1>}
+
+
+% drawing node of type EndParty in matrix line 11 with attributes: {'annexid': 'EndParty_20', 'party': <Party_3>, 'line': 11, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['EndParty_20_0'], 'node_name': 'EndParty_20_0'}
+\node[name=EndParty_20_0,annex_end_party_box,] at (pos-1-11) {Server $S$};
+
+% drawing node of type EndParty in matrix line 11 with attributes: {'annexid': 'EndParty_21', 'party': <Party_2>, 'line': 11, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['EndParty_21_0'], 'node_name': 'EndParty_21_0'}
+\node[name=EndParty_21_0,annex_end_party_box,] at (pos-0-11) {Client $C$};
+
+
+% ARROWS LAYER
+
+\begin{pgfonlayer}{arrows}% drawing node of type Protocol in matrix line 0 with attributes: {'annexid': 'Protocol_1', 'parties': [<Party_2>, <Party_3>], 'steps': [<Parallel_4>, <Serial_5>, <Separator_6>, <Serial_7>, <Parallel_8>], 'options': {'colsep': '0.4\\textwidth', 'rowsep': '1ex', 'enumerate': '\\setcounter{protostep}{%d}\\protostep{login-example:%s} ', 'styles': [], 'tex_intro': ''}, 'line': 0, 'length': 12, 'columns': [{'num': 0}, {'num': 1}], 'protocol': <Protocol_1>}
+
+
+% drawing node of type Parallel in matrix line 0 with attributes: {'annexid': 'Parallel_4', 'steps': [<StartParty_9>, <StartParty_10>], 'line': 0, 'length': 1, 'protocol': <Protocol_1>}
+
+
+% drawing node of type StartParty in matrix line 0 with attributes: {'annexid': 'StartParty_9', 'party': <Party_2>, 'line': 0, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['StartParty_9_0'], 'node_name': 'StartParty_9_0', 'end': <EndParty_21>, 'lifeline_segments': [(0, 22, 'annex_lifeline')]}
+\draw[annex_lifeline] (pos-0-0) -- (pos-0-11);
+
+% drawing node of type StartParty in matrix line 0 with attributes: {'annexid': 'StartParty_10', 'party': <Party_3>, 'line': 0, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['StartParty_10_0'], 'node_name': 'StartParty_10_0', 'end': <EndParty_20>, 'lifeline_segments': [(0, 22, 'annex_lifeline')]}
+\draw[annex_lifeline] (pos-1-0) -- (pos-1-11);
+
+% drawing node of type Serial in matrix line 1 with attributes: {'annexid': 'Serial_5', 'label': 'Registration', 'steps': [<Action_11>, <GenericMessage_12>, <Action_13>, <GenericMessage_14>], 'line': 1, 'length': 4, 'protocol': <Protocol_1>}
+
+
+% drawing node of type Action in matrix line 1 with attributes: {'annexid': 'Action_11', 'party': <Party_2>, 'label': 'Choose \\& store password, \\\\ generate new nonce $N_C$', 'line': 1, 'protocol': <Protocol_1>, '_counter': 1, 'node_name_counter': 1, '_affecting_nodes': ['Action_11_0'], 'node_name': 'Action_11_0', 'tex_id': '\\setcounter{protostep}{0}\\protostep{login-example:Action_11} ', 'tikz_extra_style': ''}
+
+
+% drawing node of type GenericMessage in matrix line 2 with attributes: {'annexid': 'GenericMessage_12', 'id': 'registration-req', 'src': <Party_2>, 'dest': <Party_3>, 'caption': '$\\{42, N_C, \\text{password}, C\\}^a_{k_S}$', 'line': 2, 'protocol': <Protocol_1>, '_counter': 2, 'text_above': '$\\{42, N_C, \\text{password}, C\\}^a_{k_S}$', 'text_below': '', '_affecting_nodes': ['pos-0-2', 'pos-1-2']}
+%% draw message
+            \draw[annex_message] (pos-0-2) to node [annex_arrow_text,above=5pt,anchor=base,pin={[pin distance=-8pt,pin edge={draw=none},annex_debug]90:registration-req}](GenericMessage_12_0){\setcounter{protostep}{1}\protostep{login-example:registration-req} \contour{white}{$\{42, N_C, \text{password}, C\}^a_{k_S}$}}  (pos-1-2); 
+
+% drawing node of type Action in matrix line 3 with attributes: {'annexid': 'Action_13', 'party': <Party_3>, 'label': 'Create \\& store user account:\\\\$(C,\\text{cookie},\\text{password})$', 'line': 3, 'protocol': <Protocol_1>, '_counter': 3, 'node_name_counter': 1, '_affecting_nodes': ['Action_13_0'], 'node_name': 'Action_13_0', 'tex_id': '\\setcounter{protostep}{2}\\protostep{login-example:Action_13} ', 'tikz_extra_style': ''}
+
+
+% drawing node of type GenericMessage in matrix line 4 with attributes: {'annexid': 'GenericMessage_14', 'id': 'registration-resp', 'src': <Party_3>, 'dest': <Party_2>, 'caption': '$\\{1337, $ ``ok``$\\}^s_{N_C}$', 'line': 4, 'protocol': <Protocol_1>, '_counter': 4, 'text_above': '$\\{1337, $ ``ok``$\\}^s_{N_C}$', 'text_below': '', '_affecting_nodes': ['pos-1-4', 'pos-0-4']}
+%% draw message
+            \draw[annex_message] (pos-1-4) to node [annex_arrow_text,above=5pt,anchor=base,pin={[pin distance=-8pt,pin edge={draw=none},annex_debug]90:registration-resp}](GenericMessage_14_0){\setcounter{protostep}{3}\protostep{login-example:registration-resp} \contour{white}{$\{1337, $ ``ok``$\}^s_{N_C}$}}  (pos-0-4); 
+
+% drawing node of type Separator in matrix line 5 with attributes: {'annexid': 'Separator_6', 'line': 5, 'protocol': <Protocol_1>}
+%% draw separator line
+        \draw[annex_separator] (pos-0-5) to  (pos-1-5);
+
+% drawing node of type Serial in matrix line 6 with attributes: {'annexid': 'Serial_7', 'label': 'Login', 'steps': [<Action_15>, <GenericMessage_16>, <Action_17>, <GenericMessage_18>, <Action_19>], 'line': 6, 'length': 5, 'protocol': <Protocol_1>}
+
+
+% drawing node of type Action in matrix line 6 with attributes: {'annexid': 'Action_15', 'party': <Party_2>, 'label': "Choose new nonce $N'_C$ \\\\ \\phantom{Choose \\& store password, ttt}", 'line': 6, 'protocol': <Protocol_1>, '_counter': 5, 'node_name_counter': 1, '_affecting_nodes': ['Action_15_0'], 'node_name': 'Action_15_0', 'tex_id': '\\setcounter{protostep}{4}\\protostep{login-example:Action_15} ', 'tikz_extra_style': ''}
+
+
+% drawing node of type GenericMessage in matrix line 7 with attributes: {'annexid': 'GenericMessage_16', 'id': 'login-req', 'src': <Party_2>, 'dest': <Party_3>, 'caption': "$\\{42, N_C', \\text{password}, C\\}^a_{k_S}$", 'line': 7, 'protocol': <Protocol_1>, '_counter': 6, 'text_above': "$\\{42, N_C', \\text{password}, C\\}^a_{k_S}$", 'text_below': '', '_affecting_nodes': ['pos-0-7', 'pos-1-7']}
+%% draw message
+            \draw[annex_message] (pos-0-7) to node [annex_arrow_text,above=5pt,anchor=base,pin={[pin distance=-8pt,pin edge={draw=none},annex_debug]90:login-req}](GenericMessage_16_0){\setcounter{protostep}{5}\protostep{login-example:login-req} \contour{white}{$\{42, N_C', \text{password}, C\}^a_{k_S}$}}  (pos-1-7); 
+
+% drawing node of type Action in matrix line 8 with attributes: {'annexid': 'Action_17', 'party': <Party_3>, 'label': 'Search account DB \\\\  \\phantom{Create \\& store user accounttttt}', 'line': 8, 'protocol': <Protocol_1>, '_counter': 7, 'node_name_counter': 1, '_affecting_nodes': ['Action_17_0'], 'node_name': 'Action_17_0', 'tex_id': '\\setcounter{protostep}{6}\\protostep{login-example:Action_17} ', 'tikz_extra_style': ''}
+
+
+% drawing node of type GenericMessage in matrix line 9 with attributes: {'annexid': 'GenericMessage_18', 'src': <Party_3>, 'dest': <Party_2>, 'caption': "$\\{23, \\text{cookie}\\}^s_{N_C'}$", 'line': 9, 'protocol': <Protocol_1>, '_counter': 8, 'text_above': "$\\{23, \\text{cookie}\\}^s_{N_C'}$", 'text_below': '', '_affecting_nodes': ['pos-1-9', 'pos-0-9']}
+%% draw message
+            \draw[annex_message] (pos-1-9) to node [annex_arrow_text,above=5pt,anchor=base,pin={[pin distance=-8pt,pin edge={draw=none},annex_debug]90:}](GenericMessage_18_0){\setcounter{protostep}{7}\protostep{login-example:GenericMessage_18} \contour{white}{$\{23, \text{cookie}\}^s_{N_C'}$}}  (pos-0-9); 
+
+% drawing node of type Action in matrix line 10 with attributes: {'annexid': 'Action_19', 'party': <Party_2>, 'label': 'Store cookie', 'line': 10, 'protocol': <Protocol_1>, '_counter': 9, 'node_name_counter': 1, '_affecting_nodes': ['Action_19_0'], 'node_name': 'Action_19_0', 'tex_id': '\\setcounter{protostep}{8}\\protostep{login-example:Action_19} ', 'tikz_extra_style': ''}
+
+
+% drawing node of type Parallel in matrix line 11 with attributes: {'annexid': 'Parallel_8', 'steps': [<EndParty_20>, <EndParty_21>], 'line': 11, 'length': 1, 'protocol': <Protocol_1>}
+
+
+% drawing node of type EndParty in matrix line 11 with attributes: {'annexid': 'EndParty_20', 'party': <Party_3>, 'line': 11, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['EndParty_20_0'], 'node_name': 'EndParty_20_0'}
+
+
+% drawing node of type EndParty in matrix line 11 with attributes: {'annexid': 'EndParty_21', 'party': <Party_2>, 'line': 11, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['EndParty_21_0'], 'node_name': 'EndParty_21_0'}
+
+
+\end{pgfonlayer}
+% MARKERS LAYER
+
+\begin{pgfonlayer}{markers}% drawing node of type Protocol in matrix line 0 with attributes: {'annexid': 'Protocol_1', 'parties': [<Party_2>, <Party_3>], 'steps': [<Parallel_4>, <Serial_5>, <Separator_6>, <Serial_7>, <Parallel_8>], 'options': {'colsep': '0.4\\textwidth', 'rowsep': '1ex', 'enumerate': '\\setcounter{protostep}{%d}\\protostep{login-example:%s} ', 'styles': [], 'tex_intro': ''}, 'line': 0, 'length': 12, 'columns': [{'num': 0}, {'num': 1}], 'protocol': <Protocol_1>}
+
+
+
+% drawing node of type Parallel in matrix line 0 with attributes: {'annexid': 'Parallel_4', 'steps': [<StartParty_9>, <StartParty_10>], 'line': 0, 'length': 1, 'protocol': <Protocol_1>}
+
+
+
+% drawing node of type StartParty in matrix line 0 with attributes: {'annexid': 'StartParty_9', 'party': <Party_2>, 'line': 0, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['StartParty_9_0'], 'node_name': 'StartParty_9_0', 'end': <EndParty_21>, 'lifeline_segments': [(0, 22, 'annex_lifeline')]}
+
+
+
+% drawing node of type StartParty in matrix line 0 with attributes: {'annexid': 'StartParty_10', 'party': <Party_3>, 'line': 0, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['StartParty_10_0'], 'node_name': 'StartParty_10_0', 'end': <EndParty_20>, 'lifeline_segments': [(0, 22, 'annex_lifeline')]}
+
+
+
+% drawing node of type Serial in matrix line 1 with attributes: {'annexid': 'Serial_5', 'label': 'Registration', 'steps': [<Action_11>, <GenericMessage_12>, <Action_13>, <GenericMessage_14>], 'line': 1, 'length': 4, 'protocol': <Protocol_1>}
+
+\node[annex_condensed_box,fit=(Action_11_0)(pos-0-2)(pos-1-2)(GenericMessage_12_0)(Action_13_0)(pos-1-4)(pos-0-4)(GenericMessage_14_0)](Serial_5) {}; \node[] at (Serial_5.north west) {};\node[annex_multistep_caption_text,anchor=north east] at (Serial_5.north east) {\contour{white}{Registration}};
+
+% drawing node of type Action in matrix line 1 with attributes: {'annexid': 'Action_11', 'party': <Party_2>, 'label': 'Choose \\& store password, \\\\ generate new nonce $N_C$', 'line': 1, 'protocol': <Protocol_1>, '_counter': 1, 'node_name_counter': 1, '_affecting_nodes': ['Action_11_0'], 'node_name': 'Action_11_0', 'tex_id': '\\setcounter{protostep}{0}\\protostep{login-example:Action_11} ', 'tikz_extra_style': ''}
+
+
+
+% drawing node of type GenericMessage in matrix line 2 with attributes: {'annexid': 'GenericMessage_12', 'id': 'registration-req', 'src': <Party_2>, 'dest': <Party_3>, 'caption': '$\\{42, N_C, \\text{password}, C\\}^a_{k_S}$', 'line': 2, 'protocol': <Protocol_1>, '_counter': 2, 'text_above': '$\\{42, N_C, \\text{password}, C\\}^a_{k_S}$', 'text_below': '', '_affecting_nodes': ['pos-0-2', 'pos-1-2', 'GenericMessage_12_0'], 'tikz_extra_style': '', 'node_name_counter': 1, 'tex_id': '\\setcounter{protostep}{1}\\protostep{login-example:registration-req} ', 'tikz_above': 'node [annex_arrow_text,above=5pt,anchor=base,pin={[pin distance=-8pt,pin edge={draw=none},annex_debug]90:registration-req}](GenericMessage_12_0){\\setcounter{protostep}{1}\\protostep{login-example:registration-req} \\contour{white}{$\\{42, N_C, \\text{password}, C\\}^a_{k_S}$}}', 'tikz_below': ''}
+
+
+
+% drawing node of type Action in matrix line 3 with attributes: {'annexid': 'Action_13', 'party': <Party_3>, 'label': 'Create \\& store user account:\\\\$(C,\\text{cookie},\\text{password})$', 'line': 3, 'protocol': <Protocol_1>, '_counter': 3, 'node_name_counter': 1, '_affecting_nodes': ['Action_13_0'], 'node_name': 'Action_13_0', 'tex_id': '\\setcounter{protostep}{2}\\protostep{login-example:Action_13} ', 'tikz_extra_style': ''}
+
+
+
+% drawing node of type GenericMessage in matrix line 4 with attributes: {'annexid': 'GenericMessage_14', 'id': 'registration-resp', 'src': <Party_3>, 'dest': <Party_2>, 'caption': '$\\{1337, $ ``ok``$\\}^s_{N_C}$', 'line': 4, 'protocol': <Protocol_1>, '_counter': 4, 'text_above': '$\\{1337, $ ``ok``$\\}^s_{N_C}$', 'text_below': '', '_affecting_nodes': ['pos-1-4', 'pos-0-4', 'GenericMessage_14_0'], 'tikz_extra_style': '', 'node_name_counter': 1, 'tex_id': '\\setcounter{protostep}{3}\\protostep{login-example:registration-resp} ', 'tikz_above': 'node [annex_arrow_text,above=5pt,anchor=base,pin={[pin distance=-8pt,pin edge={draw=none},annex_debug]90:registration-resp}](GenericMessage_14_0){\\setcounter{protostep}{3}\\protostep{login-example:registration-resp} \\contour{white}{$\\{1337, $ ``ok``$\\}^s_{N_C}$}}', 'tikz_below': ''}
+
+
+
+% drawing node of type Separator in matrix line 5 with attributes: {'annexid': 'Separator_6', 'line': 5, 'protocol': <Protocol_1>, 'tikz_extra_style': ''}
+
+
+
+% drawing node of type Serial in matrix line 6 with attributes: {'annexid': 'Serial_7', 'label': 'Login', 'steps': [<Action_15>, <GenericMessage_16>, <Action_17>, <GenericMessage_18>, <Action_19>], 'line': 6, 'length': 5, 'protocol': <Protocol_1>}
+
+\node[annex_condensed_box,fit=(Action_15_0)(pos-0-7)(pos-1-7)(GenericMessage_16_0)(Action_17_0)(pos-1-9)(pos-0-9)(GenericMessage_18_0)(Action_19_0)](Serial_7) {}; \node[] at (Serial_7.north west) {};\node[annex_multistep_caption_text,anchor=north east] at (Serial_7.north east) {\contour{white}{Login}};
+
+% drawing node of type Action in matrix line 6 with attributes: {'annexid': 'Action_15', 'party': <Party_2>, 'label': "Choose new nonce $N'_C$ \\\\ \\phantom{Choose \\& store password, ttt}", 'line': 6, 'protocol': <Protocol_1>, '_counter': 5, 'node_name_counter': 1, '_affecting_nodes': ['Action_15_0'], 'node_name': 'Action_15_0', 'tex_id': '\\setcounter{protostep}{4}\\protostep{login-example:Action_15} ', 'tikz_extra_style': ''}
+
+
+
+% drawing node of type GenericMessage in matrix line 7 with attributes: {'annexid': 'GenericMessage_16', 'id': 'login-req', 'src': <Party_2>, 'dest': <Party_3>, 'caption': "$\\{42, N_C', \\text{password}, C\\}^a_{k_S}$", 'line': 7, 'protocol': <Protocol_1>, '_counter': 6, 'text_above': "$\\{42, N_C', \\text{password}, C\\}^a_{k_S}$", 'text_below': '', '_affecting_nodes': ['pos-0-7', 'pos-1-7', 'GenericMessage_16_0'], 'tikz_extra_style': '', 'node_name_counter': 1, 'tex_id': '\\setcounter{protostep}{5}\\protostep{login-example:login-req} ', 'tikz_above': "node [annex_arrow_text,above=5pt,anchor=base,pin={[pin distance=-8pt,pin edge={draw=none},annex_debug]90:login-req}](GenericMessage_16_0){\\setcounter{protostep}{5}\\protostep{login-example:login-req} \\contour{white}{$\\{42, N_C', \\text{password}, C\\}^a_{k_S}$}}", 'tikz_below': ''}
+
+
+
+% drawing node of type Action in matrix line 8 with attributes: {'annexid': 'Action_17', 'party': <Party_3>, 'label': 'Search account DB \\\\  \\phantom{Create \\& store user accounttttt}', 'line': 8, 'protocol': <Protocol_1>, '_counter': 7, 'node_name_counter': 1, '_affecting_nodes': ['Action_17_0'], 'node_name': 'Action_17_0', 'tex_id': '\\setcounter{protostep}{6}\\protostep{login-example:Action_17} ', 'tikz_extra_style': ''}
+
+
+
+% drawing node of type GenericMessage in matrix line 9 with attributes: {'annexid': 'GenericMessage_18', 'src': <Party_3>, 'dest': <Party_2>, 'caption': "$\\{23, \\text{cookie}\\}^s_{N_C'}$", 'line': 9, 'protocol': <Protocol_1>, '_counter': 8, 'text_above': "$\\{23, \\text{cookie}\\}^s_{N_C'}$", 'text_below': '', '_affecting_nodes': ['pos-1-9', 'pos-0-9', 'GenericMessage_18_0'], 'tikz_extra_style': '', 'node_name_counter': 1, 'tex_id': '\\setcounter{protostep}{7}\\protostep{login-example:GenericMessage_18} ', 'tikz_above': "node [annex_arrow_text,above=5pt,anchor=base,pin={[pin distance=-8pt,pin edge={draw=none},annex_debug]90:}](GenericMessage_18_0){\\setcounter{protostep}{7}\\protostep{login-example:GenericMessage_18} \\contour{white}{$\\{23, \\text{cookie}\\}^s_{N_C'}$}}", 'tikz_below': ''}
+
+
+
+% drawing node of type Action in matrix line 10 with attributes: {'annexid': 'Action_19', 'party': <Party_2>, 'label': 'Store cookie', 'line': 10, 'protocol': <Protocol_1>, '_counter': 9, 'node_name_counter': 1, '_affecting_nodes': ['Action_19_0'], 'node_name': 'Action_19_0', 'tex_id': '\\setcounter{protostep}{8}\\protostep{login-example:Action_19} ', 'tikz_extra_style': ''}
+
+
+
+% drawing node of type Parallel in matrix line 11 with attributes: {'annexid': 'Parallel_8', 'steps': [<EndParty_20>, <EndParty_21>], 'line': 11, 'length': 1, 'protocol': <Protocol_1>}
+
+
+
+% drawing node of type EndParty in matrix line 11 with attributes: {'annexid': 'EndParty_20', 'party': <Party_3>, 'line': 11, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['EndParty_20_0'], 'node_name': 'EndParty_20_0'}
+
+
+
+% drawing node of type EndParty in matrix line 11 with attributes: {'annexid': 'EndParty_21', 'party': <Party_2>, 'line': 11, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['EndParty_21_0'], 'node_name': 'EndParty_21_0'}
+
+
+
+\end{pgfonlayer}
+        \end{tikzpicture}
+        

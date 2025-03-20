@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Model of the Two-Message Protocol &mdash; Security Analysis of Cryptographic Protocols with DY*  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/contentui.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/remember.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/example.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/exercise.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/infobox.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/box.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/todo.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/math.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/contentui.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Security Analysis of Cryptographic Protocols with DY*
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#example-protocols">Example Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#main-concepts-in-dy">Main Concepts in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelling-protocols.html">Modelling Protocols in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stating-sec-props.html">Stating Security Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proof-method.html">Proving Security Properties</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Security Analysis of Cryptographic Protocols with DY*</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">A Model of the Two-Message Protocol</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modelling-Twomessage.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="a-model-of-the-two-message-protocol">
+<h1>A Model of the Two-Message Protocol<a class="headerlink" href="#a-model-of-the-two-message-protocol" title="Link to this heading"></a></h1>
+<p>We build the DY* model of the Two-Message protocol following the <a class="reference internal" href="introduction.html#example-twomessage-localview"><span class="std std-ref">local-view description</span></a> step by step.</p>
+<section id="setup">
+<span id="model-twomessage-setup"></span><h2>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h2>
+<p>Create a new folder <code class="docutils literal notranslate"><span class="pre">TwoMessageP</span></code> and add the following <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>:</p>
+<div class="highlight-Makefile notranslate"><div class="highlight"><pre><span></span><span class="nv">TUTORIAL_HOME</span><span class="w"> </span><span class="o">?=</span><span class="w"> </span>../..
+
+<span class="nv">EXAMPLE_DIRS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>path_to/TwoMessageP
+
+<span class="cp">include $(TUTORIAL_HOME)/Makefile</span>
+</pre></div>
+</div>
+<p>If your run <code class="docutils literal notranslate"><span class="pre">make</span></code> in the <code class="docutils literal notranslate"><span class="pre">TwoMessageP</span></code> folder now,
+it will verify all of core DY*.
+This produces a lot of output on the terminal (including some warnings)
+and takes quite some time (around 10 Minutes)!
+You only have to do this once though, so you may as well start it now and let it run.</p>
+<p>It is best practice to separate the definition of the abstract message and state types from the protocol steps.
+We create two files <code class="docutils literal notranslate"><span class="pre">DY.TwoMessage.Data.fst</span></code> and <code class="docutils literal notranslate"><span class="pre">DY.TwoMessage.Protocol.fst</span></code> in the <code class="docutils literal notranslate"><span class="pre">TwoMessageP</span></code> folder.
+Both of them are F* modules and as such must begin with</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="n">name_of_file_without_fst</span>
+</pre></div>
+</div>
+<p>To import functions from core DY*, we need to open the corresponding modules in both:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">open</span> <span class="nc">Comparse</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Core</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Lib</span>
+</pre></div>
+</div>
+<p>If the environment variables and the Makefile are setup correctly,
+you should be able to (interactively) check both of the files successfully.
+If the previous <code class="docutils literal notranslate"><span class="pre">make</span></code> has finished and you do <code class="docutils literal notranslate"><span class="pre">make</span></code> again,
+it should be much faster and you should see a few lines related to the two files in the folder.</p>
+</section>
+<section id="the-abstract-message-and-state-types">
+<h2>The abstract message and state types<a class="headerlink" href="#the-abstract-message-and-state-types" title="Link to this heading"></a></h2>
+<p>We define the types for the abstract message and state format in the <code class="docutils literal notranslate"><span class="pre">DY.TwoMessage.Data</span></code> file.</p>
+<section id="messages">
+<h3>Messages<a class="headerlink" href="#messages" title="Link to this heading"></a></h3>
+<p>When we previously introduced the abstract message format
+and looked at the example for the Two-Message protocol,
+we already used valid F* syntax.
+So we can just copy the two record type definitions for <code class="docutils literal notranslate"><span class="pre">ping_t</span></code> and <code class="docutils literal notranslate"><span class="pre">ack_t</span></code>
+from the <a class="reference internal" href="modelling-wireabstractformats.html#ex-abstract-messages-twomessagep"><span class="std std-ref">previous example</span></a>.</p>
+<p>Now that we have the types for the two messages separately,
+we want to collect them in a single type for messages.
+We do this, by defining a new type <code class="docutils literal notranslate"><span class="pre">message_t</span></code>
+and use constructors for the two messages:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">message_t</span> <span class="o">=</span>
+  <span class="o">|</span> <span class="nc">Ping</span><span class="o">:</span> <span class="o">(</span><span class="n">ping</span><span class="o">:</span><span class="n">ping_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">message_t</span>
+  <span class="o">|</span> <span class="nc">Ack</span><span class="o">:</span>  <span class="o">(</span><span class="n">ack</span><span class="o">:</span><span class="n">ack_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">message_t</span>
+</pre></div>
+</div>
+<p>This fully defines our abstract message format.
+Whenever we have a <code class="docutils literal notranslate"><span class="pre">msg</span></code> of type <code class="docutils literal notranslate"><span class="pre">message_t</span></code>,
+we know from the constructor whether it is a Ping or Ack message
+and we can access the corresponding fields from the <code class="docutils literal notranslate"><span class="pre">ping_t</span></code> or <code class="docutils literal notranslate"><span class="pre">ack_t</span></code> record.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: Recap – Instantiating and Accessing Values of Record Types</p>
+<p>A concret instance of a Ping message with content “Alice” and <span class="math notranslate nohighlight">\(n\)</span>, can be specified as</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">msg</span> <span class="o">:</span> <span class="n">message_t</span> <span class="o">=</span> <span class="nc">Ping</span> <span class="o">{</span><span class="n">alice</span> <span class="o">=</span> <span class="s2">&quot;Alice&quot;</span><span class="o">;</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">n</span><span class="o">}</span>
+</pre></div>
+</div>
+<p>Given this <code class="docutils literal notranslate"><span class="pre">msg</span></code>, we can access say the <code class="docutils literal notranslate"><span class="pre">alice</span></code> field value with:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">al</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Ping</span><span class="o">?.</span><span class="n">ping</span> <span class="n">msg</span><span class="o">).</span><span class="n">alice</span>
+</pre></div>
+</div>
+</div>
+<p>We now need to deal with parsing and serializing of our abstract message format from/to the wire format.
+Luckily, we don’t have to write parsing and serializing by hand,
+since the tool <a class="reference external" href="https://github.com/TWal/comparse">Comparse</a> can construct those
+automatically from the type definitions.</p>
+<p>To invoke Comparse for a given type, we have to call</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_</span><span class="o">(</span><span class="n">name_of_type</span><span class="o">)]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">name_of_type</span><span class="o">))</span>
+</pre></div>
+</div>
+<p>In our case, we need:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_ping_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">ping_t</span><span class="o">))</span>
+
+<span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_ack_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">ack_t</span><span class="o">))</span>
+
+<span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_message_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">message_t</span><span class="o">))</span>
+</pre></div>
+</div>
+<p>This generates parsing and serializing functions for each of our abstract message types.</p>
+<p>However, this does not quite work yet.
+We need to guide Comparse a bit.
+Since Comparse is so general, we need to add some annotations to our types.
+We need to add
+<code class="code highlight fstar docutils literal highlight-fstar"><span class="o">[@@</span> <span class="n">with_bytes</span> <span class="n">bytes</span><span class="o">]</span></code> right before the type definitions, i.e.,</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="o">[@@</span> <span class="n">with_bytes</span> <span class="n">bytes</span><span class="o">]</span>
+<span class="k">type</span> <span class="n">ping_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>We need to do that also for <code class="docutils literal notranslate"><span class="pre">ack_t</span></code> and <code class="docutils literal notranslate"><span class="pre">message_t</span></code>.</p>
+<p>Once you added all annotations, the splices should verify.
+Verifying these lines takes a while (up to 15 Seconds)!
+This is one of the reasons to separate them from other functions that you may want to
+re-check frequently (for example protocol steps).</p>
+<div class="admonition info">
+<p class="admonition-title">Common Mistake: Forgetting <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">[@@</span> <span class="n">with_bytes</span> <span class="n">bytes</span><span class="o">]</span></code></p>
+<p>If you try <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_ping_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">ping_t</span><span class="o">))</span></code>,
+but get an error of the form</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>- ’tc’ failed
+- ’tcc’ failed
+- Cannot type (3) DY.Core.Bytes.Type.ps_bytes in context ([]). Error = ( - Name
+  &quot;DY.Core.Bytes.Type.ps_bytes&quot; not found )
+</pre></div>
+</div>
+<p>you probably forgot to add the annotation <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">[@@</span> <span class="n">with_bytes</span> <span class="n">bytes</span><span class="o">]</span></code>
+right before the type you are splicing (here <code class="docutils literal notranslate"><span class="pre">ping_t</span></code>).</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Common Mistake: Not using <code class="docutils literal notranslate"><span class="pre">ps_name_of_type</span></code> in the first argument of <code class="docutils literal notranslate"><span class="pre">splice</span></code></p>
+<p>If you get an error of the form</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Splice declared the name DY.TwoMessageP.Data.something_else_than_ps_ack_t but it was not defined.
+Those defined were: [DY.TwoMessageP.Data.ps_ack_t]
+</pre></div>
+</div>
+<p>you probably didn’t use <code class="docutils literal notranslate"><span class="pre">ps_ack_t</span></code> in the brackets of the splice.</p>
+<p>The term in this brackets really needs to be <code class="docutils literal notranslate"><span class="pre">ps_</span></code> followed by the name of the type (here <code class="docutils literal notranslate"><span class="pre">ack_t</span></code>)!</p>
+<p>That is, <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">something_else_than_ps_ack_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">ack_t</span><span class="o">))</span></code> will produce the above error,
+while <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_ack_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">ack_t</span><span class="o">))</span></code> will not.</p>
+</div>
+<p>The final step for serializing and parsing is to declare our message type <code class="docutils literal notranslate"><span class="pre">message_t</span></code>
+an instance of Comparse’s <code class="docutils literal notranslate"><span class="pre">parseable_serializable</span></code> class, like this:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span> <span class="n">parseable_serializeable_bytes_message_t</span><span class="o">:</span> <span class="n">parseable_serializeable</span> <span class="n">bytes</span> <span class="n">message_t</span> <span class="o">=</span>
+  <span class="n">mk_parseable_serializeable</span> <span class="n">ps_message_t</span>
+</pre></div>
+</div>
+<p>We don’t need to understand the details of this line.
+The important part is, that now we can call <code class="docutils literal notranslate"><span class="pre">parse</span></code> and <code class="docutils literal notranslate"><span class="pre">serialize</span></code> for instances of our message type.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: <code class="docutils literal notranslate"><span class="pre">serialize</span></code> and <code class="docutils literal notranslate"><span class="pre">parse</span></code> for <code class="docutils literal notranslate"><span class="pre">message_t</span></code></p>
+<p>With <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span> <span class="n">msg</span> <span class="o">:</span> <span class="n">message_t</span> <span class="o">=</span> <span class="nc">Ping</span> <span class="o">{</span><span class="n">alice</span> <span class="o">=</span> <span class="s2">&quot;Alice&quot;</span><span class="o">;</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">empty</span><span class="o">}</span></code> from above, we can write</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">_</span> <span class="o">=</span>
+  <span class="kd">let</span> <span class="n">msg_wire</span> <span class="o">:</span> <span class="n">bytes</span> <span class="o">=</span> <span class="n">serialize</span> <span class="n">message_t</span> <span class="n">msg</span> <span class="k">in</span> <span class="c">// serialize the abstract format to the wire format</span>
+  <span class="kd">let</span> <span class="n">msg_</span> <span class="o">=</span> <span class="n">parse</span> <span class="n">message_t</span> <span class="n">msg_wire</span> <span class="k">in</span>  <span class="c">// parse from the wire format to an abstract message</span>
+</pre></div>
+</div>
+<p>Note that we have to tell <code class="docutils literal notranslate"><span class="pre">serialize</span></code> and <code class="docutils literal notranslate"><span class="pre">parse</span></code> what the abstract type is that we consider (here <code class="docutils literal notranslate"><span class="pre">message_t</span></code>).</p>
+</div>
+<p>We don’t need to care about <em>how</em> the abstract messages are translated to the wire format,
+i.e., how <code class="docutils literal notranslate"><span class="pre">msg_wire</span></code> looks like.
+We just use the following properties that Comparse provides automatically:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">parse_serialize_inv_lemma</span> <span class="n">x</span> <span class="o">=</span>
+  <span class="n">parse</span> <span class="n">message_t</span> <span class="o">(</span><span class="n">serialize</span> <span class="n">message_t</span> <span class="n">x</span><span class="o">)</span> <span class="o">==</span> <span class="nc">Some</span> <span class="n">x</span>
+
+<span class="kd">let</span> <span class="n">serialize_parse_inv_lemma</span> <span class="n">buff</span> <span class="o">=</span>
+  <span class="k">match</span> <span class="n">parse</span> <span class="n">message_t</span> <span class="n">buf</span> <span class="k">with</span>
+  <span class="o">|</span> <span class="nc">Some</span> <span class="n">x</span> <span class="o">-&gt;</span> <span class="n">serialize</span> <span class="n">message_t</span> <span class="n">x</span> <span class="o">==</span> <span class="n">buf</span>
+  <span class="o">|</span> <span class="nc">None</span> <span class="o">-&gt;</span> <span class="bp">True</span>
+</pre></div>
+</div>
+<div class="toggle-header docutils container">
+<p><strong>Discussion</strong></p>
+</div>
+<div class="toggle-content box docutils container">
+<p>These inverse properties of parsing and serializing are quite strong
+and may not be true for some real-world protocols!
+There might be different abstract messages that have the same serialization.
+Or the other way around: a wire format message could be parsed to two different abstract formats.
+There are examples of format confusion attacks for several protocols.</p>
+<p>Thus, enforcing the inverse properties “hides” some attacks
+that can not be found when using Comparse for generating the parser and serializer of a type.</p>
+</div>
+<p>Your <code class="docutils literal notranslate"><span class="pre">DY.TwoMessageP.Data.fst</span></code> file should now look like this:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nn">DY</span><span class="p">.</span><span class="nn">TwoMessageP</span><span class="p">.</span><span class="nc">Data</span>
+
+<span class="k">open</span> <span class="nc">Comparse</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Core</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Lib</span>
+
+<span class="o">[@@</span> <span class="n">with_bytes</span> <span class="n">bytes</span><span class="o">]</span>
+<span class="k">type</span> <span class="n">ping_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="o">[@@</span> <span class="n">with_bytes</span> <span class="n">bytes</span><span class="o">]</span>
+<span class="k">type</span> <span class="n">ack_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="o">[@@</span> <span class="n">with_bytes</span> <span class="n">bytes</span><span class="o">]</span>
+<span class="k">type</span> <span class="n">message_t</span> <span class="o">=</span>
+  <span class="o">|</span> <span class="nc">Ping</span><span class="o">:</span> <span class="o">(</span><span class="n">ping</span><span class="o">:</span><span class="n">ping_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">message_t</span>
+  <span class="o">|</span> <span class="nc">Ack</span><span class="o">:</span>  <span class="o">(</span><span class="n">ack</span><span class="o">:</span><span class="n">ack_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">message_t</span>
+
+<span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_ping_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">ping_t</span><span class="o">))</span>
+<span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_ack_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">ack_t</span><span class="o">))</span>
+<span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_message_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">message_t</span><span class="o">))</span>
+
+<span class="n">instance</span> <span class="n">parseable_serializeable_bytes_message_t</span><span class="o">:</span> <span class="n">parseable_serializeable</span> <span class="n">bytes</span> <span class="n">message_t</span> <span class="o">=</span>
+  <span class="n">mk_parseable_serializeable</span> <span class="n">ps_message_t</span>
+</pre></div>
+</div>
+<p>We defined types for the abstract formats for Ping and Ack messages.
+We then collected them in an overall <code class="docutils literal notranslate"><span class="pre">message_t</span></code> type.
+Finally, we used Comparse to generate parsers and serializers for our types,
+so that we can call <code class="docutils literal notranslate"><span class="pre">parse</span></code> and <code class="docutils literal notranslate"><span class="pre">serialize</span></code> for values of type <code class="docutils literal notranslate"><span class="pre">message_t</span></code>.</p>
+</section>
+<section id="states">
+<h3>States<a class="headerlink" href="#states" title="Link to this heading"></a></h3>
+<p>We do the exact same thing for our <a class="reference internal" href="modelling-wireabstractformats.html#ex-abstract-state-twomessage"><span class="std std-ref">abstract state formats</span></a>.</p>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Define the abstract state format and parsing and serializing for them</p>
+<ol class="arabic">
+<li><p>Copy the record types for the single abstract states.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">sent_ping_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">bob</span> <span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="k">type</span> <span class="n">sent_ack_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="k">type</span> <span class="n">received_ack_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">bob</span> <span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><p>Collect the types for the single states into an overall <code class="docutils literal notranslate"><span class="pre">state_t</span></code> type.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">state_t</span> <span class="o">=</span>
+  <span class="o">|</span> <span class="nc">SentPing</span><span class="o">:</span> <span class="o">(</span><span class="n">ping</span><span class="o">:</span><span class="n">sent_ping_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">state_t</span>
+  <span class="o">|</span> <span class="nc">SentAck</span><span class="o">:</span> <span class="o">(</span><span class="n">ack</span><span class="o">:</span><span class="n">sent_ack_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">state_t</span>
+  <span class="o">|</span> <span class="nc">ReceivedAck</span><span class="o">:</span> <span class="o">(</span><span class="n">rack</span><span class="o">:</span><span class="n">received_ack_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">state_t</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><p>Use Comparse to generate a parser and serializer for <code class="docutils literal notranslate"><span class="pre">state_t</span></code>.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_sent_ping_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">sent_ping_t</span><span class="o">))</span>
+<span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_sent_ack_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">sent_ack_t</span><span class="o">))</span>
+<span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_received_ack_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">received_ack_t</span><span class="o">))</span>
+<span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_state_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">state_t</span><span class="o">))</span>
+</pre></div>
+</div>
+<p>Don’t forget to add <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">[@@</span> <span class="n">with_bytes</span> <span class="n">bytes</span><span class="o">]</span></code> for every type!</p>
+</div>
+</li>
+<li><p>Make <code class="docutils literal notranslate"><span class="pre">state_t</span></code> an instance of Comparse’s <code class="docutils literal notranslate"><span class="pre">parseable_serializable</span></code> class.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span> <span class="n">parseable_serializeable_bytes_state_t</span><span class="o">:</span> <span class="n">parseable_serializeable</span> <span class="n">bytes</span> <span class="n">state_t</span> <span class="o">=</span>
+  <span class="n">mk_parseable_serializeable</span> <span class="n">ps_state_t</span>
+</pre></div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<p>There is one final technicality that we need to do for the state type.
+We need to make it an instance of DY*’s <code class="docutils literal notranslate"><span class="pre">local_state</span></code> like this:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span> <span class="n">local_state_state_t</span><span class="o">:</span> <span class="n">local_state</span> <span class="n">state_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">tag</span> <span class="o">=</span> <span class="s2">&quot;TwoMessage.State&quot;</span><span class="o">;</span>
+  <span class="n">format</span> <span class="o">=</span> <span class="n">parseable_serializeable_bytes_state_t</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>This ensures that our protocol-level states do not interfere with any state internal to DY*.</p>
+</section>
+<section id="summary">
+<h3>Summary<a class="headerlink" href="#summary" title="Link to this heading"></a></h3>
+<p>We now have our abstract message and state types
+and can translate those to and from the wire format.
+This is all that goes into the <code class="docutils literal notranslate"><span class="pre">Data</span></code> module.</p>
+<div class="admonition remember">
+<p class="admonition-title">How-To: Define abstract message and state formats</p>
+<ul class="simple">
+<li><p>The abstract formats for messages and states go into the <code class="docutils literal notranslate"><span class="pre">Data</span></code> module.</p></li>
+<li><p>For each message and state in the protocol,
+define its own type as a record.</p></li>
+<li><p>Collect the individual record types for messages and states in an overall type <code class="docutils literal notranslate"><span class="pre">message_t</span></code> and <code class="docutils literal notranslate"><span class="pre">state_t</span></code>
+using constructors for each of the cases.</p></li>
+<li><p>Use Comparse to generate a parser and serializer for the types, with
+<code class="code highlight fstar docutils literal highlight-fstar"><span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_name_of_type</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">name_of_type</span><span class="o">))</span></code> and <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">[@@</span> <span class="n">with_bytes</span> <span class="n">bytes</span><span class="o">]</span></code> annotations.</p></li>
+<li><p>Define <code class="docutils literal notranslate"><span class="pre">parseable_serializable</span></code> instances for <code class="docutils literal notranslate"><span class="pre">message_t</span></code> and <code class="docutils literal notranslate"><span class="pre">state_t</span></code>.</p></li>
+<li><p>Define <code class="docutils literal notranslate"><span class="pre">local_state</span></code> instance for <code class="docutils literal notranslate"><span class="pre">state_t</span></code>.</p></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="the-protocol-steps">
+<h2>The protocol steps<a class="headerlink" href="#the-protocol-steps" title="Link to this heading"></a></h2>
+<p>We will now implement the protocol steps in the <code class="docutils literal notranslate"><span class="pre">DY.TwoMessage.Protocol</span></code> module.</p>
+<p>First, we need to import some libraries that we need later.
+From above, we already have</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">open</span> <span class="nc">Comparse</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Core</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Lib</span>
+</pre></div>
+</div>
+<p>we add two more DY* libraries from the tutorial repo,
+that offer a simplified interface to some of the core DY* functions:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Simplified</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Extend</span>
+</pre></div>
+</div>
+<p>These are imports for DY* functionality,
+but we also want to use the abstract message and state types,
+we just defined.
+So we finally need to import</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nn">TwoMessage</span><span class="p">.</span><span class="nc">Data</span>
+</pre></div>
+</div>
+<p>Our model of the Two-Message Protocol,
+will consist of 3 functions,
+one for each step of the <a class="reference internal" href="introduction.html#example-twomessage-localview"><span class="std std-ref">local-view description</span></a>.</p>
+<section id="the-first-step-sending-a-ping">
+<h3>The first step: Sending a Ping<a class="headerlink" href="#the-first-step-sending-a-ping" title="Link to this heading"></a></h3>
+<p>Recall what happens in the first step of the protocol,
+where Alice sends a Ping message:</p>
+<ol class="arabic simple">
+<li><p>Alice generates a new nonce <span class="math notranslate nohighlight">\(n_A\)</span></p></li>
+<li><p>Alice sends the Ping message containing the nonce <span class="math notranslate nohighlight">\(n_A\)</span>
+together with her name.</p></li>
+<li><p>She stores the nonce <span class="math notranslate nohighlight">\(n_A\)</span> and Bob’s name in a new session.</p></li>
+</ol>
+<section id="the-type">
+<h4>The type<a class="headerlink" href="#the-type" title="Link to this heading"></a></h4>
+<p>Let’s first think about the type of this protocol step.
+Since we will send a message and store a new state,
+the step is a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> function.
+Sending a message and storing a new state are both actions
+that will always succeed, so we have a plain non-optional <code class="docutils literal notranslate"><span class="pre">traceful</span></code> function.</p>
+<p>The input arguments are the names of Alice and Bob,
+where Alice is the acting party and Bob is the intended receiver
+of the message.</p>
+<p>The return values are
+the session ID of the new session of Alice,
+where she stored the nonce,
+so that we know which of Alice’s sessions is the one
+related to this run of the protocol
+and
+the timestamp of the Ping message,
+so that we know where Bob can read the Ping on the trace.</p>
+<p>In total, we have:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">send_ping</span><span class="o">:</span>
+  <span class="o">(</span><span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">bob</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="n">traceful</span> <span class="o">(</span><span class="n">state_id</span> <span class="o">&amp;</span> <span class="n">timestamp</span><span class="o">)</span>
+</pre></div>
+</div>
+</section>
+<section id="generating-the-nonce">
+<h4>Generating the nonce<a class="headerlink" href="#generating-the-nonce" title="Link to this heading"></a></h4>
+<p>To generate the nonce <span class="math notranslate nohighlight">\(n_A\)</span>,
+we use the function <code class="docutils literal notranslate"><span class="pre">gen_rand</span></code> from the <code class="docutils literal notranslate"><span class="pre">DY.Simplified</span></code> library.
+This is a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> action, so we need to use <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*</span></code>
+to give a name to the nonce:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">gen_rand</span> <span class="k">in</span>
+</pre></div>
+</div>
+</section>
+<section id="sending-the-message">
+<h4>Sending the message<a class="headerlink" href="#sending-the-message" title="Link to this heading"></a></h4>
+<p>We build the abstract Ping message with</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">ping</span> <span class="o">=</span> <span class="nc">Ping</span> <span class="o">{</span><span class="n">alice</span> <span class="o">=</span> <span class="n">alice</span><span class="o">;</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">n_a</span><span class="o">}</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>Note that this is a non-monadic action,
+i.e., an action without any side effects.
+We are just defining a concrete instance of an abstract message.
+Hence, we use the plain <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span></code> here.
+Recall,
+that plain <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span></code> s can be used inside any monad.</p>
+<p>Before sending the Ping,
+we need to translate it to the wire format.
+That is, we need to serialize it:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">ping_wire</span> <span class="o">=</span> <span class="n">serialize</span> <span class="n">message_t</span> <span class="n">ping</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>Again, serializing is a non-monadic action,
+so we have the plain <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span></code>.</p>
+<p>Observe that we need to tell the <code class="docutils literal notranslate"><span class="pre">serialize</span></code> function
+the type of the second argument (here <code class="docutils literal notranslate"><span class="pre">message_t</span></code>),
+so that it knows which format to use.</p>
+<p>Now, we can send the serialized Ping message
+with the <code class="docutils literal notranslate"><span class="pre">send_msg</span></code> function from <code class="docutils literal notranslate"><span class="pre">DY.Core</span></code>.
+This function is a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> function
+that adds the message to the trace
+and returns
+the timestamp of the message on the trace.
+This time, we have to use <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*</span></code> to give the returned timestamp a name
+(<code class="docutils literal notranslate"><span class="pre">traceful</span></code> action inside a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> function):</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="n">msg_ts</span> <span class="o">=</span> <span class="n">send_msg</span> <span class="n">ping_wire</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>The message is now sent and we can turn to storing the new state.</p>
+</section>
+<section id="storing-the-state">
+<h4>Storing the state<a class="headerlink" href="#storing-the-state" title="Link to this heading"></a></h4>
+<p>As for the message,
+we first define the abstract state with</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">ping_state</span> <span class="o">=</span> <span class="nc">SentPing</span> <span class="o">{</span><span class="n">bob</span> <span class="o">=</span> <span class="n">bob</span><span class="o">;</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">n_a</span><span class="o">}</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>We can then use the <code class="docutils literal notranslate"><span class="pre">start_new_session</span></code> function from
+the simplified <code class="docutils literal notranslate"><span class="pre">DY.Simplified</span></code> library,
+which returns the sessoin ID of the new session that was created.
+This is a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> action,
+hence we use <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*</span></code> again.</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="n">sid</span> <span class="o">=</span> <span class="n">start_new_session</span> <span class="n">alice</span> <span class="n">ping_state</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>Note, that in contrast to messages,
+we do not need to serialize the abstract state first!
+This is handled internally by the <code class="docutils literal notranslate"><span class="pre">start_new_session</span></code> function
+which is very convenient.</p>
+<p>That’s it for storing the state.</p>
+</section>
+<section id="returning">
+<h4>Returning<a class="headerlink" href="#returning" title="Link to this heading"></a></h4>
+<p>We performed all actions
+(generating the nonce, sending the Ping message and storing a new state)
+and can now finish the protocol step
+by returning the new session id and the message timestamp:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">return</span> <span class="o">(</span><span class="n">sid</span><span class="o">,</span> <span class="n">msg_ts</span><span class="o">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h4>Summary<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<p>In total, the function looks like this:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">send_ping</span><span class="o">:</span>
+  <span class="o">(</span><span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">bob</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="n">traceful</span> <span class="o">(</span><span class="n">state_id</span> <span class="o">&amp;</span> <span class="n">timestamp</span><span class="o">)</span>
+<span class="kd">let</span> <span class="n">send_ping</span> <span class="n">alice</span> <span class="n">bob</span> <span class="o">=</span>
+  <span class="kd">let</span><span class="o">*</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">gen_rand</span> <span class="k">in</span>
+
+  <span class="kd">let</span> <span class="n">ping</span> <span class="o">=</span> <span class="nc">Ping</span> <span class="o">{</span><span class="n">alice</span> <span class="o">=</span> <span class="n">alice</span><span class="o">;</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">n_a</span><span class="o">}</span> <span class="k">in</span>
+  <span class="kd">let</span> <span class="n">ping_wire</span> <span class="o">=</span> <span class="n">serialize</span> <span class="n">message_t</span> <span class="n">ping</span> <span class="k">in</span>
+  <span class="kd">let</span><span class="o">*</span> <span class="n">msg_ts</span> <span class="o">=</span> <span class="n">send_msg</span> <span class="n">ping_wire</span> <span class="k">in</span>
+
+  <span class="kd">let</span> <span class="n">ping_state</span> <span class="o">=</span> <span class="nc">SentPing</span> <span class="o">{</span><span class="n">bob</span> <span class="o">=</span> <span class="n">bob</span><span class="o">;</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">n_a</span><span class="o">}</span> <span class="k">in</span>
+  <span class="kd">let</span><span class="o">*</span> <span class="n">sid</span> <span class="o">=</span> <span class="n">start_new_session</span> <span class="n">alice</span> <span class="n">ping_state</span> <span class="k">in</span>
+
+  <span class="n">return</span> <span class="o">(</span><span class="n">sid</span><span class="o">,</span> <span class="n">msg_ts</span><span class="o">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="the-second-step-replying-with-an-ack">
+<h3>The second step: Replying with an Ack<a class="headerlink" href="#the-second-step-replying-with-an-ack" title="Link to this heading"></a></h3>
+<p>In the second protocol step,
+Bob receives a Ping message,
+sends back the received nonce
+and stores a new state for the session
+with Alice and the none received in the message.</p>
+<section id="id2">
+<h4>The Type<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<p>We begin again with the type of this second step.
+We are now reading from the trace, sending a message
+and storing a new state.
+So this step is also a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> function.
+But now, reading the Ping message may fail
+(either when receiving, if there is no message entry at the
+given timestamp or when parsing the wire format message to a Ping)
+and so the whole step mail fail and we end up with a
+<code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> function.</p>
+<p>The input arguments are
+the name of Bob (the receiving and replying participant)
+and the timestamp of the Ping message.</p>
+<p>The return values are the same as for the first protocol step:
+the session ID of the new session of Bob,
+where he stores the received nonce and name for this protocol run
+and the timestamp of his reply (the Ack).</p>
+<p>Thus, we have the type:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">receive_ping_and_send_ack</span><span class="o">:</span>
+  <span class="o">(</span><span class="n">bob</span><span class="o">:</span><span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">ping_ts</span><span class="o">:</span><span class="n">timestamp</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="o">(</span><span class="n">state_id</span> <span class="o">&amp;</span> <span class="n">timestamp</span><span class="o">))</span>
+</pre></div>
+</div>
+</section>
+<section id="receiving-the-ping">
+<h4>Receiving the Ping<a class="headerlink" href="#receiving-the-ping" title="Link to this heading"></a></h4>
+<p>To read the message from the trace,
+i.e., receiving a message,
+we call the <code class="docutils literal notranslate"><span class="pre">recv_msg</span></code> function from <code class="docutils literal notranslate"><span class="pre">DY.Core</span></code>.
+It takes as an argument the timestamp of the message
+and returns the content of the message in wire format.
+This can fail, if the entry at the provided timestamp
+is not a message entry (for example, if it is a state entry,
+or a generate nonce entry).
+<code class="docutils literal notranslate"><span class="pre">recv_msg</span></code> is thus a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> function.
+Since we want the overall protocol step to fail,
+if receiving the message fails,
+we use <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*?</span></code> to store the read message content:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">recv_msg</span> <span class="n">msg_ts</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>If receiving is successful,
+<code class="docutils literal notranslate"><span class="pre">msg</span></code> contains the content of the message
+and the step continues.
+We now have to translate the wire format <code class="docutils literal notranslate"><span class="pre">msg</span></code>
+to our abstract Ping type.
+Translating from wire to abstract format is parsing
+and we would like to call</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">parse</span> <span class="n">message_t</span> <span class="n">msg</span>
+</pre></div>
+</div>
+<p>Parsing is an action that might fail,
+but does not need to look at or change the trace.
+Hence, parsing is an <code class="docutils literal notranslate"><span class="pre">option</span></code> action.
+Now recall from the <a class="reference internal" href="modelling-tracefulmonad.html#monads-combine"><span class="std std-ref">monad introduction</span></a>
+that if we want to use an <code class="docutils literal notranslate"><span class="pre">option</span></code> action
+inside a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> action,
+we need to use a <code class="docutils literal notranslate"><span class="pre">return</span></code> around the call.
+And again, we want our overall step to fail,
+if parsing fails,
+so we use <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*?</span></code>:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="n">png</span> <span class="o">=</span> <span class="n">return</span> <span class="o">(</span><span class="n">parse</span> <span class="n">message_t</span> <span class="n">msg</span><span class="o">)</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>If parsing is successful,
+we now have the abstract format of
+the message content stored at the input argument timestamp.
+Now, we need to check that the received message
+is indeed a Ping message (and not an Ack for example).
+If it is not a Ping message,
+the whole step should fail.</p>
+<p>For this check,
+we use the <code class="docutils literal notranslate"><span class="pre">guard_tr</span></code> function from <code class="docutils literal notranslate"><span class="pre">DY.Core</span></code>.
+This function takes a <code class="docutils literal notranslate"><span class="pre">bool</span></code> as argument
+and has the behavior: if the bool is <code class="code highlight fstar docutils literal highlight-fstar"><span class="bp">true</span></code>,
+the execution continues with an unchanged trace,
+if it is <code class="code highlight fstar docutils literal highlight-fstar"><span class="bp">false</span></code> the execution stops.</p>
+<p>With this, we can write:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">guard_tr</span> <span class="o">(</span><span class="nc">Ping</span><span class="o">?</span> <span class="n">png</span><span class="o">);*?</span>
+</pre></div>
+</div>
+<p>This checks, if the received abstract message is a Ping or not
+and stops the execution if not.</p>
+<p>Now, we know that the received message is indeed a Ping
+and we can finally access the values that we need:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="nc">Ping</span> <span class="n">png</span> <span class="o">=</span> <span class="n">png</span> <span class="k">in</span>
+<span class="kd">let</span> <span class="n">alice</span> <span class="o">=</span> <span class="n">png</span><span class="o">.</span><span class="n">alice</span> <span class="k">in</span>
+<span class="kd">let</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">png</span><span class="o">.</span><span class="n">n_a</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>Note: The first line above just removes the <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">Ping</span></code> constructor.
+The received and parsed <code class="docutils literal notranslate"><span class="pre">png</span></code> is of the general <code class="docutils literal notranslate"><span class="pre">message_t</span></code> type,
+but to access the field values of the <code class="docutils literal notranslate"><span class="pre">ping_t</span></code> record,
+we need to remove the <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">Ping</span></code> constructor first.</p>
+<p>This concludes receiving of the message
+and reading its content.</p>
+</section>
+<section id="sending-the-ack">
+<h4>Sending the Ack<a class="headerlink" href="#sending-the-ack" title="Link to this heading"></a></h4>
+<p>We can now build the reply by
+defining the concrete instance of the <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">ack_t</span></code>:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">ack</span> <span class="o">=</span> <span class="nc">Ack</span> <span class="o">{</span><span class="n">n_a</span><span class="o">}</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>To send the reply,
+we first need to serialize it to the wire format
+and can then use the <code class="docutils literal notranslate"><span class="pre">send_msg</span></code> function,
+we already saw in the first protocol step.
+This time, we do both serializing and sending together:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="n">ack_ts</span> <span class="o">=</span> <span class="n">send_msg</span> <span class="o">(</span><span class="n">serialize</span> <span class="n">message_t</span> <span class="n">ack</span><span class="o">)</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>Remember that sending a message is a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> action
+that does not fail,
+hence we have to use <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*</span></code> here.</p>
+</section>
+<section id="id3">
+<h4>Storing the State<a class="headerlink" href="#id3" title="Link to this heading"></a></h4>
+<p>The remaining part of the second protocol step
+is storing a new state for Bob.
+This works the same as in the first protocol step.
+We first define the content of the new state
+in the abstract format:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">ack_state</span> <span class="o">=</span> <span class="nc">SentAck</span> <span class="o">{</span><span class="n">alice</span><span class="o">;</span> <span class="n">n_a</span><span class="o">}</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>and then start a new session for Bob with this new content:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="n">sess_id</span> <span class="o">=</span> <span class="n">start_new_session</span> <span class="n">bob</span> <span class="n">ack_state</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>Recall, we don’t have to serialize the state content,
+as this is done implicitly inside the <code class="docutils literal notranslate"><span class="pre">start_new_session</span></code> function.
+Again, this is a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> function that does not fail,
+hence the <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*</span></code>.</p>
+</section>
+<section id="id4">
+<h4>Returning<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
+<p>Finally, we have to return the
+session ID of the new session
+and the timestamp of the Ack.
+Remember, that we are now in a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> function,
+hence we need to return an <code class="docutils literal notranslate"><span class="pre">option</span></code>
+(in contrast to the first protocol step):</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="o">(</span><span class="n">sess_id</span><span class="o">,</span> <span class="n">ack_ts</span><span class="o">))</span>
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h4>Summary<a class="headerlink" href="#id5" title="Link to this heading"></a></h4>
+<p>Collecting everything from above,
+the second protocol step looks like this:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">receive_ping_and_send_ack</span><span class="o">:</span>
+  <span class="o">(</span><span class="n">bob</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">ping_ts</span><span class="o">:</span> <span class="n">timestamp</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="o">(</span><span class="n">state_id</span> <span class="o">&amp;</span> <span class="n">timestamp</span><span class="o">))</span>
+<span class="kd">let</span> <span class="n">receive_ping_and_send_ack</span> <span class="n">bob</span> <span class="n">msg_ts</span> <span class="o">=</span>
+  <span class="kd">let</span><span class="o">*?</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">recv_msg</span> <span class="n">msg_ts</span> <span class="k">in</span>
+  <span class="kd">let</span><span class="o">*?</span> <span class="n">png</span> <span class="o">=</span> <span class="n">return</span> <span class="o">(</span><span class="n">parse</span> <span class="n">message_t</span> <span class="n">msg</span><span class="o">)</span> <span class="k">in</span>
+  <span class="n">guard_tr</span> <span class="o">(</span><span class="nc">Ping</span><span class="o">?</span> <span class="n">png</span><span class="o">);*?</span>
+
+  <span class="kd">let</span> <span class="nc">Ping</span> <span class="n">png</span> <span class="o">=</span> <span class="n">png</span> <span class="k">in</span>
+  <span class="kd">let</span> <span class="n">alice</span> <span class="o">=</span> <span class="n">png</span><span class="o">.</span><span class="n">alice</span> <span class="k">in</span>
+  <span class="kd">let</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">png</span><span class="o">.</span><span class="n">n_a</span> <span class="k">in</span>
+
+  <span class="kd">let</span> <span class="n">ack</span> <span class="o">=</span> <span class="nc">Ack</span> <span class="o">{</span><span class="n">n_a</span><span class="o">}</span> <span class="k">in</span>
+  <span class="kd">let</span><span class="o">*</span> <span class="n">ack_ts</span> <span class="o">=</span> <span class="n">send_msg</span> <span class="o">(</span><span class="n">serialize</span> <span class="n">message_t</span> <span class="n">ack</span><span class="o">)</span> <span class="k">in</span>
+
+  <span class="kd">let</span> <span class="n">ack_state</span> <span class="o">=</span> <span class="nc">SentAck</span> <span class="o">{</span><span class="n">alice</span><span class="o">;</span> <span class="n">n_a</span><span class="o">}</span> <span class="k">in</span>
+  <span class="kd">let</span><span class="o">*</span> <span class="n">sess_id</span> <span class="o">=</span> <span class="n">start_new_session</span> <span class="n">bob</span> <span class="n">ack_state</span> <span class="k">in</span>
+
+  <span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="o">(</span><span class="n">sess_id</span><span class="o">,</span> <span class="n">ack_ts</span><span class="o">))</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="the-third-step-receiving-an-ack">
+<h3>The third step: Receiving an Ack<a class="headerlink" href="#the-third-step-receiving-an-ack" title="Link to this heading"></a></h3>
+<p>In the final protocol step,
+Alice receives an Acknowledgment from Bob
+and checks whether she previously started a run with Bob
+and the nonce received in the Ack.
+If this is the case,
+she stores that this run is now completed.</p>
+<section id="id6">
+<h4>The Type<a class="headerlink" href="#id6" title="Link to this heading"></a></h4>
+<p>This step reads the Ack message from the trace
+and looks for a previous state of Alice on the trace
+and updates that state.
+The step is thus a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> function.
+As in the previous step,
+reading (and parsing) the Ack message may fail
+as well as finding a previous state of Alice.
+We thus have a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> function.</p>
+<p>The input arguments are the name of the acting participant,
+i.e., Alice and the timestamp of the acknowledgment.</p>
+<p>The return value is the session ID of the session
+that Alice now considers as completed.</p>
+<p>The type is:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">receive_ack</span><span class="o">:</span>
+  <span class="o">(</span><span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">ack_ts</span><span class="o">:</span> <span class="n">timestamp</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="n">state_id</span><span class="o">)</span>
+</pre></div>
+</div>
+</section>
+<section id="receiving-the-ack">
+<h4>Receiving the Ack<a class="headerlink" href="#receiving-the-ack" title="Link to this heading"></a></h4>
+<p>Receiving and parsing of the Ack
+is the same as for the Ping message in the previous step.</p>
+<p>We first call the <code class="docutils literal notranslate"><span class="pre">recv_msg</span></code> function with the provided timestamp of the Ack.
+Recall, this is a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> action
+that might fail, if the trace entry at this timestamp
+is not a message entry.
+We thus have to use <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*?</span></code></p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">recv_msg</span> <span class="n">ack_ts</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>If this action is successful,
+we now have the Ack in the wire format.
+To translate it to our abstract format,
+we call <code class="docutils literal notranslate"><span class="pre">parse</span></code>. Since this is an <code class="docutils literal notranslate"><span class="pre">option</span></code> action
+inside a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> function,
+we need to wrap the call in a <code class="docutils literal notranslate"><span class="pre">return</span></code> and use <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*?</span></code>:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="n">ack</span> <span class="o">=</span> <span class="n">return</span> <span class="o">(</span><span class="n">parse</span> <span class="n">message_t</span> <span class="n">msg</span><span class="o">)</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>If this action is successful,
+we have the abstract message that was on the trace
+at the provided timestamp.
+We now need to check that this message
+is indeed an Ack.
+For this we use again the <code class="docutils literal notranslate"><span class="pre">guard_tr</span></code> function:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">guard_tr</span> <span class="o">(</span><span class="nc">Ack</span><span class="o">?</span> <span class="n">ack</span><span class="o">);*?</span>
+</pre></div>
+</div>
+<p>Reading the Ack from the trace was successful
+and we can now access the data with</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="nc">Ack</span> <span class="n">ack</span> <span class="o">=</span> <span class="n">ack</span> <span class="k">in</span>
+<span class="kd">let</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">ack</span><span class="o">.</span><span class="n">n_a</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>Note again, that the first line just removes the <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">Ack</span></code> constructor
+to then access the <code class="docutils literal notranslate"><span class="pre">n_a</span></code> record field of the <code class="docutils literal notranslate"><span class="pre">ack_t</span></code> type.</p>
+</section>
+<section id="searching-a-previous-state">
+<h4>Searching a previous state<a class="headerlink" href="#searching-a-previous-state" title="Link to this heading"></a></h4>
+<p>At this point,
+Alice received a nonce <span class="math notranslate nohighlight">\(n_A\)</span> as an acknowledgment.
+She now wants to check, whether she actually
+started a run with this nonce.</p>
+<p>That is,
+we are looking for a previous state of Alice
+that is a <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">SentPing</span></code> state and contains the same nonce
+<span class="math notranslate nohighlight">\(n_A\)</span>.</p>
+<p>For this, we use the <code class="docutils literal notranslate"><span class="pre">lookup_state</span></code> function
+from <code class="docutils literal notranslate"><span class="pre">DY.Extend</span></code>:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="o">(</span><span class="n">sid</span><span class="o">,</span> <span class="n">st</span><span class="o">)</span> <span class="o">=</span> <span class="n">lookup_state</span> <span class="o">#</span><span class="n">state_t</span> <span class="n">alice</span>
+  <span class="o">(</span><span class="k">fun</span> <span class="n">st</span> <span class="o">-&gt;</span>
+         <span class="nc">SentPing</span><span class="o">?</span> <span class="n">st</span>
+     <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="nc">SentPing</span><span class="o">?.</span><span class="n">ping</span> <span class="n">st</span><span class="o">).</span><span class="n">n_a</span> <span class="o">=</span> <span class="n">n_a</span>
+  <span class="o">)</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>This function takes three arguments:</p>
+<ul>
+<li><p>the implicit abstract state type (here <code class="docutils literal notranslate"><span class="pre">state_t</span></code>)</p></li>
+<li><p>the participant for which we want to find a state (here <code class="docutils literal notranslate"><span class="pre">alice</span></code>)</p></li>
+<li><p>a property of an abstract state <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">propt</span><span class="o">:</span> <span class="n">state_t</span> <span class="o">-&gt;</span> <span class="kt">bool</span></code></p>
+<p>Here the property checks that
+the state is a <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">SentPing</span></code> state
+and the stored nonce in the state is the same as the received nonce <span class="math notranslate nohighlight">\(n_A\)</span>
+from the Ack message.</p>
+</li>
+</ul>
+<p>The lookup function returns the
+session ID of the found state and
+the content, i.e. the abstract state.
+The action may fail,
+if there is no state of the principal satisfying the property.</p>
+<div class="toggle-header docutils container">
+<p><strong>Discussion: How lookup works</strong></p>
+</div>
+<div class="toggle-content box docutils container">
+<p>The <code class="docutils literal notranslate"><span class="pre">lookup_state</span></code> function
+looks for the first state entry on the trace
+(starting from the back/most recent time)
+that satisfies the property.
+It does <em>not</em> check that this state entry
+is the most recent one in the session.
+I.e., it could be the case,
+that the returned state is not the current state
+of the principal.
+In our case here that means,
+that we do not check whether Alice already completed the run before.</p>
+<p>For the examples in this tutorial,
+this implementation of the lookup function
+is sufficient.
+A future feature in DY*
+will change the behavior of the lookup
+to include the check to look only at the
+most recent states of sessions.</p>
+</div>
+<div class="toggle-header docutils container">
+<p><strong>Discussion: Why use lookup?</strong></p>
+</div>
+<div class="toggle-content box docutils container">
+<p>From the analysis of cryptographic protocols
+you may be used to the attacker
+specifying the concrete session in
+follow-up steps.
+In our example, we could have added an
+additional argument to the <code class="docutils literal notranslate"><span class="pre">receive_ack</span></code> step
+for the session that Alice should be in.
+I.e., she would check whether the received nonce
+corresponds to the nonce stored in that
+specific session and then finish this session.</p>
+<p>Instead, we use the state lookup function here
+which is closer to how web servers work.
+They look at the content of received messages
+and try to find the corresponding session from that.
+For example by looking at some session ID provided in the message.</p>
+<p>Both models cover a range of session mixup attacks.
+If the attacker can provide the session,
+he can inject data in possibly unrelated sessions.
+With the lookup, we also get session mixup
+since the key we use for lookup might not be unique across sessions.</p>
+<p>Both models can be implemented in DY*.</p>
+</div>
+<p>Now that we have the previous state of Alice,
+we can access the fields and see who was the other participant of that run</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">bob</span> <span class="o">=</span> <span class="o">(</span><span class="nc">SentPing</span><span class="o">?.</span><span class="n">ping</span> <span class="n">st</span><span class="o">).</span><span class="n">bob</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>Unfortunately,
+this does not work immediately as we would expect.
+We need to use another <code class="docutils literal notranslate"><span class="pre">guard_tr</span></code> first.</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">guard_tr</span> <span class="o">(</span><span class="nc">SentPing</span><span class="o">?</span> <span class="n">st</span><span class="o">);*?</span>
+</pre></div>
+</div>
+<p>This guard should always be satisfied,
+since the lookup function returns a state
+satisfying the property,
+which already includes that the state is
+a <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">SentPing</span></code> state.
+So it doesn’t change the function,
+but it is needed for a technical reason
+for DY* to argue that the found state is a <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">SentPing</span></code> state.</p>
+<div class="toggle-header docutils container">
+<p><strong>The technical reason</strong></p>
+</div>
+<div class="toggle-content box docutils container">
+<p>In the bind of the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> monad,
+the second action can’t make use of the fact,
+that it is executed only if the first action was successful.
+It turns out to be technically very difficult
+to express this behavior for the second action
+in the type definition of the bind.</p>
+</div>
+<p>We have now found that Alice previously
+started a run with the nonce received in the Ack.</p>
+</section>
+<section id="setting-the-new-state">
+<h4>Setting the new state<a class="headerlink" href="#setting-the-new-state" title="Link to this heading"></a></h4>
+<p>The next action is finishing the run.
+We do this by updating the previous session of Alice
+to a <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">ReceivedAck</span></code> state.</p>
+<p>Recall from the introduction of <a class="reference internal" href="introduction.html#sec-intro-states"><span class="std std-ref">States</span></a>
+and <a class="reference internal" href="introduction.html#sec-intro-trace"><span class="std std-ref">The Global Trace</span></a>
+that a (full) state of a principal consists of several sessions
+and that state entries on the trace contain only a single
+state and not a complete session or full state of a principal.
+The content of a state are stored together
+with the name of the principal
+and the session ID on the trace.
+We may have several state entries for the same principal and session ID.
+In this case the intended meaning is,
+that the most recent of those entries is the current state
+of this session.</p>
+<p>Updating the state of a session,
+is thus just adding a new state entry to the trace
+with the new content
+for the same principal and session ID.
+This can be done with the <code class="docutils literal notranslate"><span class="pre">set_state</span></code> function:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">set_state</span> <span class="n">alice</span> <span class="n">sid</span> <span class="o">(</span><span class="nc">ReceivedAck</span> <span class="o">{</span><span class="n">bob</span><span class="o">;</span> <span class="n">n_a</span><span class="o">});*</span>
+</pre></div>
+</div>
+<p>It is a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> action that does not fail,
+it takes as arguments the principal (<code class="docutils literal notranslate"><span class="pre">alice</span></code>),
+the session ID (<code class="docutils literal notranslate"><span class="pre">sid</span></code>)
+and the content of the state in its abstract format (the <code class="code highlight fstar docutils literal highlight-fstar"><span class="nc">ReceivedAck</span></code> state)</p>
+</section>
+<section id="id7">
+<h4>Returning<a class="headerlink" href="#id7" title="Link to this heading"></a></h4>
+<p>The protocol step returns the session ID
+of the session of Alice that has now finished.</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="n">sid</span><span class="o">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id8">
+<h4>Summary<a class="headerlink" href="#id8" title="Link to this heading"></a></h4>
+<p>The final protocol step looks like this:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">receive_ack</span><span class="o">:</span>
+  <span class="o">(</span><span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">ack_ts</span><span class="o">:</span> <span class="n">timestamp</span><span class="o">)</span> <span class="o">-&gt;</span>
+  <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="n">state_id</span><span class="o">)</span>
+<span class="kd">let</span> <span class="n">receive_ack</span> <span class="n">alice</span> <span class="n">ack_ts</span> <span class="o">=</span>
+  <span class="kd">let</span><span class="o">*?</span> <span class="n">ack</span> <span class="o">=</span> <span class="n">recv_msg</span> <span class="n">ack_ts</span> <span class="k">in</span>
+  <span class="kd">let</span><span class="o">*?</span> <span class="n">ack</span> <span class="o">=</span> <span class="n">return</span> <span class="o">(</span><span class="n">parse</span> <span class="n">message_t</span> <span class="n">ack</span><span class="o">)</span> <span class="k">in</span>
+  <span class="n">guard_tr</span> <span class="o">(</span><span class="nc">Ack</span><span class="o">?</span> <span class="n">ack</span><span class="o">);*?</span>
+
+  <span class="kd">let</span> <span class="nc">Ack</span> <span class="n">ack</span> <span class="o">=</span> <span class="n">ack</span> <span class="k">in</span>
+  <span class="kd">let</span> <span class="n">n_a</span> <span class="o">=</span> <span class="n">ack</span><span class="o">.</span><span class="n">n_a</span> <span class="k">in</span>
+
+  <span class="kd">let</span><span class="o">*?</span> <span class="o">(</span><span class="n">sid</span><span class="o">,</span> <span class="n">st</span><span class="o">)</span> <span class="o">=</span> <span class="n">lookup_state</span> <span class="o">#</span><span class="n">state_t</span> <span class="n">alice</span>
+    <span class="o">(</span><span class="k">fun</span> <span class="n">st</span> <span class="o">-&gt;</span>
+          <span class="nc">SentPing</span><span class="o">?</span> <span class="n">st</span>
+      <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="nc">SentPing</span><span class="o">?.</span><span class="n">ping</span> <span class="n">st</span><span class="o">).</span><span class="n">n_a</span> <span class="o">=</span> <span class="n">n_a</span>
+    <span class="o">)</span> <span class="k">in</span>
+  <span class="n">guard_tr</span><span class="o">(</span><span class="nc">SentPing</span><span class="o">?</span> <span class="n">st</span><span class="o">);*?</span>
+  <span class="kd">let</span> <span class="n">bob</span> <span class="o">=</span> <span class="o">(</span><span class="nc">SentPing</span><span class="o">?.</span><span class="n">ping</span> <span class="n">st</span><span class="o">).</span><span class="n">bob</span> <span class="k">in</span>
+
+  <span class="n">set_state</span> <span class="n">alice</span> <span class="n">sid</span> <span class="o">(</span><span class="nc">ReceivedAck</span> <span class="o">{</span><span class="n">bob</span><span class="o">;</span> <span class="n">n_a</span><span class="o">});*</span>
+
+  <span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="n">sid</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>This concludes the model of the  Two-message protocol.
+We defined the abstract message and state types in
+<code class="docutils literal notranslate"><span class="pre">DY.TwoMessage.Data</span></code> and the three protocol steps
+as functions in <code class="docutils literal notranslate"><span class="pre">DY.TwoMessage.Protocol</span></code>.</p>
+<p>You should be able to run <code class="docutils literal notranslate"><span class="pre">make</span></code> now in the example folder.</p>
+</section>
+</section>
+</section>
+<section id="an-example-protocol-run">
+<span id="sec-ex-run-two-message-implementation"></span><h2>An Example Protocol Run<a class="headerlink" href="#an-example-protocol-run" title="Link to this heading"></a></h2>
+<p>Now that we have our model of the Two-Message protocol,
+we need to check that we modeled the right behavior.
+We do this by implementing an example run of the protocol
+using the protocol functions from the model.
+We can then print the trace after this run and see
+whether the run finishes successfully
+and whether the trace looks as we expect.</p>
+<p>Recall from <a class="reference internal" href="introduction.html#ex-run-two-messagep"><span class="std std-ref">before</span></a>
+that the trace after one successful run of the Two-Message protocol
+should look like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1. Generate nonce n_A
+2. Message: Ping (Alice, n_A)
+3. Session 0 of Alice: SentPing n_A to Bob
+4. Message: Ack n_A
+5. Session 0 of Bob: SentAck n_A to Alice
+6. Session 0 of Alice: ReceivedAck n_A from Bob
+</pre></div>
+</div>
+<section id="id9">
+<h3>Setup<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<p>We implement the example run in a new module <code class="docutils literal notranslate"><span class="pre">DY.TwoMessage.Run</span></code>
+in the same <code class="docutils literal notranslate"><span class="pre">TwoMessageP</span></code> folder.
+We begin the module with the usual imports of the DY* libraries
+and of course our protocol model:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Core</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Lib</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Simplified</span>
+
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nn">TwoMessage</span><span class="p">.</span><span class="nc">Protocol</span>
+</pre></div>
+</div>
+<p>As a second setup,
+we add a new target to our <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>
+so that we can execute the extracted code and print the trace.
+Add the following at the end of the <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> in the <code class="docutils literal notranslate"><span class="pre">TwoMessageP</span></code> folder:</p>
+<div class="highlight-Makefile notranslate"><div class="highlight"><pre><span></span><span class="nf">test</span><span class="o">:</span>
+<span class="w">     </span><span class="nb">cd</span><span class="w"> </span><span class="k">$(</span>TUTORIAL_HOME<span class="k">)</span>/obj<span class="p">;</span><span class="w"> </span><span class="k">$(</span>FSTAR_EXE<span class="k">)</span><span class="w"> </span>--ocamlenv<span class="w"> </span>ocamlbuild<span class="w"> </span>-use-ocamlfind<span class="w"> </span>-pkg<span class="w"> </span>batteries<span class="w"> </span>-pkg<span class="w"> </span>fstar.lib<span class="w"> </span>DY_TwoMessage_Run.native
+<span class="w">     </span><span class="k">$(</span>TUTORIAL_HOME<span class="k">)</span>/obj/DY_TwoMessage_Run.native
+</pre></div>
+</div>
+<p>If you now run <code class="docutils literal notranslate"><span class="pre">make</span></code> followed by <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code>,
+the second command should produce some warnings on the terminal
+and end with the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Finished, 4 targets (0 cached) in 00:00:00.
+../../obj/DY_TwoMessage_Run.native
+</pre></div>
+</div>
+<p>You are now set up to start implementing the example protocol run
+in the new <code class="docutils literal notranslate"><span class="pre">DY.TwoMessage.Run</span></code> module.
+This will consist of three parts:</p>
+<ol class="arabic simple">
+<li><p>Calling the protocol steps.</p></li>
+<li><p>Printing the trace after the run.</p></li>
+<li><p>Executing the example run.</p></li>
+</ol>
+</section>
+<section id="the-example-run">
+<h3>The example run<a class="headerlink" href="#the-example-run" title="Link to this heading"></a></h3>
+<p>The example run, will be a function where we call the
+protocol steps in the expected order.
+Since the individual steps are functions in the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> monad,
+our overall run function will also be in the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> monad.
+The run does not take any input arguments and does not return any value.
+The type of the run function is thus</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">run</span><span class="o">:</span> <span class="kt">unit</span> <span class="o">-&gt;</span> <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="kt">unit</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>The first step of the protocol is the <code class="docutils literal notranslate"><span class="pre">send_ping</span></code> step.
+This step takes as arguments the names of the two participants,
+i.e., Alice and Bob.
+Since we need these names later on again,
+it is useful to define them in two variables:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">alice</span> <span class="o">=</span> <span class="s2">&quot;Alice&quot;</span> <span class="k">in</span>
+<span class="kd">let</span> <span class="n">bob</span> <span class="o">=</span> <span class="s2">&quot;Bob&quot;</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>We can now call the <code class="docutils literal notranslate"><span class="pre">send_ping</span></code> step with <code class="docutils literal notranslate"><span class="pre">alice</span></code> and <code class="docutils literal notranslate"><span class="pre">bob</span></code>.
+This is a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> action that returns
+the new session ID of Alice for this new run
+and the timestamp of the Ping message on the trace.
+For the second step, we need the timestamp of the Ping,
+so we save the computed values of the <code class="docutils literal notranslate"><span class="pre">send_ping</span></code> step
+with <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*</span></code>:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="o">(</span><span class="n">alice_sid</span><span class="o">,</span> <span class="n">ping_ts</span><span class="o">)</span> <span class="o">=</span> <span class="n">send_ping</span> <span class="n">alice</span> <span class="n">bob</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>The second protocol step (<code class="docutils literal notranslate"><span class="pre">receive_ping_and_send_ack</span></code>)
+takes as arguments the name of Bob (i.e., the variable <code class="docutils literal notranslate"><span class="pre">bob</span></code>)
+and the timestamp of the Ping
+that the first step just computed (<code class="docutils literal notranslate"><span class="pre">ping_ts</span></code>).
+The second step is a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> action
+and we want the overall run to fail,
+if this step fails,
+so we use <code class="code highlight fstar docutils literal highlight-fstar"><span class="kd">let</span><span class="o">*?</span></code> to store the computed values:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="o">(</span><span class="n">bob_sid</span><span class="o">,</span> <span class="n">ack_ts</span><span class="o">)</span> <span class="o">=</span> <span class="n">receive_ping_and_send_ack</span> <span class="n">bob</span> <span class="n">ping_ts</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>The final step takes as argument the name of Alice
+(stored in <code class="docutils literal notranslate"><span class="pre">alice</span></code>)
+and the timestamp of the Ack.
+This last step is also a <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> action
+and we want the run to fail, if this step fails.
+Since we don’t want to continue our run after this step,
+we don’t need to save the computed values and can just use:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">receive_ack</span> <span class="n">alice</span> <span class="n">ack_ts</span><span class="o">;*?</span>
+</pre></div>
+</div>
+<p>This concludes the implementation of the example protocol run.
+We called the protocol steps in the expected order,
+passing on the arguments (in particular the message timestamps) from the previous steps.</p>
+</section>
+<section id="printing-the-trace">
+<h3>Printing the Trace<a class="headerlink" href="#printing-the-trace" title="Link to this heading"></a></h3>
+<p>Inside the <code class="docutils literal notranslate"><span class="pre">run</span></code> function,
+we want to print the trace,
+after the run.</p>
+<p>Printing in F* works with <code class="code highlight fstar docutils literal highlight-fstar"><span class="nn">IO</span><span class="p">.</span><span class="n">debug_print_string</span></code> which takes
+a string as argument that is then printed.
+As you noticed before,
+the <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code> produced some lines of output, even though
+we didn’t have any run yet.
+It is thus useful,
+to print some recognizable string before the actual output starts.
+For example like this:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">_</span> <span class="o">=</span> <span class="nn">IO</span><span class="p">.</span><span class="n">debug_print_string</span> <span class="s2">&quot;************* Trace *************</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>To print the actual trace,
+we use the <code class="docutils literal notranslate"><span class="pre">trace_to_string</span></code> function from <code class="docutils literal notranslate"><span class="pre">DY.Lib</span></code>.
+This function takes two arguments:
+some printer functions and the trace to be printed.
+It returns a string.
+For now, we can just use the default printers <code class="docutils literal notranslate"><span class="pre">default_trace_to_string_printers</span></code>.</p>
+<p>But how do we get the trace after the example run?
+There is the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> function <code class="docutils literal notranslate"><span class="pre">get_trace</span></code> in <code class="docutils literal notranslate"><span class="pre">DY.Core</span></code>
+that returns the current trace.
+We can thus access the trace after the example run,
+by calling <code class="docutils literal notranslate"><span class="pre">get_trace</span></code> after the calls to the protocol steps:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="n">tr</span> <span class="o">=</span> <span class="n">get_trace</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>Now that we have the trace,
+we can call <code class="docutils literal notranslate"><span class="pre">trace_to_string</span></code>
+and print the resulting string:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">_</span> <span class="o">=</span> <span class="nn">IO</span><span class="p">.</span><span class="n">debug_print_string</span> <span class="o">(</span>
+   <span class="n">trace_to_string</span> <span class="n">default_trace_to_string_printers</span> <span class="n">tr</span>
+ <span class="o">)</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>This concludes printing of the trace.</p>
+<p>However, the <code class="docutils literal notranslate"><span class="pre">run</span></code> function has return type
+<code class="docutils literal notranslate"><span class="pre">traceful</span> <span class="pre">(option</span> <span class="pre">unit)</span></code>,
+so we need to return something in the end.
+In our case,
+we can just go with</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="bp">()</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>The overall <code class="docutils literal notranslate"><span class="pre">run</span></code> function looks like this:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">run</span><span class="o">:</span>
+  <span class="kt">unit</span> <span class="o">-&gt;</span> <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="kt">unit</span><span class="o">)</span>
+<span class="kd">let</span> <span class="n">run</span> <span class="bp">()</span> <span class="o">=</span>
+  <span class="kd">let</span> <span class="n">alice</span> <span class="o">=</span> <span class="s2">&quot;Alice&quot;</span> <span class="k">in</span>
+  <span class="kd">let</span> <span class="n">bob</span> <span class="o">=</span> <span class="s2">&quot;Bob&quot;</span> <span class="k">in</span>
+
+  <span class="kd">let</span><span class="o">*</span> <span class="o">(</span><span class="n">alice_sid</span><span class="o">,</span> <span class="n">ping_ts</span><span class="o">)</span> <span class="o">=</span> <span class="n">send_ping</span> <span class="n">alice</span> <span class="n">bob</span> <span class="k">in</span>
+  <span class="kd">let</span><span class="o">*?</span> <span class="o">(</span><span class="n">bob_sid</span><span class="o">,</span> <span class="n">ack_ts</span><span class="o">)</span> <span class="o">=</span>
+    <span class="n">receive_ping_and_send_ack</span> <span class="n">bob</span> <span class="n">ping_ts</span> <span class="k">in</span>
+  <span class="n">receive_ack</span> <span class="n">alice</span> <span class="n">ack_ts</span><span class="o">;*?</span>
+
+
+  <span class="kd">let</span><span class="o">*</span> <span class="n">tr</span> <span class="o">=</span> <span class="n">get_trace</span> <span class="k">in</span>
+  <span class="kd">let</span> <span class="n">_</span> <span class="o">=</span> <span class="nn">IO</span><span class="p">.</span><span class="n">debug_print_string</span> <span class="s2">&quot;************* Trace *************</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">in</span>
+  <span class="kd">let</span> <span class="n">_</span> <span class="o">=</span> <span class="nn">IO</span><span class="p">.</span><span class="n">debug_print_string</span> <span class="o">(</span>
+    <span class="n">trace_to_string</span> <span class="n">default_trace_to_string_printers</span> <span class="n">tr</span>
+    <span class="o">)</span> <span class="k">in</span>
+
+  <span class="n">return</span> <span class="o">(</span><span class="nc">Some</span> <span class="bp">()</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>You can run <code class="docutils literal notranslate"><span class="pre">make</span></code> followed by <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code> now.
+But you will not see any output from the <code class="docutils literal notranslate"><span class="pre">run</span></code> function,
+only some warnings and output from the extraction process.</p>
+</section>
+<section id="executing-the-run">
+<h3>Executing the Run<a class="headerlink" href="#executing-the-run" title="Link to this heading"></a></h3>
+<p>As a final step,
+we need to call our <code class="docutils literal notranslate"><span class="pre">run</span></code> function,
+when the module is executed.
+We achieve this by adding</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">_</span> <span class="o">=</span> <span class="n">run</span> <span class="bp">()</span> <span class="n">empty_trace</span>
+</pre></div>
+</div>
+<p>at the end of the module.</p>
+<p>If you run <code class="docutils literal notranslate"><span class="pre">make</span></code> followed by <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code> now,
+you will see the <code class="docutils literal notranslate"><span class="pre">***</span> <span class="pre">Trace</span> <span class="pre">***</span></code> string
+followed by the trace after the run.
+The trace should look like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{&quot;TraceID&quot;: 0, &quot;Type&quot;: &quot;Nonce&quot;, &quot;Usage&quot;: {&quot;Type&quot;: &quot;NoUsage&quot;}}
+{&quot;TraceID&quot;: 1, &quot;Type&quot;: &quot;Message&quot;, &quot;Content&quot;: &quot;[Alice, [Nonce #0,]]&quot;}
+{&quot;TraceID&quot;: 2, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 0, &quot;Principal&quot;: &quot;Alice&quot;, &quot;Tag&quot;: &quot;TwoMessage.State&quot;, &quot;Content&quot;: &quot;[Bob, [Nonce #0,]]&quot;}
+{&quot;TraceID&quot;: 3, &quot;Type&quot;: &quot;Message&quot;, &quot;Content&quot;: &quot; [Nonce #0,]&quot;}
+{&quot;TraceID&quot;: 4, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 0, &quot;Principal&quot;: &quot;Bob&quot;, &quot;Tag&quot;: &quot;TwoMessage.State&quot;, &quot;Content&quot;: &quot;[Alice, [Nonce #0,]]&quot;}
+{&quot;TraceID&quot;: 5, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 0, &quot;Principal&quot;: &quot;Alice&quot;, &quot;Tag&quot;: &quot;TwoMessage.State&quot;, &quot;Content&quot;: &quot;[Bob, [Nonce #0,]]&quot;}
+</pre></div>
+</div>
+</section>
+<section id="pretty-printing">
+<h3>Pretty Printing<a class="headerlink" href="#pretty-printing" title="Link to this heading"></a></h3>
+<p>We can print the content of the trace entries nicer,
+by defining our own printer functions for our
+message and state types.
+Download the <code class="docutils literal notranslate"><span class="pre">DY.TwoMessage.Run.Printing.fst</span></code> file from the <a class="reference external" href="https://github.com/REPROSEC/dolev-yao-star-tutorial-code/blob/main/examples/TwoMessageP/DY.TwoMessage.Run.Printing.fst">Tutorial Repo on GitHub</a>.
+Import the module in the <code class="docutils literal notranslate"><span class="pre">DY.TwoMessage.Run</span></code> module
+and change the default printers to <code class="docutils literal notranslate"><span class="pre">get_trace_to_string_printers</span></code>.</p>
+<p>The printing should now look like:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">_</span> <span class="o">=</span> <span class="nn">IO</span><span class="p">.</span><span class="n">debug_print_string</span> <span class="o">(</span>
+   <span class="n">trace_to_string</span> <span class="n">get_trace_to_string_printers</span> <span class="n">tr</span>
+ <span class="o">)</span> <span class="k">in</span>
+</pre></div>
+</div>
+<p>Run <code class="docutils literal notranslate"><span class="pre">make</span></code> followed by <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code> again.
+The trace should now look like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{&quot;TraceID&quot;: 0, &quot;Type&quot;: &quot;Nonce&quot;, &quot;Usage&quot;: {&quot;Type&quot;: &quot;NoUsage&quot;}}
+{&quot;TraceID&quot;: 1, &quot;Type&quot;: &quot;Message&quot;, &quot;Content&quot;: &quot;Ping [name = (Nonce #0), n_a = (Alice)]&quot;}
+{&quot;TraceID&quot;: 2, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 0, &quot;Principal&quot;: &quot;Alice&quot;, &quot;Tag&quot;: &quot;TwoMessage.State&quot;, &quot;Content&quot;: &quot;SentPing [n_a = (Nonce #0), to = (Bob)]&quot;}
+{&quot;TraceID&quot;: 3, &quot;Type&quot;: &quot;Message&quot;, &quot;Content&quot;: &quot;Ack [n_a = (Nonce #0)]&quot;}
+{&quot;TraceID&quot;: 4, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 0, &quot;Principal&quot;: &quot;Bob&quot;, &quot;Tag&quot;: &quot;TwoMessage.State&quot;, &quot;Content&quot;: &quot;SentAck [n_a = (Nonce #0), to = (Alice)]&quot;}
+{&quot;TraceID&quot;: 5, &quot;Type&quot;: &quot;Session&quot;, &quot;SessionID&quot;: 0, &quot;Principal&quot;: &quot;Alice&quot;, &quot;Tag&quot;: &quot;TwoMessage.State&quot;, &quot;Content&quot;: &quot;ReceivedAck [n_a = (Nonce #0), from = (Bob)]&quot;}
+</pre></div>
+</div>
+<p>Which is much closer to our <a class="reference internal" href="introduction.html#ex-run-two-messagep"><span class="std std-ref">previous</span></a> intuitive description of the trace.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DY* Maintainer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

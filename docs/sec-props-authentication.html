@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Authentication &mdash; Security Analysis of Cryptographic Protocols with DY*  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/contentui.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/remember.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/example.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/exercise.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/infobox.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/box.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/todo.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/math.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/contentui.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Security Analysis of Cryptographic Protocols with DY*
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#example-protocols">Example Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#main-concepts-in-dy">Main Concepts in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelling-protocols.html">Modelling Protocols in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stating-sec-props.html">Stating Security Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proof-method.html">Proving Security Properties</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Security Analysis of Cryptographic Protocols with DY*</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Authentication</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/sec-props-authentication.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="authentication">
+<span id="sec-authentication"></span><h1>Authentication<a class="headerlink" href="#authentication" title="Link to this heading"></a></h1>
+<p>In contrast to secrecy properties,
+authentication properties do not talk about attacker knowledge,
+but about the order of things happening on the trace.
+They are usually phrased as:</p>
+<blockquote>
+<div><p>If y happens,
+then x must have previously happend.</p>
+</div></blockquote>
+<p>For example,
+recall, the responder authentication property for the Online? protocol:</p>
+<blockquote>
+<div><p>If Alice at the end of a run believes,
+she talks with Bob,
+then this Bob must have been involved in the run,
+i.e., Bob must have previously sent an acknowledgement as response.</p>
+</div></blockquote>
+<p>To state this property in DY*,
+we use <em>events</em>,
+which are a type of trace entries, that we did not discuss so far.
+Inutitively, those entries log observable protocol actions.
+Usually, we have one event for every protocol step to log
+that the respective participant is executing the step.</p>
+<p>For example, in the Online? protocol,
+we will add one event for each of the three protocol steps:</p>
+<ul class="simple">
+<li><p>An “Initiating” event, that Alice triggers,
+when she starts a new run with some nonce <span class="math notranslate nohighlight">\(n_A\)</span> and Bob.</p></li>
+<li><p>A “Responding” event, that Bob triggers, when he replies with an acknowledgement <span class="math notranslate nohighlight">\(n_A\)</span> to Alice.</p></li>
+<li><p>A “Finishing” event, that Alice triggers, when she finishes a run with Bob and the nonce <span class="math notranslate nohighlight">\(n_A\)</span>, i .e., when she receives the acknowledgement.</p></li>
+</ul>
+<p>With these events,
+we can then express responder authentication as:</p>
+<blockquote>
+<div><p>If Alice triggered a Finishing event,
+then Bob previously triggered a corresponding Responding event,
+as long as both Alice and Bob are honest.</p>
+</div></blockquote>
+<p>As for secrecy,
+the properties only talk about traces complying with the underlying protocol.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: Responder Authentication for the Online? protocol</p>
+<p>Responder Authentication for the Online? protocol is stated in DY* as the following Lemma:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">responder_authentication</span><span class="o">:</span>
+  <span class="n">tr</span><span class="o">:</span><span class="n">trace</span> <span class="o">-&gt;</span> <span class="n">ts</span><span class="o">:</span><span class="n">timestamp</span> <span class="o">-&gt;</span>
+  <span class="n">alice</span><span class="o">:</span><span class="n">principal</span> <span class="o">-&gt;</span> <span class="n">bob</span><span class="o">:</span><span class="n">principal</span> <span class="o">-&gt;</span>
+  <span class="n">n_a</span><span class="o">:</span><span class="n">bytes</span> <span class="o">-&gt;</span>
+  <span class="nc">Lemma</span>
+  <span class="o">(</span><span class="k">requires</span>
+     <span class="n">complies_with_online_protocol</span> <span class="n">tr</span> <span class="o">/\</span>
+     <span class="n">event_triggered_at</span> <span class="n">tr</span> <span class="n">ts</span> <span class="n">alice</span> <span class="o">(</span><span class="nc">Finishing</span> <span class="o">{</span><span class="n">alice</span><span class="o">;</span> <span class="n">bob</span><span class="o">;</span> <span class="n">n_a</span><span class="o">})</span>
+  <span class="o">)</span>
+  <span class="o">(</span><span class="k">ensures</span>
+     <span class="n">principal_is_corrupt</span> <span class="n">tr</span> <span class="n">alice</span> <span class="o">\/</span> <span class="n">principal_is_corrupt</span> <span class="n">tr</span> <span class="n">bob</span> <span class="o">\/</span>
+     <span class="n">event_triggered_before</span> <span class="n">tr</span> <span class="n">ts</span> <span class="n">bob</span> <span class="o">(</span><span class="nc">Responding</span> <span class="o">{</span><span class="n">alice</span><span class="o">;</span> <span class="n">bob</span><span class="o">;</span> <span class="n">n_a</span><span class="o">})</span>
+  <span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Responder Authentication for the NSL protocol</p>
+<p>Write down the responder authentication property for the NSL protocol as a Lemma.
+The textual description of the property is:</p>
+<blockquote>
+<div><p>If Alice at the end of a run believes to be talking with Bob,
+then this Bob must indeed be involved in the run.</p>
+</div></blockquote>
+<ol class="arabic">
+<li><p>What events do we need to introduce to state the property?
+Give them speaking names and explain, what they should express/when they are triggered.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>As for the Online? protocol,
+we add one event for every protocol step.
+That is, we have</p>
+<ul class="simple">
+<li><p>an “Initiating” event,
+that Alice triggers, when she starts a new run with a nonce <span class="math notranslate nohighlight">\(n_A\)</span> and Bob,</p></li>
+<li><p>a “Responding to Message 1” event,
+that Bob triggers, when he replies to Alice with a second message containing
+the nonces <span class="math notranslate nohighlight">\(n_A\)</span> and <span class="math notranslate nohighlight">\(n_B\)</span>,</p></li>
+<li><p>a “Responding to a Message 2” event,
+that Alice triggers, when seh replies to Bob with a third message containing the nonce <span class="math notranslate nohighlight">\(n_B\)</span>, and</p></li>
+<li><p>a “Finishing” event,
+that Bob triggers, when he receives the final third message from Alice.</p></li>
+</ul>
+</div>
+</li>
+<li><p>Using your events,
+describe the responder authentication property as a text.</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<p>If Alice triggers a “Responding to a Message 2” event,
+then Bob previously triggerd a corresponding “Responding to a Mesage 1” event,
+as long as both Alice and Bob are honest.</p>
+</div>
+</li>
+<li><p>Finally, express your property as an F* lemma.
+(You can again use <code class="docutils literal notranslate"><span class="pre">complies_with_nsl</span></code> as blackbox.)</p>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">responder_authentication</span><span class="o">:</span>
+  <span class="n">tr</span><span class="o">:</span><span class="n">trace</span> <span class="o">-&gt;</span> <span class="n">ts</span><span class="o">:</span><span class="n">timestamp</span> <span class="o">-&gt;</span>
+  <span class="n">alice</span><span class="o">:</span><span class="n">principal</span> <span class="o">-&gt;</span> <span class="n">bob</span><span class="o">:</span><span class="n">principal</span> <span class="o">-&gt;</span> <span class="n">n_a</span><span class="o">:</span><span class="n">bytes</span> <span class="o">-&gt;</span> <span class="n">n_b</span><span class="o">:</span><span class="n">bytes</span> <span class="o">-&gt;</span>
+  <span class="nc">Lemma</span>
+  <span class="o">(</span><span class="k">requires</span>
+    <span class="n">complies_with_nsl</span> <span class="n">tr</span> <span class="o">/\</span>
+    <span class="n">event_triggered_at</span> <span class="n">tr</span> <span class="n">ts</span> <span class="n">alice</span> <span class="o">(</span><span class="nc">Responding2</span> <span class="o">{</span><span class="n">alice</span><span class="o">;</span> <span class="n">bob</span><span class="o">;</span> <span class="n">n_a</span><span class="o">;</span> <span class="n">n_b</span><span class="o">})</span>
+  <span class="o">)</span>
+  <span class="o">(</span><span class="k">ensures</span>
+    <span class="n">principal_is_corrupt</span> <span class="n">tr</span> <span class="n">alice</span> <span class="o">\/</span>
+    <span class="n">principal_is_corrupt</span> <span class="n">tr</span> <span class="n">bob</span> <span class="o">\/</span>
+    <span class="n">event_triggered_before</span> <span class="n">tr</span> <span class="n">ts</span> <span class="n">bob</span> <span class="o">(</span><span class="nc">Responding1</span> <span class="o">{</span><span class="n">alice</span><span class="o">;</span> <span class="n">bob</span><span class="o">;</span> <span class="n">n_a</span><span class="o">;</span> <span class="n">n_b</span><span class="o">})</span>
+  <span class="o">)</span>
+</pre></div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonition exercise">
+<p class="admonition-title">Exercise: Initiator Authentication for the NSL protocol</p>
+<p>Write down the following initiator authentication property for the NSL protocol as an F* lemma:</p>
+<blockquote>
+<div><p>If Bob at the end of a run believes to be talking with Alice,
+then this Alice must indeed be involved in the run.</p>
+</div></blockquote>
+<div class="toggle-header docutils container">
+<p><strong>Show/Hide Answer</strong></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">initiator_authentication</span><span class="o">:</span>
+  <span class="n">tr</span><span class="o">:</span><span class="n">trace</span> <span class="o">-&gt;</span> <span class="n">ts</span><span class="o">:</span><span class="n">timestamp</span> <span class="o">-&gt;</span>
+  <span class="n">alice</span><span class="o">:</span><span class="n">principal</span> <span class="o">-&gt;</span> <span class="n">bob</span><span class="o">:</span><span class="n">principal</span> <span class="o">-&gt;</span> <span class="n">n_a</span><span class="o">:</span><span class="n">bytes</span> <span class="o">-&gt;</span> <span class="n">n_b</span><span class="o">:</span><span class="n">bytes</span> <span class="o">-&gt;</span>
+  <span class="nc">Lemma</span>
+  <span class="o">(</span><span class="k">requires</span>
+    <span class="n">complies_with_nsl</span> <span class="n">tr</span> <span class="o">/\</span>
+    <span class="n">event_triggered_at</span> <span class="n">tr</span> <span class="n">ts</span> <span class="n">bob</span> <span class="o">(</span><span class="nc">Finishing</span> <span class="o">{</span><span class="n">alice</span><span class="o">;</span> <span class="n">bob</span><span class="o">;</span> <span class="n">n_a</span><span class="o">;</span> <span class="n">n_b</span><span class="o">})</span>
+  <span class="o">)</span>
+  <span class="o">(</span><span class="k">ensures</span>
+    <span class="n">principal_is_corrupt</span> <span class="n">tr</span> <span class="n">alice</span> <span class="o">\/</span>
+    <span class="n">principal_is_corrupt</span> <span class="n">tr</span> <span class="n">bob</span> <span class="o">\/</span>
+    <span class="n">event_triggered_before</span> <span class="n">tr</span> <span class="n">ts</span> <span class="n">alice</span> <span class="o">(</span><span class="nc">Responding2</span> <span class="o">{</span><span class="n">alice</span><span class="o">;</span> <span class="n">bob</span><span class="o">;</span> <span class="n">n_a</span><span class="o">;</span> <span class="n">n_b</span><span class="o">})</span>
+  <span class="o">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition remember">
+<p class="admonition-title">Remember: General Structure of Authentication Property</p>
+<p>Authentication properties in DY* usually look like the following:</p>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">bob_authentication</span><span class="o">:</span>
+  <span class="n">tr</span><span class="o">:</span><span class="n">trace</span> <span class="o">-&gt;</span> <span class="n">ts</span><span class="o">:</span><span class="n">timestamp</span> <span class="o">-&gt;</span>
+  <span class="n">alice</span><span class="o">:</span><span class="n">principal</span> <span class="o">-&gt;</span> <span class="n">bob</span><span class="o">:</span><span class="n">principal</span> <span class="o">-&gt;</span>
+  <span class="nc">Lemma</span>
+  <span class="o">(</span><span class="k">requires</span>
+    <span class="n">complies_with_protocol</span> <span class="n">tr</span> <span class="o">/\</span>
+    <span class="n">event_triggered_at</span> <span class="n">tr</span> <span class="n">ts</span> <span class="n">alice</span> <span class="o">(</span><span class="nc">Event2</span> <span class="n">alice</span> <span class="n">bob</span> <span class="o">...)</span>
+  <span class="o">)</span>
+  <span class="o">(</span><span class="k">ensures</span>
+     <span class="n">principal_is_corrupt</span> <span class="n">tr</span> <span class="n">alice</span> <span class="o">\/</span>
+     <span class="n">principal_is_corrupt</span> <span class="n">tr</span> <span class="n">bob</span> <span class="o">\/</span>
+     <span class="n">event_triggered_before</span> <span class="n">tr</span> <span class="n">ts</span> <span class="n">bob</span> <span class="o">(</span><span class="nc">Event1</span> <span class="n">alice</span> <span class="n">bob</span> <span class="o">...)</span>
+  <span class="o">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DY* Maintainer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

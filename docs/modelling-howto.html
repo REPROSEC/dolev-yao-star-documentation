@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How To: Modelling a Protocol in DY* &mdash; Security Analysis of Cryptographic Protocols with DY*  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/contentui.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/remember.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/example.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/exercise.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/infobox.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/box.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/todo.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/math.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/contentui.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Security Analysis of Cryptographic Protocols with DY*
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#example-protocols">Example Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#main-concepts-in-dy">Main Concepts in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelling-protocols.html">Modelling Protocols in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stating-sec-props.html">Stating Security Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proof-method.html">Proving Security Properties</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Security Analysis of Cryptographic Protocols with DY*</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">How To: Modelling a Protocol in DY*</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modelling-howto.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="how-to-modelling-a-protocol-in-dy">
+<h1>How To: Modelling a Protocol in DY*<a class="headerlink" href="#how-to-modelling-a-protocol-in-dy" title="Link to this heading"></a></h1>
+<p>Before we continue to model the next protocol,
+let’s summarize how we build a model of a protocol in DY*
+using our model of the Two-Message protocol as an example.</p>
+<div class="admonition remember" id="howto-modelling-protocols">
+<p class="admonition-title">How-To: Modelling a Protocol in DY*</p>
+<p><em>Technical Setup:</em></p>
+<ul>
+<li><p>create a new folder</p></li>
+<li><div class="toggle-header docutils container">
+<p>add a <code class="docutils literal notranslate"><span class="pre">Makefile</span></code></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-Makefile notranslate"><div class="highlight"><pre><span></span><span class="nv">TUTORIAL_HOME</span><span class="w"> </span><span class="o">?=</span><span class="w"> </span>../..
+
+<span class="nv">EXAMPLE_DIRS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>path_to/TwoMessageP
+
+<span class="cp">include $(TUTORIAL_HOME)/Makefile</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><div class="toggle-header docutils container">
+<p>create two modules: <code class="docutils literal notranslate"><span class="pre">Data.fst</span></code> and <code class="docutils literal notranslate"><span class="pre">Protocol.fst</span></code></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nn">DY</span><span class="p">.</span><span class="nn">TwoMessage</span><span class="p">.</span><span class="nc">Data</span>
+
+<span class="k">open</span> <span class="nc">Comparse</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Core</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Lib</span>
+</pre></div>
+</div>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nn">DY</span><span class="p">.</span><span class="nn">TwoMessage</span><span class="p">.</span><span class="nc">Protocol</span>
+
+<span class="k">open</span> <span class="nc">Comparse</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Core</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Lib</span>
+
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Simplified</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Extend</span>
+
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nn">TwoMessage</span><span class="p">.</span><span class="nc">Data</span>
+</pre></div>
+</div>
+</div>
+</li>
+</ul>
+<p><em>Define abstract message and state formats:</em></p>
+<ul>
+<li><p>The abstract formats for messages and states go into the <code class="docutils literal notranslate"><span class="pre">Data</span></code> module.</p></li>
+<li><div class="toggle-header docutils container">
+<p>For each message and state in the protocol,
+define its own type as a record.</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">ping_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="k">type</span> <span class="n">ack_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">sent_ping_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">bob</span> <span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="k">type</span> <span class="n">sent_ack_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="k">type</span> <span class="n">received_ack_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">bob</span> <span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><div class="toggle-header docutils container">
+<p>Collect the individual record types for messages and states in an overall type <code class="docutils literal notranslate"><span class="pre">message_t</span></code> and <code class="docutils literal notranslate"><span class="pre">state_t</span></code>
+using constructors for each of the cases.</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">message_t</span> <span class="o">=</span>
+  <span class="o">|</span> <span class="nc">Ping</span><span class="o">:</span> <span class="o">(</span><span class="n">ping</span><span class="o">:</span><span class="n">ping_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">message_t</span>
+  <span class="o">|</span> <span class="nc">Ack</span><span class="o">:</span>  <span class="o">(</span><span class="n">ack</span><span class="o">:</span><span class="n">ack_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">message_t</span>
+</pre></div>
+</div>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">type</span> <span class="n">state_t</span> <span class="o">=</span>
+  <span class="o">|</span> <span class="nc">SentPing</span><span class="o">:</span> <span class="o">(</span><span class="n">ping</span><span class="o">:</span><span class="n">sent_ping_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">state_t</span>
+  <span class="o">|</span> <span class="nc">SentAck</span><span class="o">:</span> <span class="o">(</span><span class="n">ack</span><span class="o">:</span><span class="n">sent_ack_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">state_t</span>
+  <span class="o">|</span> <span class="nc">ReceivedAck</span><span class="o">:</span> <span class="o">(</span><span class="n">rack</span><span class="o">:</span><span class="n">received_ack_t</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">state_t</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><div class="toggle-header docutils container">
+<p>Use Comparse to generate a parser and serializer for the types, with
+<code class="code highlight fstar docutils literal highlight-fstar"><span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_name_of_type</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">name_of_type</span><span class="o">))</span></code> and <code class="code highlight fstar docutils literal highlight-fstar"><span class="o">[@@</span> <span class="n">with_bytes</span> <span class="n">bytes</span><span class="o">]</span></code> annotations.</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_ping_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">ping_t</span><span class="o">))</span>
+<span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_ack_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">ack_t</span><span class="o">))</span>
+<span class="o">%</span><span class="n">splice</span> <span class="o">[</span><span class="n">ps_message_t</span><span class="o">]</span> <span class="o">(</span><span class="n">gen_parser</span> <span class="o">(</span><span class="k">`</span><span class="n">message_t</span><span class="o">))</span>
+</pre></div>
+</div>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="o">[@@</span> <span class="n">with_bytes</span> <span class="n">bytes</span><span class="o">]</span>
+<span class="k">type</span> <span class="n">ping_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">alice</span><span class="o">:</span> <span class="n">principal</span><span class="o">;</span>
+  <span class="n">n_a</span> <span class="o">:</span> <span class="n">bytes</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><div class="toggle-header docutils container">
+<p>Define <code class="docutils literal notranslate"><span class="pre">parseable_serializable</span></code> instances for <code class="docutils literal notranslate"><span class="pre">message_t</span></code> and <code class="docutils literal notranslate"><span class="pre">state_t</span></code>.</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span> <span class="n">parseable_serializeable_bytes_message_t</span><span class="o">:</span> <span class="n">parseable_serializeable</span> <span class="n">bytes</span> <span class="n">message_t</span> <span class="o">=</span>
+  <span class="n">mk_parseable_serializeable</span> <span class="n">ps_message_t</span>
+</pre></div>
+</div>
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span> <span class="n">parseable_serializeable_bytes_state_t</span><span class="o">:</span> <span class="n">parseable_serializeable</span> <span class="n">bytes</span> <span class="n">state_t</span> <span class="o">=</span>
+  <span class="n">mk_parseable_serializeable</span> <span class="n">ps_state_t</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><div class="toggle-header docutils container">
+<p>Define <code class="docutils literal notranslate"><span class="pre">local_state</span></code> instance for <code class="docutils literal notranslate"><span class="pre">state_t</span></code>.</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">instance</span> <span class="n">local_state_state</span><span class="o">:</span> <span class="n">local_state</span> <span class="n">state_t</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">tag</span> <span class="o">=</span> <span class="s2">&quot;P.State&quot;</span><span class="o">;</span>
+  <span class="n">format</span> <span class="o">=</span> <span class="n">parseable_serializeable_bytes_state_t</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</li>
+</ul>
+<p><em>Implement the protocol steps:</em></p>
+<ul>
+<li><p>The protocol steps go into the <code class="docutils literal notranslate"><span class="pre">Protocol</span></code> module.</p></li>
+<li><p>For each step think about the <em>type</em> first:</p>
+<ul class="simple">
+<li><p>The <em>monad</em>:</p>
+<ul>
+<li><p>Every step will be in the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> monad, since it works with the trace.</p></li>
+<li><p>The step is in the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> monad,
+if it may fail.
+(For example when reading a message from the trace,
+parsing a message to an expected format, looking up a particular state, etc.)</p></li>
+<li><p>Most steps will probably be in the <code class="docutils literal notranslate"><span class="pre">traceful</span></code> + <code class="docutils literal notranslate"><span class="pre">option</span></code> monad.
+(A typical exception is the very first step of the protocol.)</p></li>
+</ul>
+</li>
+<li><p>Typical <em>input arguments</em> are:</p>
+<ul>
+<li><p>the active participant in this step (of type <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">principal</span></code>)</p></li>
+<li><p>the timestamp of the message that is received in this step (of type <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">timestamp</span></code>)</p></li>
+<li><p>the session IDs of the state of the active participant,
+where private and public keys are stored (of type <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">state_id</span></code>)</p></li>
+</ul>
+</li>
+<li><p>Typical <em>return values</em> are:</p>
+<ul>
+<li><p>the timestamp of the message sent in this step (of type <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">timestamp</span></code>)</p></li>
+<li><p>the session ID of the active participant that has been used or updated in this step (of type <code class="code highlight fstar docutils literal highlight-fstar"><span class="n">state_id</span></code>)</p></li>
+<li><p>The verly last step of the protocol usually doesn’t have any return values and hence has return type <code class="code highlight fstar docutils literal highlight-fstar"><span class="kt">unit</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>The general structure of one protocol step is:</p>
+<ol class="arabic">
+<li><p>Receiving the message:</p>
+<ol class="arabic">
+<li><div class="toggle-header docutils container">
+<p><em>receive</em> the message at the provided timestamp</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">recv_msg</span> <span class="n">msg_ts</span> <span class="k">in</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><div class="toggle-header docutils container">
+<p><em>decrypt</em> the message</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="n">plaintext</span> <span class="o">=</span> <span class="n">pke_dec_with_key_lookup</span> <span class="o">#</span><span class="n">message_t</span> <span class="n">alice</span> <span class="n">keys_sid</span> <span class="n">key_tag</span> <span class="n">cipher</span> <span class="k">in</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><div class="toggle-header docutils container">
+<p><em>parse</em> the message to the abstract format</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="n">abstract_msg</span> <span class="o">=</span> <span class="n">return</span> <span class="o">(</span><span class="n">parse</span> <span class="n">message_t</span> <span class="n">msg</span><span class="o">)</span> <span class="k">in</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><div class="toggle-header docutils container">
+<p><em>check</em> that the message is of the <em>expected format</em> for the step</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">guard_tr</span> <span class="o">(</span><span class="nc">Ping</span><span class="o">?</span> <span class="n">asbtract_msg</span><span class="o">);*?</span>
+</pre></div>
+</div>
+</div>
+</li>
+</ol>
+</li>
+<li><div class="toggle-header docutils container">
+<p><em>Find</em> the <em>session</em> of the active participant corresponding to the received message.
+This includes checks of the received data and the stored data.</p>
+</div>
+<div class="toggle-content docutils container">
+<blockquote>
+<div><div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="o">(</span><span class="n">st</span><span class="o">,</span> <span class="n">sid</span><span class="o">)</span> <span class="o">=</span> <span class="n">lookup_state</span> <span class="o">#</span><span class="n">state_t</span> <span class="n">alice</span> <span class="n">some_property</span> <span class="k">in</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</li>
+<li><p>Generate the next message (the reply):</p>
+<ol class="arabic">
+<li><p>compute the <em>abstract</em> reply</p></li>
+<li><div class="toggle-header docutils container">
+<p><em>serialize</em> the reply</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">wire_msg</span> <span class="o">=</span> <span class="n">serialize</span> <span class="o">#</span><span class="n">bytes</span> <span class="n">message_t</span> <span class="n">abstract_msg</span> <span class="k">in</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><div class="toggle-header docutils container">
+<p><em>encrypt</em> the reply</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*?</span> <span class="n">cipher</span> <span class="o">=</span> <span class="n">pke_enc_for</span> <span class="n">alice</span> <span class="n">bob</span> <span class="n">key_sid</span> <span class="n">key_tag</span> <span class="n">plaintext</span> <span class="k">in</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><div class="toggle-header docutils container">
+<p><em>send</em> the reply</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="n">reply_ts</span> <span class="o">=</span> <span class="n">send_msg</span> <span class="n">ciper</span> <span class="k">in</span>
+</pre></div>
+</div>
+</div>
+</li>
+</ol>
+</li>
+<li><div class="toggle-header docutils container">
+<p><em>Update</em> the corresponding <em>session</em></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="n">set_state</span> <span class="n">alice</span> <span class="n">sid</span> <span class="n">abstract_state</span><span class="o">;*</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><p><em>Return</em> the message timestamp from Step 3.4. and the session ID updated in Step 4.</p></li>
+</ol>
+</li>
+</ul>
+<p><em>Check the model with an example run:</em></p>
+<p>After implementing the protocol steps,
+you should check that they model the protocol in the correct way.
+I.e., call the steps in the right order of an example run of the protocol
+and closely look at the produced trace:</p>
+<ul>
+<li><div class="toggle-header docutils container">
+<p>In a <code class="docutils literal notranslate"><span class="pre">Run</span></code> module,</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">module</span> <span class="nn">DY</span><span class="p">.</span><span class="nn">TwoMessage</span><span class="p">.</span><span class="nc">Run</span>
+
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Core</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Lib</span>
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nc">Simplified</span>
+
+<span class="k">open</span> <span class="nn">DY</span><span class="p">.</span><span class="nn">TwoMessage</span><span class="p">.</span><span class="nc">Protocol</span>
+</pre></div>
+</div>
+</div>
+<ul>
+<li><p>define a <code class="docutils literal notranslate"><span class="pre">run</span></code> function where you</p>
+<ul>
+<li><div class="toggle-header docutils container">
+<p>call the protocol steps in the order of an example run of the protocol,
+passing on arguments (message timestamps, session IDs) as needed.</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">run</span><span class="o">:</span>
+  <span class="kt">unit</span> <span class="o">-&gt;</span> <span class="n">traceful</span> <span class="o">(</span><span class="n">option</span> <span class="kt">unit</span><span class="o">)</span>
+<span class="kd">let</span> <span class="n">run</span> <span class="bp">()</span> <span class="o">=</span>
+  <span class="kd">let</span> <span class="n">alice</span> <span class="o">=</span> <span class="s2">&quot;Alice&quot;</span> <span class="k">in</span>
+  <span class="kd">let</span> <span class="n">bob</span> <span class="o">=</span> <span class="s2">&quot;Bob&quot;</span> <span class="k">in</span>
+
+  <span class="kd">let</span><span class="o">*</span> <span class="o">(</span><span class="n">alice_sid</span><span class="o">,</span> <span class="n">ping_ts</span><span class="o">)</span> <span class="o">=</span> <span class="n">send_ping</span> <span class="n">alice</span> <span class="n">bob</span> <span class="k">in</span>
+  <span class="kd">let</span><span class="o">*?</span> <span class="o">(</span><span class="n">bob_sid</span><span class="o">,</span> <span class="n">ack_ts</span><span class="o">)</span> <span class="o">=</span>
+    <span class="n">receive_ping_and_send_ack</span> <span class="n">bob</span> <span class="n">ping_ts</span> <span class="k">in</span>
+  <span class="n">receive_ack</span> <span class="n">alice</span> <span class="n">ack_ts</span><span class="o">;*?</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><div class="toggle-header docutils container">
+<p>access the trace after the run with <code class="docutils literal notranslate"><span class="pre">get_trace</span></code></p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span><span class="o">*</span> <span class="n">tr</span> <span class="o">=</span> <span class="n">get_trace</span> <span class="k">in</span>
+</pre></div>
+</div>
+</div>
+</li>
+<li><div class="toggle-header docutils container">
+<p>print the trace with <code class="code highlight fstar docutils literal highlight-fstar"><span class="nn">IO</span><span class="p">.</span><span class="n">debug_print_string</span></code> using <code class="docutils literal notranslate"><span class="pre">trace_to_string</span></code> with
+either <code class="docutils literal notranslate"><span class="pre">default_trace_to_string_printers</span></code> or a custom <code class="docutils literal notranslate"><span class="pre">get_trace_to_string_printers</span></code> for pretty printing.</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">_</span> <span class="o">=</span> <span class="nn">IO</span><span class="p">.</span><span class="n">debug_print_string</span> <span class="s2">&quot;************* Trace *************</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">in</span>
+<span class="kd">let</span> <span class="n">_</span> <span class="o">=</span> <span class="nn">IO</span><span class="p">.</span><span class="n">debug_print_string</span> <span class="o">(</span>
+   <span class="n">trace_to_string</span> <span class="n">default_trace_to_string_printers</span> <span class="n">tr</span>
+ <span class="o">)</span> <span class="k">in</span>
+</pre></div>
+</div>
+</div>
+</li>
+</ul>
+</li>
+<li><div class="toggle-header docutils container">
+<p>call the <code class="docutils literal notranslate"><span class="pre">run</span></code> function on the empty trace when executing the module</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-fstar notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="n">_</span> <span class="o">=</span> <span class="n">run</span> <span class="bp">()</span> <span class="n">empty_trace</span>
+</pre></div>
+</div>
+</div>
+</li>
+</ul>
+</li>
+<li><div class="toggle-header docutils container">
+<p>Add the <code class="docutils literal notranslate"><span class="pre">test</span></code> target to the <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>.</p>
+</div>
+<div class="toggle-content docutils container">
+<div class="highlight-Makefile notranslate"><div class="highlight"><pre><span></span><span class="nf">test</span><span class="o">:</span>
+<span class="w">  </span><span class="nb">cd</span><span class="w"> </span><span class="k">$(</span>TUTORIAL_HOME<span class="k">)</span>/obj<span class="p">;</span><span class="w"> </span><span class="k">$(</span>FSTAR_EXE<span class="k">)</span><span class="w"> </span>--ocamlenv<span class="w"> </span>ocamlbuild<span class="w"> </span>-use-ocamlfind<span class="w"> </span>-pkg<span class="w"> </span>batteries<span class="w"> </span>-pkg<span class="w"> </span>fstar.lib<span class="w"> </span>DY_TwoMessage_Run.native
+<span class="w">  </span><span class="k">$(</span>TUTORIAL_HOME<span class="k">)</span>/obj/DY_TwoMessage_Run.native
+</pre></div>
+</div>
+</div>
+</li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">make</span></code> followed by <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">test</span></code>.</p></li>
+<li><p>Look at the output and check:</p>
+<ul class="simple">
+<li><p>Did the example run succeed? I.e., do you see any output after the <code class="docutils literal notranslate"><span class="pre">***Trace***</span></code> string?
+(If not, move <code class="docutils literal notranslate"><span class="pre">get_trace</span></code> and <code class="code highlight fstar docutils literal highlight-fstar"><span class="nn">IO</span><span class="p">.</span><span class="n">debug_print_string</span></code> around until you find the step that is failing.)</p></li>
+<li><p>Does the trace look like expected? Do all entries appear with the right values?</p></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DY* Maintainer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

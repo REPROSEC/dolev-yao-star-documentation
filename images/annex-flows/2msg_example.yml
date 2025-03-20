@@ -1,0 +1,47 @@
+options:
+  enumerate: "\\setcounter{protostep}{%d}\\protostep{2msg-example:%s} "
+  colsep: 0.35\linewidth
+  rowsep: 0.3ex
+  styles: []
+
+
+protocol:
+  !Protocol
+  parties:
+  - &Alice
+    !Party
+    name: Alice
+  - &Bob
+    !Party
+    name: Bob
+
+
+  steps:
+# Start Parties
+    - !Parallel
+      steps:
+        - !start-party
+          party: *Alice
+        - !start-party
+          party: *Bob
+    - !action
+      party: *Alice
+      id: gen-nonce
+      label: Generate a new nonce $n_A$          
+    - !msg &online
+      src: *Alice
+      dest: *Bob
+      caption: Ping $\{\text{Alice}, n_A\}$
+      id: online-msg1
+    - !msg
+      src: *Bob
+      dest: *Alice
+      caption: Ack $\{n_A\}$
+      
+# End Parties
+    - !Parallel
+      steps:
+        - !end-party
+          party: *Alice
+        - !end-party
+          party: *Bob

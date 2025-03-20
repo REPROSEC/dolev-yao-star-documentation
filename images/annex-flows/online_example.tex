@@ -1,0 +1,130 @@
+
+        \begin{tikzpicture}[]
+        \pgfdeclarelayer{arrows}
+        \pgfdeclarelayer{groups}
+        \pgfdeclarelayer{markers}
+        \pgfsetlayers{groups,arrows,main,markers}
+        
+        % MATRIX
+        \matrix [column sep={0.35\linewidth,between origins}, row sep=0.3ex]
+        {
+        \node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-0){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-0){};\node[annex_matrix_dummy_height,minimum height=5ex,anchor=center]{};\node[annex_matrix_dummy_height,minimum height=5ex,anchor=center]{};\\
+\node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-1){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-1){};\node[annex_matrix_dummy_height,minimum height=3ex,anchor=center]{};\\
+\node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-2){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-2){};\node[annex_matrix_dummy_height,minimum height=2ex+2ex,anchor=south,yshift=-1ex]{};\\
+\node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-3){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-3){};\node[annex_matrix_dummy_height,minimum height=2ex+2ex,anchor=south,yshift=-1ex]{};\\
+\node[annex_matrix_node,inner sep=0,outer sep=0](pos-0-4){}; &\node[annex_matrix_node,inner sep=0,outer sep=0](pos-1-4){};\node[annex_matrix_dummy_height,minimum height=5ex,anchor=center]{};\node[annex_matrix_dummy_height,minimum height=5ex,anchor=center]{};\\
+};
+
+% MAIN LAYER
+
+% drawing node of type Protocol in matrix line 0 with attributes: {'annexid': 'Protocol_1', 'parties': [<Party_2>, <Party_3>], 'steps': [<Parallel_4>, <Action_5>, <GenericMessage_6>, <GenericMessage_7>, <Parallel_8>], 'options': {'colsep': '0.35\\linewidth', 'rowsep': '0.3ex', 'enumerate': '\\setcounter{protostep}{%d}\\protostep{online-example:%s} ', 'styles': [], 'tex_intro': ''}, 'line': 0, 'length': 5, 'columns': [{'num': 0}, {'num': 1}], 'protocol': <Protocol_1>}
+
+
+% drawing node of type Parallel in matrix line 0 with attributes: {'annexid': 'Parallel_4', 'steps': [<StartParty_9>, <StartParty_10>], 'line': 0, 'length': 1, 'protocol': <Protocol_1>}
+
+
+% drawing node of type StartParty in matrix line 0 with attributes: {'annexid': 'StartParty_9', 'party': <Party_2>, 'line': 0, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['StartParty_9_0'], 'node_name': 'StartParty_9_0', 'end': <EndParty_11>, 'lifeline_segments': [(0, 8, 'annex_lifeline')]}
+\node[name=StartParty_9_0,annex_start_party_box,] at (pos-0-0) {Alice};
+
+% drawing node of type StartParty in matrix line 0 with attributes: {'annexid': 'StartParty_10', 'party': <Party_3>, 'line': 0, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['StartParty_10_0'], 'node_name': 'StartParty_10_0', 'end': <EndParty_12>, 'lifeline_segments': [(0, 8, 'annex_lifeline')]}
+\node[name=StartParty_10_0,annex_start_party_box,] at (pos-1-0) {Bob};
+
+% drawing node of type Action in matrix line 1 with attributes: {'annexid': 'Action_5', 'party': <Party_2>, 'id': 'gen-nonce', 'label': 'Generate a new nonce $n_A$', 'line': 1, 'protocol': <Protocol_1>, '_counter': 1, 'node_name_counter': 1, '_affecting_nodes': ['Action_5_0'], 'node_name': 'Action_5_0'}
+\node[annex_action,name=Action_5_0,pin={[pin distance=-6pt,pin edge={draw=none},annex_debug]90:{gen-nonce} }] at (pos-0-1) {\setcounter{protostep}{0}\protostep{online-example:gen-nonce} \contour{white}{Generate a new nonce $n_A$}};
+
+% drawing node of type GenericMessage in matrix line 2 with attributes: {'annexid': 'GenericMessage_6', 'src': <Party_2>, 'dest': <Party_3>, 'caption': 'Ping $\\{\\text{Alice}, n_A\\}^\\text{a}_{k_\\text{Bob}}$', 'id': 'online-msg1', 'line': 2, 'protocol': <Protocol_1>, '_counter': 2, 'text_above': 'Ping $\\{\\text{Alice}, n_A\\}^\\text{a}_{k_\\text{Bob}}$', 'text_below': '', '_affecting_nodes': ['pos-0-2', 'pos-1-2']}
+
+
+% drawing node of type GenericMessage in matrix line 3 with attributes: {'annexid': 'GenericMessage_7', 'src': <Party_3>, 'dest': <Party_2>, 'caption': 'Ack $\\{n_A\\}^\\text{a}_{k_\\text{Alice}}$', 'line': 3, 'protocol': <Protocol_1>, '_counter': 3, 'text_above': 'Ack $\\{n_A\\}^\\text{a}_{k_\\text{Alice}}$', 'text_below': '', '_affecting_nodes': ['pos-1-3', 'pos-0-3']}
+
+
+% drawing node of type Parallel in matrix line 4 with attributes: {'annexid': 'Parallel_8', 'steps': [<EndParty_11>, <EndParty_12>], 'line': 4, 'length': 1, 'protocol': <Protocol_1>}
+
+
+% drawing node of type EndParty in matrix line 4 with attributes: {'annexid': 'EndParty_11', 'party': <Party_2>, 'line': 4, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['EndParty_11_0'], 'node_name': 'EndParty_11_0'}
+\node[name=EndParty_11_0,annex_end_party_box,] at (pos-0-4) {Alice};
+
+% drawing node of type EndParty in matrix line 4 with attributes: {'annexid': 'EndParty_12', 'party': <Party_3>, 'line': 4, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['EndParty_12_0'], 'node_name': 'EndParty_12_0'}
+\node[name=EndParty_12_0,annex_end_party_box,] at (pos-1-4) {Bob};
+
+
+% ARROWS LAYER
+
+\begin{pgfonlayer}{arrows}% drawing node of type Protocol in matrix line 0 with attributes: {'annexid': 'Protocol_1', 'parties': [<Party_2>, <Party_3>], 'steps': [<Parallel_4>, <Action_5>, <GenericMessage_6>, <GenericMessage_7>, <Parallel_8>], 'options': {'colsep': '0.35\\linewidth', 'rowsep': '0.3ex', 'enumerate': '\\setcounter{protostep}{%d}\\protostep{online-example:%s} ', 'styles': [], 'tex_intro': ''}, 'line': 0, 'length': 5, 'columns': [{'num': 0}, {'num': 1}], 'protocol': <Protocol_1>}
+
+
+% drawing node of type Parallel in matrix line 0 with attributes: {'annexid': 'Parallel_4', 'steps': [<StartParty_9>, <StartParty_10>], 'line': 0, 'length': 1, 'protocol': <Protocol_1>}
+
+
+% drawing node of type StartParty in matrix line 0 with attributes: {'annexid': 'StartParty_9', 'party': <Party_2>, 'line': 0, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['StartParty_9_0'], 'node_name': 'StartParty_9_0', 'end': <EndParty_11>, 'lifeline_segments': [(0, 8, 'annex_lifeline')]}
+\draw[annex_lifeline] (pos-0-0) -- (pos-0-4);
+
+% drawing node of type StartParty in matrix line 0 with attributes: {'annexid': 'StartParty_10', 'party': <Party_3>, 'line': 0, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['StartParty_10_0'], 'node_name': 'StartParty_10_0', 'end': <EndParty_12>, 'lifeline_segments': [(0, 8, 'annex_lifeline')]}
+\draw[annex_lifeline] (pos-1-0) -- (pos-1-4);
+
+% drawing node of type Action in matrix line 1 with attributes: {'annexid': 'Action_5', 'party': <Party_2>, 'id': 'gen-nonce', 'label': 'Generate a new nonce $n_A$', 'line': 1, 'protocol': <Protocol_1>, '_counter': 1, 'node_name_counter': 1, '_affecting_nodes': ['Action_5_0'], 'node_name': 'Action_5_0', 'tex_id': '\\setcounter{protostep}{0}\\protostep{online-example:gen-nonce} ', 'tikz_extra_style': ''}
+
+
+% drawing node of type GenericMessage in matrix line 2 with attributes: {'annexid': 'GenericMessage_6', 'src': <Party_2>, 'dest': <Party_3>, 'caption': 'Ping $\\{\\text{Alice}, n_A\\}^\\text{a}_{k_\\text{Bob}}$', 'id': 'online-msg1', 'line': 2, 'protocol': <Protocol_1>, '_counter': 2, 'text_above': 'Ping $\\{\\text{Alice}, n_A\\}^\\text{a}_{k_\\text{Bob}}$', 'text_below': '', '_affecting_nodes': ['pos-0-2', 'pos-1-2']}
+%% draw message
+            \draw[annex_message] (pos-0-2) to node [annex_arrow_text,above=2.6pt,anchor=base,pin={[pin distance=-8pt,pin edge={draw=none},annex_debug]90:online-msg1}](GenericMessage_6_0){\setcounter{protostep}{1}\protostep{online-example:online-msg1} \contour{white}{Ping $\{\text{Alice}, n_A\}^\text{a}_{k_\text{Bob}}$}}  (pos-1-2); 
+
+% drawing node of type GenericMessage in matrix line 3 with attributes: {'annexid': 'GenericMessage_7', 'src': <Party_3>, 'dest': <Party_2>, 'caption': 'Ack $\\{n_A\\}^\\text{a}_{k_\\text{Alice}}$', 'line': 3, 'protocol': <Protocol_1>, '_counter': 3, 'text_above': 'Ack $\\{n_A\\}^\\text{a}_{k_\\text{Alice}}$', 'text_below': '', '_affecting_nodes': ['pos-1-3', 'pos-0-3']}
+%% draw message
+            \draw[annex_message] (pos-1-3) to node [annex_arrow_text,above=2.6pt,anchor=base,pin={[pin distance=-8pt,pin edge={draw=none},annex_debug]90:}](GenericMessage_7_0){\setcounter{protostep}{2}\protostep{online-example:GenericMessage_7} \contour{white}{Ack $\{n_A\}^\text{a}_{k_\text{Alice}}$}}  (pos-0-3); 
+
+% drawing node of type Parallel in matrix line 4 with attributes: {'annexid': 'Parallel_8', 'steps': [<EndParty_11>, <EndParty_12>], 'line': 4, 'length': 1, 'protocol': <Protocol_1>}
+
+
+% drawing node of type EndParty in matrix line 4 with attributes: {'annexid': 'EndParty_11', 'party': <Party_2>, 'line': 4, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['EndParty_11_0'], 'node_name': 'EndParty_11_0'}
+
+
+% drawing node of type EndParty in matrix line 4 with attributes: {'annexid': 'EndParty_12', 'party': <Party_3>, 'line': 4, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['EndParty_12_0'], 'node_name': 'EndParty_12_0'}
+
+
+\end{pgfonlayer}
+% MARKERS LAYER
+
+\begin{pgfonlayer}{markers}% drawing node of type Protocol in matrix line 0 with attributes: {'annexid': 'Protocol_1', 'parties': [<Party_2>, <Party_3>], 'steps': [<Parallel_4>, <Action_5>, <GenericMessage_6>, <GenericMessage_7>, <Parallel_8>], 'options': {'colsep': '0.35\\linewidth', 'rowsep': '0.3ex', 'enumerate': '\\setcounter{protostep}{%d}\\protostep{online-example:%s} ', 'styles': [], 'tex_intro': ''}, 'line': 0, 'length': 5, 'columns': [{'num': 0}, {'num': 1}], 'protocol': <Protocol_1>}
+
+
+
+% drawing node of type Parallel in matrix line 0 with attributes: {'annexid': 'Parallel_4', 'steps': [<StartParty_9>, <StartParty_10>], 'line': 0, 'length': 1, 'protocol': <Protocol_1>}
+
+
+
+% drawing node of type StartParty in matrix line 0 with attributes: {'annexid': 'StartParty_9', 'party': <Party_2>, 'line': 0, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['StartParty_9_0'], 'node_name': 'StartParty_9_0', 'end': <EndParty_11>, 'lifeline_segments': [(0, 8, 'annex_lifeline')]}
+
+
+
+% drawing node of type StartParty in matrix line 0 with attributes: {'annexid': 'StartParty_10', 'party': <Party_3>, 'line': 0, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['StartParty_10_0'], 'node_name': 'StartParty_10_0', 'end': <EndParty_12>, 'lifeline_segments': [(0, 8, 'annex_lifeline')]}
+
+
+
+% drawing node of type Action in matrix line 1 with attributes: {'annexid': 'Action_5', 'party': <Party_2>, 'id': 'gen-nonce', 'label': 'Generate a new nonce $n_A$', 'line': 1, 'protocol': <Protocol_1>, '_counter': 1, 'node_name_counter': 1, '_affecting_nodes': ['Action_5_0'], 'node_name': 'Action_5_0', 'tex_id': '\\setcounter{protostep}{0}\\protostep{online-example:gen-nonce} ', 'tikz_extra_style': ''}
+
+
+
+% drawing node of type GenericMessage in matrix line 2 with attributes: {'annexid': 'GenericMessage_6', 'src': <Party_2>, 'dest': <Party_3>, 'caption': 'Ping $\\{\\text{Alice}, n_A\\}^\\text{a}_{k_\\text{Bob}}$', 'id': 'online-msg1', 'line': 2, 'protocol': <Protocol_1>, '_counter': 2, 'text_above': 'Ping $\\{\\text{Alice}, n_A\\}^\\text{a}_{k_\\text{Bob}}$', 'text_below': '', '_affecting_nodes': ['pos-0-2', 'pos-1-2', 'GenericMessage_6_0'], 'tikz_extra_style': '', 'node_name_counter': 1, 'tex_id': '\\setcounter{protostep}{1}\\protostep{online-example:online-msg1} ', 'tikz_above': 'node [annex_arrow_text,above=2.6pt,anchor=base,pin={[pin distance=-8pt,pin edge={draw=none},annex_debug]90:online-msg1}](GenericMessage_6_0){\\setcounter{protostep}{1}\\protostep{online-example:online-msg1} \\contour{white}{Ping $\\{\\text{Alice}, n_A\\}^\\text{a}_{k_\\text{Bob}}$}}', 'tikz_below': ''}
+
+
+
+% drawing node of type GenericMessage in matrix line 3 with attributes: {'annexid': 'GenericMessage_7', 'src': <Party_3>, 'dest': <Party_2>, 'caption': 'Ack $\\{n_A\\}^\\text{a}_{k_\\text{Alice}}$', 'line': 3, 'protocol': <Protocol_1>, '_counter': 3, 'text_above': 'Ack $\\{n_A\\}^\\text{a}_{k_\\text{Alice}}$', 'text_below': '', '_affecting_nodes': ['pos-1-3', 'pos-0-3', 'GenericMessage_7_0'], 'tikz_extra_style': '', 'node_name_counter': 1, 'tex_id': '\\setcounter{protostep}{2}\\protostep{online-example:GenericMessage_7} ', 'tikz_above': 'node [annex_arrow_text,above=2.6pt,anchor=base,pin={[pin distance=-8pt,pin edge={draw=none},annex_debug]90:}](GenericMessage_7_0){\\setcounter{protostep}{2}\\protostep{online-example:GenericMessage_7} \\contour{white}{Ack $\\{n_A\\}^\\text{a}_{k_\\text{Alice}}$}}', 'tikz_below': ''}
+
+
+
+% drawing node of type Parallel in matrix line 4 with attributes: {'annexid': 'Parallel_8', 'steps': [<EndParty_11>, <EndParty_12>], 'line': 4, 'length': 1, 'protocol': <Protocol_1>}
+
+
+
+% drawing node of type EndParty in matrix line 4 with attributes: {'annexid': 'EndParty_11', 'party': <Party_2>, 'line': 4, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['EndParty_11_0'], 'node_name': 'EndParty_11_0'}
+
+
+
+% drawing node of type EndParty in matrix line 4 with attributes: {'annexid': 'EndParty_12', 'party': <Party_3>, 'line': 4, 'protocol': <Protocol_1>, 'node_name_counter': 1, '_affecting_nodes': ['EndParty_12_0'], 'node_name': 'EndParty_12_0'}
+
+
+
+\end{pgfonlayer}
+        \end{tikzpicture}
+        

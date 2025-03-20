@@ -1,0 +1,57 @@
+options:
+  enumerate: "\\setcounter{protostep}{%d}\\protostep{nsl-example:%s} "
+  colsep: 0.35\linewidth
+  rowsep: 0.3ex
+  styles: []
+
+
+protocol:
+  !Protocol
+  parties:
+  - &Alice
+    !Party
+    name: Alice
+  - &Bob
+    !Party
+    name: Bob
+
+
+  steps:
+# Start Parties
+    - !Parallel
+      steps:
+        - !start-party
+          party: *Alice
+        - !start-party
+          party: *Bob
+
+    - !action
+      party: *Alice
+      id: gen-nonce
+      label: Generate a new nonce $n_A$          
+    - !msg &online
+      src: *Alice
+      dest: *Bob
+      caption: $\{\text{Alice}, n_A\}^\text{a}_{k_\text{Bob}}$
+      id: online-msg1
+    - !action
+      party: *Bob
+      id: gen-nonce-bob
+      label: Generate a new nonce $n_B$          
+    - !msg
+      src: *Bob
+      dest: *Alice
+      caption: $\{\text{Bob}, n_A, n_B\}^\text{a}_{k_\text{Alice}}$
+      id: nonces-bob-alice
+    - !msg
+      src: *Alice
+      dest: *Bob
+      caption: $\{n_B\}^\text{a}_{k_\text{Bob}}$
+      
+# End Parties
+    - !Parallel
+      steps:
+        - !end-party
+          party: *Alice
+        - !end-party
+          party: *Bob

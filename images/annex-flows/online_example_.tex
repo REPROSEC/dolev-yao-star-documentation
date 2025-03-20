@@ -1,0 +1,182 @@
+\documentclass[tikz,convert={outfile=\jobname.svg,command=\unexpanded{pdf2svg \infile\space\outfile}}]{standalone}
+
+\usepackage{amsmath}
+
+\usepackage[outline]{contour}
+\contourlength{0.14em} % default is 0.05em, values >0.14em lead to clipped arrows
+
+
+\usepackage{color}
+\definecolor{figurehighlight1}{RGB}{190, 0, 0}
+\definecolor{figurehighlight2}{RGB}{0, 0, 190}
+\definecolor{anthrazit}{RGB}{ 50, 50, 50}
+\definecolor{mittelblau}{RGB}{0,  65,  145}
+\definecolor{hellblau}{RGB}{  0,  190, 255}
+\definecolor{dunkelrot}{RGB}{  190,  0, 0}
+\definecolor{kommentare}{RGB}{0, 99, 0}
+\definecolor{gelb}{RGB}{222, 173, 0}
+\definecolor{linkcolor}{rgb}{0,0,0.5}
+
+
+\usetikzlibrary{fit,positioning,arrows.meta,decorations.pathreplacing,calc, backgrounds,snakes,arrows,decorations.markings,shapes.misc}
+
+\tikzset{% basics
+  every node/.style={font=\scriptsize,align=center},
+  annex_lifeline/.style={draw=black!30},
+  annex_lifeline_dotted/.style={draw=anthrazit,dotted},
+  annex_matrix_node/.style={},
+  annex_matrix_dummy_height/.style={},
+  % default style used below
+  line/.style={draw=yellow!50!green},
+  seperatorline/.style={draw=hellblau},
+  reqrespline/.style={draw=mittelblau, line width=0.25mm},
+  websocketline/.style={draw=gelb, line width=0.2mm},
+  % groups
+  annex_group_box/.style={draw=black!15,fill=black!4,dashed,rounded corners=1ex},
+  annex_group_title_placeholder/.style={},
+  annex_condensed_box/.style={draw=blue,rounded corners=1ex,inner sep=0.3ex},
+  annex_multistep_caption_text/.style={blue},%font=\sffamily\tiny\color{teal}},
+  % start/end parties
+%  annex_start_party_box/.style={fill=white,draw,rounded corners=0.3ex,align=center,anchor=center,text height=5pt,text depth=0ex,minimum height=0em,inner sep=1.5mm},
+ annex_start_party_box/.style={fill=white,draw,rounded corners=0.3ex,align=center,anchor=center,inner sep=1mm},
+  annex_end_party_box/.style={annex_start_party_box,scale=0.8},
+  % individual steps
+  annex_arrow_text/.style={yshift=1pt},
+  annex_message/.style={fill=white,-Latex,reqrespline},
+  annex_http_request/.style={fill=white,-Latex,reqrespline},
+  annex_http_response/.style={-Latex[open],reqrespline,align=center},
+  annex_websocket/.style={-Latex,websocketline},
+  annex_action/.style={fill=white,inner sep=0ex,minimum height=1em,align=center},
+  annex_open_window/.style={->,line,dashed},
+  annex_script_action_box/.style={annex_action,anchor=center},
+  annex_script_action_arrow/.style={-Latex[open],reqrespline},
+  annex_script_action_arrow_reversed/.style={<-,line},
+  annex_open_window_start_party_box/.style={annex_start_party_box},
+  annex_open_window_start_party_arrow/.style={->,line,dashed},
+  annex_separator/.style={seperatorline,dashed},
+  server/.style={draw=anthrazit,fill=anthrazit,text=white},
+  browser/.style={},
+  attacker/.style={draw=dunkelrot,fill=dunkelrot,text=white},
+  annex_comment_text/.style={font=\small},
+  annex_vertical_space/.style={},
+  msg_type/.style={align=left,xshift=1pt,font=\scriptsize\scshape,rounded corners=1pt,inner sep=2pt,text depth=1pt,text height=4pt,gray},
+  annex_note/.style={align=left},
+  annex_debug/.style={opacity=0},
+}
+
+
+% Uppercase roman numbering
+\newcounter{bigprotophase}[figure]
+\renewcommand{\thebigprotophase}{\Roman{bigprotophase}}
+\def\bigprotophase#1{%
+  \begin{tikzpicture}
+    \node[rounded corners,fill=OliveGreen]{%
+      \parbox{1.4em}{%
+        \color{white}\centering%
+        \textbf{%
+          \refstepcounter{bigprotophase}%
+          \thebigprotophase%
+          \label{bigprotophase:#1}%
+        }%
+      }%
+    };%
+  \end{tikzpicture}%
+}
+
+\def\refbigprotophase#1{%
+  \resizebox{!}{0.6\baselineskip}{%
+    \begin{tikzpicture}[baseline={([yshift=-1.5pt]O.base)}]
+      \node (O) [draw,rounded corners]{\parbox{1.2em}{\centering\ref{bigprotophase:#1}}};
+    \end{tikzpicture}%
+  }%
+}
+
+
+% Lowercase roman numbering
+\newcounter{protophase}[figure]
+\renewcommand{\theprotophase}{\roman{protophase}}
+\def\protophase#1{%
+  \begin{tikzpicture}
+    \node [rounded corners,fill=OliveGreen]{%
+      \parbox{1.2em}{%
+        \color{white}\centering%
+        \textbf{%
+          \refstepcounter{protophase}%
+          \theprotophase%
+          \label{protophase:#1}%
+        }%
+      }%
+    };%
+  \end{tikzpicture}%
+}
+
+\def\refprotophase#1{%
+  \resizebox{!}{0.6\baselineskip}{%
+    \begin{tikzpicture}[baseline={([yshift=-1.5pt]O.base)}]
+      \node (O) [draw,rounded corners]{\parbox{1.1em}{\centering\ref{protophase:#1}}};
+    \end{tikzpicture}%
+  }%
+}
+
+
+% Regular numbering
+\newcounter{protostep}[figure]
+\def\protostep#1{%
+  \resizebox{!}{0.8\baselineskip}{%
+    \begin{tikzpicture}[baseline={([yshift=-0.5pt]O.base)}]
+      \node (O) [sharp corners,fill=blue,inner sep=1ex]{%
+        \color{white}%
+        \textbf{%
+          \refstepcounter{protostep}%
+          \theprotostep%
+          \label{protostep:#1}%
+        }%
+      };
+    \end{tikzpicture}%
+  }%
+}
+
+\def\refprotostep#1{%
+  \resizebox{!}{0.6\baselineskip}{%
+    \begin{tikzpicture}[baseline={([yshift=-1.5pt]O.base)}]
+      \node (O) [draw,sharp corners]{\ref{protostep:#1}};
+    \end{tikzpicture}%
+  }%
+}
+
+% alphabetical "numbering"
+\newcounter{attackstep}[figure]
+\renewcommand{\theattackstep}{\alph{attackstep}}
+\def\attackstep#1{%
+  \resizebox{!}{0.8\baselineskip}{%
+    \begin{tikzpicture}[baseline={([yshift=-0.5pt]O.base)}]
+      \node (O) [draw,sharp corners]{%
+        \textbf{%
+          \refstepcounter{attackstep}%
+          \theattackstep%
+          \label{attackstep:#1}%
+        }%
+      };
+    \end{tikzpicture}%
+  }%
+}
+
+\def\refattackstep#1{%
+  \resizebox{!}{0.6\baselineskip}{%
+    \begin{tikzpicture}[baseline={([yshift=-1.5pt]O.base)}]
+      \node (O) [draw,sharp corners]{\ref{attackstep:#1}};
+    \end{tikzpicture}%
+  }%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END of annexlang macros %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\input{online_example}
+\end{document}
+
+% Local Variables:
+% TeX-command-extra-options: "-shell-escape"
+% End:

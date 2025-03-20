@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Global Trace &mdash; Security Analysis of Cryptographic Protocols with DY*  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/contentui.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/remember.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/example.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/exercise.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/infobox.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/box.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/todo.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/math.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/contentui.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Security Analysis of Cryptographic Protocols with DY*
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#example-protocols">Example Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#main-concepts-in-dy">Main Concepts in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelling-protocols.html">Modelling Protocols in DY*</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stating-sec-props.html">Stating Security Properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proof-method.html">Proving Security Properties</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Security Analysis of Cryptographic Protocols with DY*</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">The Global Trace</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/intro-dyconcepts-trace.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="the-global-trace">
+<span id="sec-intro-trace"></span><h1>The Global Trace<a class="headerlink" href="#the-global-trace" title="Link to this heading"></a></h1>
+<p>The overall state of the system, including all messages sent so far and
+the states of participants across all parallel flows, are captured on
+<strong>the trace</strong>, which is a log of observable protocol actions. The trace is
+an ordered collection of <strong>entries</strong> of the following types:</p>
+<ul class="simple">
+<li><p><strong>messages</strong> sent between participants</p></li>
+<li><p><strong>states</strong> of participants</p></li>
+<li><p><strong>events</strong> logged by participants (for example, “Alice initiated a flow
+with Bob”)</p></li>
+<li><p>generation of <strong>random values</strong> (for example, keys and nonces)</p></li>
+<li><p><strong>corruption</strong> (more on the attacker model and corruption later)</p></li>
+</ul>
+<p>Since the trace acts as a log, entries can only be <em>appended</em> to the end
+of the trace, but not removed from the trace or changed later on.</p>
+<div class="admonition example" id="ex-run-two-messagep">
+<p class="admonition-title">Example: Trace of Run of Two-Message Protocol</p>
+<p>The trace after a successful run of the Two-Message protocol
+looks like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1. Generate nonce n_A
+2. Message: Ping (Alice, n_A)
+3. Session 0 of Alice: SentPing n_A to Bob
+4. Message: Ack n_A
+5. Session 0 of Bob: SentAck n_A to Alice
+6. Session 0 of Alice: ReceivedAck n_A from Bob
+</pre></div>
+</div>
+</div>
+<div class="admonition example">
+<p class="admonition-title">Example: Key Setup for Online? Protocol</p>
+<p>The key setup phase for the Online? Protocol
+is captured on the trace like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1. Generate private key k_A for Alice
+// Alice stores this private key
+2. Session 0 of Alice: Private Key k_A
+
+3. Generate private key k_B for Bob
+// Bob stores his private key
+4. Session 0 of Bob: Private Key k_B
+
+// Alice stores the public key of Bob
+5. Session 1 of Alice: Public Key pk_B of Bob
+// Bob stores the public key of Alice
+6. Session 1 of Bob: Public Key pk_A of Alice
+</pre></div>
+</div>
+</div>
+<p>Observe from the previous example,
+that a trace entry only contains <em>one</em> action and not the complete global
+state where relevant parts are updated.
+In particular for states that means that
+a trace entry contains only one state (<span class="todo-inline">TODO: state vs session vs version: What terms to use?</span>),
+and not the full state of a principal.
+For example, in Step 5, Alice adds a new Session 1 to her state.
+The corresponding trace entry captures only the new state,
+and not the <em>full</em> state of Alice.</p>
+<div class="admonition example">
+<p class="admonition-title">Example: Trace for Attack on Needham-Schroeder Protocol</p>
+<p>The beginning of the trace corresponding to the attack flow for the
+Needham-Schroeder protocol looks like this (simplified):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>// Setup Phase: Key generation and compromising Eve
+0.  Generate a private decryption key for Alice
+1.  Store the private key in Alice&#39;s state
+2.  + 3. Generate and store a private decryption key for Bob
+4.  + 5. Generate and store a private decryption key for Eve
+6.  Compromise the state session where Eve stores her private key
+7.  Store the public encryption key of Alice in Bob&#39;s state
+8.  Store the public encryption key of Bob in Eve&#39;s state
+9.  Store the public encryption key of Eve in Alice&#39;s state
+10. Compromise the state session where Eve stores Alice&#39;s encryption key
+
+// Actual Flow - Step 1: Alice starts a flow with Eve and sends a nonce $n_a$ encrypted to Eve
+11. Generate nonce n_a
+12. Event: Alice initiated flow with Eve using n_a
+13. Store (Eve, n_a) in Alice&#39;s state
+14. Generate a nonce n_pke used for encryption
+15. Message from Alice to Eve: encrypted (n_a, Alice) with Eve&#39;s key and used n_pke
+...
+</pre></div>
+</div>
+<p>In the above trace part we see trace entries of all 5 types:</p>
+<ul class="simple">
+<li><p>messages: entry 15,</p></li>
+<li><p>states of participants: entries 1,3,5,7,8,9,13,</p></li>
+<li><p>an event: entry 12,</p></li>
+<li><p>generation of random values: entries 0,2,4,11,14, and</p></li>
+<li><p>corruption: entries 6 and 10.</p></li>
+</ul>
+</div>
+<section id="sending-and-receiving-of-messages">
+<h2>Sending and Receiving of Messages<a class="headerlink" href="#sending-and-receiving-of-messages" title="Link to this heading"></a></h2>
+<p>Among other things, the trace is used as post and letter box for our
+asynchronous communication model. To send a message, a new message entry
+is added to the trace and receiving a message is just reading the
+corresponding message entry. Delivery of the message by the postal
+service corresponds to telling the receiver which message entry to read.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, DY* Maintainer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
