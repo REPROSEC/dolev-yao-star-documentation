@@ -33,3 +33,7 @@
 - Run: `make latexpdf`
 - Copy `build/latex/securityanalysisofcryptographicprotocolswithdy.pdf` to `docs/`
 - Commit and push repository
+
+# Troubleshooting
+
+If no static files are loaded, you have to add an empty file called `.nojekyll` to the `docs/` folder.
